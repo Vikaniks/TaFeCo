@@ -1,0 +1,369 @@
+@charset "UTF-8";
+@import url(fonts.css);
+@import url(all.min.css);
+
+
+:root {
+    --высотаГолова: 8rem;
+    --высотаНога: 4rem;
+    --высотаМеню:1.5rem;
+    --ширинаЭлементМеню:24%;
+
+    --sizeFuenteMenu: 2rem;
+    --fuenteSans:"Garamond";
+
+    --margen: 1rem;
+    --margen-pequeno: .5rem;
+    --redondeado: .3rem;
+
+    --borde: 1px solid var(--color-fondo-secundario);
+    --sombra: .5rem .5rem .5rem rgba(0, 0, 0, 0.50);
+
+    --colorОсновной: #41b143;
+    --colorОсновнойСветлый:#06b209;
+	--colorОсновнойТемный: #053302;
+
+    --colorКонтрастСветлый: #b4f861;
+	--colorКонтрастБелый:#d5f4c9;
+
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--fuenteSans);
+}
+
+/* Estilos de la cabecera */
+header {
+    height: var(--высотаГолова);
+	background-image: url('images/flow_fon.png'); /* Замените на путь к вашему изображению */
+	background-size: cover; /* Изображение растягивается по всему контейнеру */
+	background-position: center; /* Центрирование изображения */
+	background-repeat: no-repeat; /* Отключаем повторение изображения */
+	padding: .3rem;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+#header_izq {
+    width: 95%;
+}
+#header_der {
+    width: 5%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+h1 {
+    color: var(--colorКонтрастСветлый);
+    font-family: var(--fuenteSerif);
+    font-size: 2.5rem;
+    text-align: center;
+
+	}
+h2 {
+    color: var(--colorКонтрастБелый);
+    font-family: var(--fuenteSerif);
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/*estilos de la barra de menu*/
+nav {
+   background-color: var(--colorОсновной);
+   padding: var(--margen-pequeno);
+}
+
+nav ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    list-style: none;
+    
+   }
+
+  nav ul li {
+    list-style: none;
+	display: inline-block;
+	position: relative;
+   }
+
+   .enlace_menu {
+    display: inline-block;
+    padding: 10px 15px;
+    
+
+    width: var(--ширинаЭлементМеню);
+    height:var(--высотаМеню);
+    
+    text-decoration: none;
+    font-weight: bolder;
+    font-size: 1.3rem;
+    color: var(--colorОсновнойТемный);
+   }
+
+    .enlace_menu:visited{
+        color: var(--colorОсновнойТемный);
+    }
+
+    .enlace_menu:hover {
+        background-color: var(--colorОсновной);
+        color: var(--colorОсновнойТемный);
+        text-decoration: none;
+    }
+    .enlace_menu:active{
+        background-color: var(--colorОсновнойТемный);
+        color: var(--colorКонтрастСветлый);
+    }
+    
+
+
+
+ul .submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--colorОсновнойСветлый);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 10px 0;
+    min-width: 160px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    list-style: none;  /* Убираем маркеры списка */
+    margin: 0;  /* Убираем отступы */
+    padding: 0;  /* Убираем отступы */
+}
+
+li:hover > .submenu {
+    display: block;
+}
+.submenu li {
+    width: 100%;  /* Ширина подменю */
+}
+
+.submenu li a {
+    padding: 8px 20px;
+    color: #333;
+    text-decoration: none;
+    display: block;
+    width: calc(100% - 40px); /* Вычитаем padding */
+}
+
+.submenu li a:hover {
+    background-color: var(--colorКонтрастБелый);
+    color: var(--colorОсновной);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (min-width: 768px) {
+    nav {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: var(--margen);
+
+        nav ul .enlace_menu {
+            display: flex;
+            justify-content: center;
+
+            & a {
+                margin: 0 var(--margen-pequeno);
+            }
+        }
+    }
+
+    #egg {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--margen);
+
+    }
+
+    /*#enlaces {
+        display: flex;
+        flex-wrap: wrap;
+
+        & a {
+            padding: 0 var(--margen-pequeno);
+        }
+
+        justify-content: center;
+
+    }
+
+    #listas {
+        display: flex;
+        flex-wrap: wrap;
+
+        justify-content: space-evenly;
+    }
+
+    #formularios form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--margen);
+
+        & fieldset {
+            width: calc(50% - var(--margen) / 2);
+        }
+    }
+
+    aside ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        & a {
+            margin: var(--margen-pequeno);
+        }
+    }
+
+    #arriba {
+        display: none;
+    }*/
+}
+
+@media (min-width: 1024px) {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        text-align: center;
+    }
+
+    /*body>nav:first-of-type {
+        & ul {
+            justify-content: flex-start;
+        }
+    }*/
+
+    #html {
+        display: grid;
+        gap: var(--margen);
+
+        grid-template-columns: 1fr 1fr;
+
+        & h2 {
+            grid-column-end: span 2;
+        }
+
+        /*#parrafos {
+            grid-row-end: span 3;
+        }
+
+        #listas {
+            flex-direction: column;
+            align-items: center;
+        }*/
+    }
+
+    /*#formularios form {
+        & fieldset {
+            width: 100%;
+        }*/
+    }
+
+
+/*@media (min-width: 1440px) {
+    #html {
+        grid-template-columns: 2fr 1fr 1fr;
+
+        grid-template-areas:
+            "titulo-html    titulo-html     titulo-html"
+            "parrafos       enlaces         formularios"
+            "parrafos       listas          formularios"
+            "parrafos       tablas          formularios"
+            "multimedia     multimedia      multimedia";
+
+        & h2 {
+            grid-area: titulo-html;
+        }
+
+        & #parrafos {
+            grid-area: parrafos;
+        }
+
+        & #listas {
+            grid-area: listas;
+        }
+
+        & #enlaces {
+            grid-area: enlaces;
+        }
+
+        & #tablas {
+            grid-area: tablas;
+        }
+
+        & #multimedia {
+            grid-area: multimedia;
+
+            display: grid;
+            gap: var(--margen);
+
+            grid-template-columns: 1fr 1fr 1fr;
+
+            & h3,
+            & audio {
+                grid-column-end: span 3;
+            }
+
+            & audio {
+                grid-row-start: 2;
+            }
+
+            & .proporcion:first-of-type {
+                grid-row-start: 3;
+                grid-column-start: 2;
+            }
+        }
+
+        & #formularios {
+            grid-area: formularios;
+        }
+    }
+}
+
+@media (min-width: 2560px) {
+    #html {
+        grid-template-columns: 2fr 1fr 1fr 2fr;
+
+        grid-template-areas:
+            "titulo-html    titulo-html     titulo-html     titulo-html"
+            "parrafos       enlaces         formularios     multimedia"
+            "parrafos       listas          formularios     multimedia"
+            "parrafos       tablas          formularios     multimedia";
+
+        align-items: start;
+    }
+}*/
