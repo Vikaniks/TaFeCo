@@ -215,13 +215,7 @@ section{
 	color: var(--colorPrincipalOscuro);
 }
 
-tr, th, td {
-    border: 1px solid #084303;
-    border-radius: .3rem;
-    border-collapse: collapse;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
 
-}
 
 
 .product-card-container {
@@ -244,8 +238,8 @@ tr, th, td {
 }
 
 .product-image {
-    flex: 0 0 20%; /* Занимает не более 20% от ширины карточки */
-    max-width: 20%;
+    flex: 0 0 27%; /* Занимает не более 20% от ширины карточки */
+    max-width: 27%;
     height: auto;
     border-radius: 5px;
     margin-right: 20px; /* Отступ справа от изображения */
@@ -256,6 +250,7 @@ tr, th, td {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 0 20px;
     flex-grow: 1; /* Занимаем оставшееся пространство */
     overflow: hidden; /* Скрываем переполнение */
     text-overflow: ellipsis; /* Добавляем многоточие, если текст выходит за границы */
@@ -264,7 +259,7 @@ tr, th, td {
 }
 
 .product-title {
-    font-size: 1.5em;
+    font-size: 1.3em;
     margin: 10px 0;
     white-space: normal; /* Разрешаем переносы внутри текста */
     overflow: hidden; /* Скрываем переполнение */
@@ -275,6 +270,10 @@ tr, th, td {
 .product-price {
     font-size: 1.2em;
     margin: 5px 0;
+    
+}
+.product-price{
+    font-weight: bold;
 }
 
 .product-quantity {
@@ -285,16 +284,16 @@ tr, th, td {
     margin-right: 10px;
 }
 
-#quantity1,
-#quantity2 {
-    width: 50px;
+#quantity {
+    width: 30px;
+    
 }
 
 .add-to-cart-btn {
     background-color: var(--colorPrincipal);
     color: var(--fondoClaro);
     border: none;
-    padding: 10px 20px;
+    padding: 10px 10px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1em;
@@ -303,7 +302,7 @@ tr, th, td {
 }
 
 .add-to-cart-btn:hover {
-    background-color: #00795c;
+    background-color: var(--colorPrincipalClaro);
 }
 
 /*Estilo del pie*/
@@ -334,7 +333,7 @@ footer{
     
 #redes-sociales li {
     display: inline-flex;     /* Используем inline-flex для элементов списка */
-    padding: 0 40px;          /* Добавляем отступы между элементами */
+    padding: 0 25px;          /* Добавляем отступы между элементами */
 }
 
 #pie_der {
@@ -438,7 +437,19 @@ footer p{
         }
         
         .product-card {
-            width: calc(50% - 60px); /* Устанавливаем ширину карточки на 50% минус отступ */
+            width: calc(50% - 60px); /* Устанавливаем ширину карточки на 33% минус отступ */
+            margin-bottom: 20px; /* Добавляем нижний отступ для карточек */
+        }
+    }
+    @media (min-width: 1024px) {
+        .product-card-container {
+            flex-direction: row; /* Размещаем карточки горизонтально */
+            flex-wrap: wrap; /* Переносим карточки на следующую строку, если не хватает места */
+            gap: 20px; /* Добавляем отступы между карточками */
+        }
+        
+        .product-card {
+            width: calc(33% - 60px); /* Устанавливаем ширину карточки на 33% минус отступ */
             margin-bottom: 20px; /* Добавляем нижний отступ для карточек */
         }
     }
