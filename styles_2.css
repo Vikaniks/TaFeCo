@@ -18,7 +18,7 @@
 	    --colorPrincipalOscuro: #084303;
 
 	    --colorContraste: #8ef861;
-	    --colorContrasteOscuro: #bfb025;
+	    --colorContrasteOscuro: rgb(255, 201, 100);
 	    --colorContrasteClaro: #57c992;
 
     --fondoClaro: #fcf9e5;
@@ -73,6 +73,21 @@ header {
 
 #header_der img {
     padding-left: var(--paddingGeneral);
+}
+.cart-container {
+    position: relative;
+    display: inline-block;
+}
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: 12px;
+    background-color: var(--colorContrasteOscuro);
+    color: var(--colorPrincipalOscuro);
+    border-radius: 50%;
+    padding: 5px 10px;
+    font-size: 1em;
+    font-weight: bold;
 }
 
 h1 {
@@ -221,7 +236,7 @@ section{
 .product-card-container {
     display: flex;
     flex-direction: column; /* Размещаем карточки вертикально */
-    gap: 10px; /* Добавляем отступы между карточками */
+    gap: 5px; /* Добавляем отступы между карточками */
 }
 
 .product-card {
@@ -229,11 +244,11 @@ section{
     border: 1px solid #084303;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 10px;
     display: flex;
     flex-direction: row; /* Горизонтальное содержание карточки */
     align-items: center;
-    width: calc(100% - 40px); /* Устанавливаем ширину карточки */
+    width: calc(100% - 20px); /* Устанавливаем ширину карточки */
     overflow: hidden;
 }
 
@@ -281,12 +296,21 @@ section{
 }
 
 .product-quantity label {
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
-#quantity {
-    width: 30px;
-    
+
+.quantity-btn.decrease,
+.quantity-btn.increase {
+    padding: 0 5px; /* Немного увеличиваем кнопку "-" */
+    border: 1px solid var(--colorPrincipalOscuro);
+}
+input[type="number"] {
+    width: 50px; /* Увеличиваем ширину */
+    font-size: 1em;
+    text-align: center; /* Размещаем число по центру */
+    border: 1px solid var(--colorPrincipalOscuro);
+    border-radius: 5px;
 }
 
 .add-to-cart-btn {
@@ -304,6 +328,115 @@ section{
 .add-to-cart-btn:hover {
     background-color: var(--colorPrincipalClaro);
 }
+
+/* Общие стили для таблицы */
+#tablas {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box; /* Учитываем padding и border в общих размерах */
+    overflow-x: auto; /* Добавляем горизонтальную прокрутку, если таблица выходит за границы */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+thead th {
+    background-color: var(--fondoOscuro);
+    font-weight: bold;
+}
+
+tbody tr:hover {
+    background-color: var(--fondoOscuro);
+}
+tfoot tr{
+    width: 100%;
+    background-color: var(--fondoOscuro);
+}
+tfoot th {
+    text-align: center;
+    font-weight: bold;
+}
+tfoot td {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Медиа-запрос для ширины экрана менее 425px */
+@media (max-width: 768px) {
+    table, thead, tbody, tfoot, th, td, tr {
+        display: block;
+        width: calc(100%-40px);
+    }
+
+    /* Скрываем изображения */
+    td:first-child, th, tfoot tr th:first-child {
+        display: none;
+    }
+
+    /* Делаем колонки 2, 3 и 4 отдельными строками */
+    td:nth-child(2), td:nth-child(3), td:nth-child(4) {
+        width: calc(100%-40px);
+        display: block;
+    }
+
+    /* Добавляем заголовки к колонкам 2, 3 и 4 */
+    tbody tr td:nth-child(2)::before {
+        content: "Наименование: ";
+        font-weight: bold;
+    }
+
+    td:nth-child(3)::before {
+        content: "Количество: ";
+        font-weight: bold;
+    }
+
+    td:nth-child(4)::before {
+        content: "Цена: ";
+        font-weight: bold;
+    }
+
+    /* Устанавливаем вертикальное расположение для колонки выбора количества */
+    td:nth-child(5) {
+        display: flex;
+        flex-direction: column;
+        width: calc(100%-40px);
+    }
+
+    td:nth-child(5)::before {
+        content: "Выбрать кол-во: ";
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    /* Перемещаем стоимость на отдельную строку */
+    td:nth-child(6) {
+        width: calc(100%-40px);
+        display: block;
+    }
+
+    td:nth-child(6)::before {
+        content: "Стоимость: ";
+        font-weight: bold;
+    }
+
+    
+    tfoot td {
+        text-align: center;
+        padding-top: 10px;
+        display: block;
+        font-weight: bold;
+    }
+}
+
 
 /*Estilo del pie*/
 footer{
@@ -433,11 +566,11 @@ footer p{
         .product-card-container {
             flex-direction: row; /* Размещаем карточки горизонтально */
             flex-wrap: wrap; /* Переносим карточки на следующую строку, если не хватает места */
-            gap: 20px; /* Добавляем отступы между карточками */
+            gap: 10px; /* Добавляем отступы между карточками */
         }
         
         .product-card {
-            width: calc(50% - 60px); /* Устанавливаем ширину карточки на 33% минус отступ */
+            width: calc(50% - 30px); /* Устанавливаем ширину карточки на 33% минус отступ */
             margin-bottom: 20px; /* Добавляем нижний отступ для карточек */
         }
     }
@@ -445,12 +578,21 @@ footer p{
         .product-card-container {
             flex-direction: row; /* Размещаем карточки горизонтально */
             flex-wrap: wrap; /* Переносим карточки на следующую строку, если не хватает места */
-            gap: 20px; /* Добавляем отступы между карточками */
+            gap: 10px; /* Добавляем отступы между карточками */
         }
         
         .product-card {
-            width: calc(33% - 60px); /* Устанавливаем ширину карточки на 33% минус отступ */
+            width: calc(33% - 30px); /* Устанавливаем ширину карточки на 33% минус отступ */
             margin-bottom: 20px; /* Добавляем нижний отступ для карточек */
         }
+    }
+    @media (max-width: 320px) {
+        .quantity-controls {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px; /* Добавляем отступы между элементами */
+        }
+    
+        
     }
     							

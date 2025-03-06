@@ -66,6 +66,44 @@
 
 	<main>
 
+        <div class="product-card-container">
+            <div class="product-card">
+                <img src="./images/user-157669 (1).svg" alt="Product Image" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-title" id="Цыпленок">Цыпленок</h3>
+                    <p class="product-unit">кг</p>
+                    <p class="product-price">100.00 руб.</p>
+                    <div class="product-quantity">
+                        <label for="quantity-1">Количество:</label>
+                        <div class="quantity-controls">
+                        <button class="quantity-btn decrease" onclick="decreaseQuantity('quantity-1')">-</button>
+                    <input type="number" id="quantity-1" name="quantity" min="1" value="1">
+                    <button class="quantity-btn increase" onclick="increaseQuantity('quantity-1')">+</button>
+                </div>
+            </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Цыпленок', 'quantity-1')">Добавить в корзину</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="./images/user-157669 (1).svg" alt="Product Image" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-title" id="Цыпленок">Цыпленок</h3>
+                    <p class="product-unit">кг</p>
+                    <p class="product-price">150.00 руб.</p>
+                    <div class="product-quantity">
+                        <label for="quantity-2">Количество:</label>
+                        <div class="quantity-controls">
+                        <button class="quantity-btn decrease" onclick="decreaseQuantity('quantity-2')">-</button>
+                    <input type="number" id="quantity-2" name="quantity" min="1" value="1">
+                    <button class="quantity-btn increase" onclick="increaseQuantity('quantity-2')">+</button>
+                </div>
+            </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Цыпленок', 'quantity-2')">Добавить в корзину</button>
+                </div>
+            </div>
+            <!-- Добавьте еще карточки по аналогии -->
+        </div>
+
 
     </main>
 

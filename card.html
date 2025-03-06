@@ -22,10 +22,13 @@
             </div>
     
             <div id="header_der">
-                   <a href="login.html"><img src="images/cart.svg" alt="acceso a cart" width="50px" height="50px"></a>
-                   <a href="login.html"><img src="images/Pollo.svg" alt="acceso a user" width="50px" height="50px"></a>				
-                    
-                </div>
+                <a href="login.html" class="cart-container">
+                    <img src="images/cart.svg" alt="acceso a cart" width="50px" height="50px">
+                    <div class="cart-count" id="cart-count">0</div>
+                </a>
+                <a href="login.html" class="cart-container"><img src="images/user-309995.svg" alt="acceso a user" width="50px" height="50px"></a>				
+                 
+             </div>
         </header>
     </div>
     
@@ -66,43 +69,47 @@
 
 	<main>
 
-        <div class="product-card-container">
-            <div class="product-card">
-                <img src="./images/chiken_joven.svg" alt="Product Image" class="product-image">
-                <div class="product-details">
-                    <h3 class="product-title" id="Цыпленок">Цыпленок</h3>
-                    <p class="product-unit">кг</p>
-                    <p class="product-price">100.00 руб.</p>
-                    <div class="product-quantity">
-                        <label for="quantity-1">Количество:</label>
-                        <div class="quantity-controls">
-                        <button class="quantity-btn decrease" onclick="decreaseQuantity('quantity-1')">-</button>
-                    <input type="number" id="quantity-1" name="quantity" min="1" value="1">
-                    <button class="quantity-btn increase" onclick="increaseQuantity('quantity-1')">+</button>
-                </div>
-            </div>
-                    <button class="add-to-cart-btn" onclick="addToCart('Цыпленок', 'quantity-1')">Добавить в корзину</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="./images/chiken_joven.svg" alt="Product Image" class="product-image">
-                <div class="product-details">
-                    <h3 class="product-title" id="Цыпленок">Цыпленок</h3>
-                    <p class="product-unit">кг</p>
-                    <p class="product-price">150.00 руб.</p>
-                    <div class="product-quantity">
-                        <label for="quantity-2">Количество:</label>
-                        <div class="quantity-controls">
-                        <button class="quantity-btn decrease" onclick="decreaseQuantity('quantity-2')">-</button>
-                    <input type="number" id="quantity-2" name="quantity" min="1" value="1">
-                    <button class="quantity-btn increase" onclick="increaseQuantity('quantity-2')">+</button>
-                </div>
-            </div>
-                    <button class="add-to-cart-btn" onclick="addToCart('Цыпленок', 'quantity-2')">Добавить в корзину</button>
-                </div>
-            </div>
-            <!-- Добавьте еще карточки по аналогии -->
+        <section id="tablas">
+            <h3>Корзина покупок</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Изображение</th>
+                        <th scope="col">Наименование</th>
+                        <th scope="col">Количество</th>
+                        <th scope="col">Цена</th>
+                        <th scope="col">Удалить из корзины</th>
+                        <th scope="col">Стоимость</th>
+                        
+                    </tr>
+                </thead>
+                <tbody id="cart-items">
+                    <!-- Товары будут загружены сюда -->
+                    
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th scope="row" colspan="3" >Всего товаров на сумму -</th>
+                        <td id="total-items"></td>
+                        
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+
+
+
+
+
+        <div class="shopping-cart">
+            <h3>Корзина</h3>
+            <ul id="cart-items">Моя Корзина 
+                <!-- Добавленные товары будут здесь -->
+            </ul>
+            <p id="total-items">Всего товаров: 0 </p>
         </div>
+
+
     </main>
 
 	<div>
@@ -126,7 +133,7 @@
     </div>
 
 
-
+    <script src="script.js"></script>
 </body>
 
 </html>

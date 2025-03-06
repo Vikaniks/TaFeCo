@@ -65,49 +65,44 @@
 
 
 	<main>
-		<section>
-			<img src="images/product/eggs.svg" alt="eggs" width="160px" height="160px">
-		</section>
 
-        <section id="tablas">
-            <h3>Яйцо</h3>
-            <table>
-                <caption>Título de la tabla</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Артикул</th>
-                        <th scope="col">Изображение</th>
-                        <th scope="col">Наименование</th>
-                        <th scope="col">Ед.изм</th>
-                        <th scope="col">Остаток на складе</th>
-                        <th scope="col">Цена</th>
-                        <th scope="col">Выбрать кол-во</th>
-                        <th scope="col">Стоимость</th>
-                        <th scope="col">Наличие</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td><img src="images/eggs.svg" alt="#" height="100px" width="100px"></td>
-                        <td>Яйцо куриное</td>
-                        <td>десяток</td>
-                        <td>1234,56€</td>
-                        <td>''''''''''''/td>
-                        <td><button></button></td>
-                        <td>------</td>
-                        <td>В наличии</td>
-                    </tr>
-                    
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th scope="row" colspan="3">Total</th>
-                        <td>14567,89€</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </section>
+		<div class="product-card-container">
+            <div class="product-card">
+                <img src="./images/eggs.svg" alt="Product Image" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-title" id="Яйцо">Яйцо</h3>
+                    <p class="product-unit">кг</p>
+                    <p class="product-price">100.00 руб.</p>
+                    <div class="product-quantity">
+                        <label for="quantity-1">Количество:</label>
+                        <div class="quantity-controls">
+                        <button class="quantity-btn decrease" onclick="decreaseQuantity('quantity-1')">-</button>
+                    <input type="number" id="quantity-1" name="quantity" min="1" value="1">
+                    <button class="quantity-btn increase" onclick="increaseQuantity('quantity-1')">+</button>
+                </div>
+            </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Цыпленок', 'quantity-1')">Добавить в корзину</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="./images/eggs.svg" alt="Product Image" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-title" id="Яйцо">Яйцо</h3>
+                    <p class="product-unit">кг</p>
+                    <p class="product-price">150.00 руб.</p>
+                    <div class="product-quantity">
+                        <label for="quantity-2">Количество:</label>
+                        <div class="quantity-controls">
+                        <button class="quantity-btn decrease" onclick="decreaseQuantity('quantity-2')">-</button>
+                    <input type="number" id="quantity-2" name="quantity" min="1" value="1">
+                    <button class="quantity-btn increase" onclick="increaseQuantity('quantity-2')">+</button>
+                </div>
+            </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Цыпленок', 'quantity-2')">Добавить в корзину</button>
+                </div>
+            </div>
+            <!-- Добавьте еще карточки по аналогии -->
+        </div>
 
 
 	</main>
