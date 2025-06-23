@@ -53,6 +53,10 @@ public class SecurityConfig {
                                 "/conserva",
                                 "/sale",
                                 "/condition",
+                                "/cart",
+                                "/confirmar_order",
+                                "/finalOrder",
+                                "/order",
                                 "/error"
                         ).permitAll()
                         .requestMatchers("/api/user").hasRole("USER")

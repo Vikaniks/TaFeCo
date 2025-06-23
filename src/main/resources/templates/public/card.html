@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html lang="ru"
-      xmlns:th="http://www.thymeleaf.org"
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      layout:decorate="~{fragments/layout}">
 
-<head layout:fragment="head">
-    <title>TaFe - Co | Корзина</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaFe - Co</title>
+    <link rel="icon" th:href="@{/img/Pollo.svg}" />
+    <link rel="stylesheet" th:href="@{/css/styles_2.css}" />
+    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}" />
 </head>
 
 <body>
-
-<section layout:fragment="header" th:replace="fragments/header :: header"></section>
-
-<nav layout:fragment="nav" th:replace="fragments/nav :: nav"></nav>
+<div th:replace="include/header :: header"></div>
+<div th:replace="include/nav :: nav"></div>
 
 <main layout:fragment="content">
     <section id="tablas">
@@ -45,11 +47,10 @@
     </section>
 </main>
 
-<footer layout:fragment="footer" th:replace="fragments/footer :: footer"></footer>
+<div th:replace="include/footer :: footer"></div>
 
-<section layout:fragment="scroll-top" th:replace="fragments/scroll-top :: scroll-top"></section>
-
-<script type="module" th:src="@{/js/cart/cartUI.js}"></script>
-
+<script type="module" src="/js/main.js"></script>
+<!-- <script src="/js/lib/jspdf.umd.min.js"></script>-->
 </body>
+
 </html>

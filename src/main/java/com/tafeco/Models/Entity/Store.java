@@ -13,10 +13,7 @@ import java.io.Serializable;
 @ToString
 @Entity
 @Table(name="stores")
-public class Store implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 7178386848968642920L;
+public class Store  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,9 +1,9 @@
 <footer th:fragment="footer">
     <div id="pie_izq">
         <ul id="redes-sociales">
-            <li><a th:href="@{https://t.me/{user}(user=${telegramUsername})}" target="_blank"><i class="fa fa-telegram"></i></a></li>
-            <li><a th:href="@{https://wa.me/{number}(number=${whatsappTo})}" target="_blank"><i class="fa fa-whatsapp"></i></a></li>
-            <li><a th:href="'mailto:' + ${mailUsername}" target="_blank"><i class="fa fa-envelope-o"></i></a></li>
+            <li><a th:href="@{https://t.me/{user}(user=${telegramUsername})}" target="_blank" class="telegram-icon"><i class="fa fa-telegram"></i></a></li>
+            <li><a th:href="@{https://wa.me/{number}(number=${whatsappTo})}" target="_blank" class="whatsapp-icon"><i class="fa fa-whatsapp"></i></a></li>
+            <li><a th:href="'mailto:' + ${mailUsername}" target="_blank" class="email-icon"><i class="fa fa-envelope-o"></i></a></li>
         </ul>
     </div>
     <div id="pie_der">

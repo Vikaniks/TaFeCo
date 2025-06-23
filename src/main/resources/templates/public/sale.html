@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+
+<head>
+    <title>TaFe & Co</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" th:href="@{/img/Pollo.svg}" />
+    <link rel="stylesheet" th:href="@{/css/styles_2.css}" />
+    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}" />
+</head>
+
+<body>
+
+<div th:replace="include/header :: header"></div>
+<div th:replace="include/nav :: nav"></div>
+
+<main layout:fragment="content">
+        <section>
+            <h2>Акции и специальные предложения</h2>
+            <h4>Здесь вы можете найти информацию о текущих акциях и специальных предложениях.</h4>
+            <div class="promo-item-conteiner">
+            <div class="promo-item">
+                <h3>Скидка 20% на все яйца!</h3>
+                <p>Покупая 10 упаковок, вы получаете скидку 20% на всю покупку.</p>
+            </div>
+            <div class="promo-item">
+                <h3>Подарок при покупке молока</h3>
+                <p>При покупке 5 литров молока вы получаете бесплатную упаковку творога.</p>
+            </div>
+            <div class="promo-item">
+                <h3>Скидка на мясо птицы</h3>
+                <p>При покупке 3 кг мяса птицы вы получаете скидку 15% на следующий заказ.</p>
+            </div>
+            <div class="promo-item">
+                <h3>Сезонные овощи</h3>
+                <p>При покупке 5 кг сезонных овощей вы получаете скидку 10% на весь заказ.</p>
+            </div>
+            <div class="promo-item">
+                <h3>Подарок при покупке зелени</h3>
+                <p>При покупке 3 упаковок зелени вы получаете бесплатную упаковку свежих трав.</p>
+            </div>
+            <div class="promo-item">
+                <h3>Закрутки со скидкой</h3>
+                <p>При покупке 5 банок закруток вы получаете скидку 10% на весь заказ.</p>
+            </div>
+        </div>
+        </section>
+            
+</main>
+
+<div th:replace="include/footer :: footer"></div>
+<script type="module" src="/js/main.js"></script>
+
+</body>
+</html>

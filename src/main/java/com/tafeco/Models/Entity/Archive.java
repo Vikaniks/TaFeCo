@@ -14,10 +14,7 @@ import java.io.Serializable;
 @ToString
 @Entity
 @Table(name="archives")
-public class Archive implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -2669028536370631121L;
+public class Archive  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

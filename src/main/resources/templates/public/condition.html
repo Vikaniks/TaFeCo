@@ -1,85 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
-	<link rel="icon" href="images/Pollo.svg">
-    	
-	<link rel="stylesheet" href="styles_2.css">
-    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
-	<title>TaFe - Co</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaFe - Co</title>
+    <link rel="icon" th:href="@{/img/Pollo.svg}" />
+    <link rel="stylesheet" th:href="@{/css/styles_2.css}" />
+    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}" />
 </head>
 
 <body>
+<div th:replace="include/header :: header"></div>
+<div th:replace="include/nav :: nav"></div>
 
-	<div>
-        <header>
-            <div id="header_izq">
-                <h1>TaФe & Co</h1>
-                <h2>Фермерское хозяйство</h2>
-            </div>
-    
-            <div id="header_der">
-                <div class="cart-container">
-                    <a href="card.html">
-                        <img src="images/cart.svg" alt="acceso a cart" width="50px" height="50px">
-                    </a>
-                    <div class="cart-count" id="cart-count">0</div>
-                </div>
-                
-                <div class="user-container">
-                    <a href="register.html">
-                        <img src="images/user-309995.svg" alt="acceso a user" width="50px" height="50px">
-                    </a>
-                    <div class="dropdown-menu">
-                        <ul>
-                            <li><a href="register.html">Личный кабинет</a></li>
-                            <li><a href="public/index.html" id="logout">Выйти</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-        </header>
-    </div>
-    
-    
-
-	<div>
-        <nav id="menu">
-            <ul>
-                <li>
-                    <a href="public/index.html" class="enlace_menu">О нас</a>
-                </li>
-                <li>
-                    <a href="public/shop.html" class="enlace_menu">Магазин</a>
-                    
-                    <ul class="submenu">
-                                    <li><a href="egg.html" class="enlace_menu">Яйцо</a></li>
-                                    <li><a href="milk.html" class="enlace_menu">Молоко</a></li>
-                                    <li><a href="chiken.html" class="enlace_menu">Мясо птицы</a></li>
-                                    <li><a href="chiken_joven.html" class="enlace_menu">Живая птица</a></li>
-                                    <li><a href="vegetables.html" class="enlace_menu">Овощи</a></li>
-                                    <li><a href="green.html" class="enlace_menu">Зелень</a></li>           
-                                    <li><a href="conserva.html" class="enlace_menu">Закрутки</a></li>
-                                </ul>
-                                
-                </li>
-                <li>
-                    <a href="sale.html" class="enlace_menu">Акции</a>
-                </li>
-                <li>
-                    <a href="condition.html" class="enlace_menu">Доставка и оплата</a>
-                </li>
-                
-                
-            </ul>
-        </nav>
-    </div>
-
-    <main>
+<main layout:fragment="content">
 		<section>
 			<div class="delivery-info">
                 <h3>🚚 Время и стоимость доставки</h3>
@@ -123,32 +59,12 @@
             <br>
 			Налоги и сборы: Все налоги и сборы, связанные с покупкой товара, включены в цену, указанную на сайте.</p>
 
-</p>
-</section>
+        </section>
 </main>
 
-<div>
-    <footer>
-        <div id="pie_izq">
-            <ul id="redes-sociales">
-                <li><a href="https://t.me/" target="_blank" class="telegram-icon"><i class="fa fa-telegram" aria-hidden="true"></i></a></li>
-                <li><a href="https://wa.me/79312606980" target="_blank" class="whatsapp-icon"><i class="fa fa-whatsapp" aria-hidden="true"></i></a></li>
-                <li><a href="#" target="_blank" class="email-icon"><i class="fa fa-envelope-o" aria-hidden="true"></i></a></li>
-            </ul>
-            
-        </div>
-        <div id="pie_der">
-        <p>&copy; 2025 studio VikanikS</p>
-        </div>
-
-        <div id="arriba">
-            <a href="#header_izq"><i class="fa fa-arrow-up fa-2x" aria-hidden="true"></i></a>
-        </div>
-    </footer>
-</div>
-
-
+<div th:replace="include/footer :: footer"></div>
 <script type="module" src="/js/main.js"></script>
+
 </body>
 
 </html>
