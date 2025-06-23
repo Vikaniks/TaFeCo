@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 533.33 533.33" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <radialGradient id="a" cx=".26389" cy=".22656" r="1.0361">
+   <stop stop-color="#ff8a00" offset="0"/>
+   <stop stop-color="#ff0" offset="1"/>
+  </radialGradient>
+ </defs>
+ <g fill-rule="evenodd">
+  <path d="m268.54 7.4607c-144.7 1.3821-139.62 187.98 2.5392 189.37 125.66-1.381 134.54-192.13-2.5392-189.37z" fill="url(#a)" stroke="#000" stroke-linejoin="round" stroke-width="6.861"/>
+  <path d="m260.7 16.976c-6.362-10.905-116.19 20.87-83.04 100.74 18.176 8.179 93.037-72.573 83.04-100.74z" fill="#fff" fill-opacity=".5" stroke-width="3.75"/>
+  <path d="m87.033 266.33c11.814-21.424 123.59-59.1 175.4-56.145 50.891-2.216 156.31 27.334 177.21 55.405-61.798-8.1257-69.067 217.19-69.067 217.19-85.426-73.136-113.6-83.479-218.11 2.216-3.635-16.991-2.727-225.32-65.432-218.67z" fill="#a0ce32" stroke="#000" stroke-linejoin="round" stroke-width="11.091"/>
+  <path d="m217.08 226.44c-0.90901-12.559-89.061 13.297-113.6 34.721 25.446 12.558 49.983 70.181 52.709 183.95 26.355-96.037 68.159-147.01 60.889-218.67z" fill="#fff" fill-opacity=".498" stroke-width="4.159"/>
+ </g>
+</svg>
