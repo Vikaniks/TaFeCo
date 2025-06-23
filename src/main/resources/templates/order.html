@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="icon" href="images/Pollo.svg">
+    	
+	<link rel="stylesheet" href="styles_2.css">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+	<title>TaFe - Co</title>
+</head>
+
+<body>
+
+	<div>
+        <header>
+            <div id="header_izq">
+                <h1>TaФe & Co</h1>
+                <h2>Фермерское хозяйство</h2>
+            </div>
+    
+            <div id="header_der">
+                <div class="cart-container">
+                    <a href="card.html">
+                        <img src="images/cart.svg" alt="acceso a cart" width="50px" height="50px">
+                    </a>
+                    <div class="cart-count" id="cart-count">0</div>
+                </div>
+                
+                <div class="user-container">
+                    <a href="register.html">
+                        <img src="images/user-309995.svg" alt="acceso a user" width="50px" height="50px">
+                    </a>
+                    <div class="dropdown-menu">
+                        <ul>
+                            <li><a href="register.html">Личный кабинет</a></li>
+                            <li><a href="public/index.html" id="logout">Выйти</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+        </header>
+    </div>
+    
+    
+
+	<div>
+        <nav id="menu">
+            <ul>
+                <li>
+                    <a href="public/index.html" class="enlace_menu">О нас</a>
+                </li>
+                <li>
+                    <a href="public/shop.html" class="enlace_menu">Магазин</a>
+                    
+                    <ul class="submenu">
+                                    <li><a href="egg.html" class="enlace_menu">Яйцо</a></li>
+                                    <li><a href="milk.html" class="enlace_menu">Молоко</a></li>
+                                    <li><a href="chiken.html" class="enlace_menu">Мясо птицы</a></li>
+                                    <li><a href="chiken_joven.html" class="enlace_menu">Живая птица</a></li>
+                                    <li><a href="vegetables.html" class="enlace_menu">Овощи</a></li>
+                                    <li><a href="green.html" class="enlace_menu">Зелень</a></li>           
+                                    <li><a href="conserva.html" class="enlace_menu">Закрутки</a></li>
+                                </ul>
+                                
+                </li>
+                <li>
+                    <a href="sale.html" class="enlace_menu">Акции</a>
+                </li>
+                <li>
+                    <a href="condition.html" class="enlace_menu">Доставка и оплата</a>
+                </li>
+                
+                
+            </ul>
+        </nav>
+    </div>
+
+
+	<main>
+
+        <div class="form-container">
+            <h3>Оформление заказа</h3>
+            <form id="order-form">
+                <!-- Выбор способа заказа -->
+                <div class="form-group-radio">
+                    <label class="selected">
+                        <span class="fake-radio"></span> Без регистрации
+                    </label>
+                    <button class="form" id="go-to-login">Регистрация/ вход в ЛК</button>
+                </div>
+    
+                <!-- Имя получателя -->
+                <div class="form-group-row">
+                    <label for="name">Получатель</label>
+                    <input type="text" id="name" name="name" required placeholder="Имя">
+                    <span class="error-message"></span>
+                    <input type="text" id="surname" name="surname" required placeholder="Фамилия">
+                    <span class="error-message"></span>
+                </div>
+    
+                <!-- Телефон -->
+                <div class="form-group-row">
+                    <label for="phone">Телефон</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="+7 XXX XXX XX XX" 
+                    maxlength="18">
+                    <span class="error-message"></span>
+                
+                <!-- Эл.почта -->
+                
+                    <label for="email">Электронная почта</label>
+                    <input type="email" id="email" name="email" required placeholder="xxx@xxx.xx">
+                    <span class="error-message"></span>
+                </div>
+    
+                <!-- Адрес доставки -->
+                <div class="form-group-row">
+                    <label for="address">Адрес доставки</label>
+                    <select id="city" name="city" required>
+                        <option value="Санкт-Петербург">Санкт-Петербург</option>
+                        <option value="Пушкин">Пушкин</option>
+                        <option value="Гатчина">Гатчина</option>
+                        <option value="Волосово">Волосово</option>
+                    </select>
+                    <input type="text" id="barrio" name="barrio" required placeholder="Район">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group-row">    
+                    <input type="text" id="address" name="address" required placeholder="Улица, дом, квартира">
+                    <span class="error-message"></span>
+                    <input type="text" id="address-extra" name="addressExtra" placeholder="Дополнительная информация">
+                </div>
+    
+                <!-- Дата доставки -->
+                <div class="form-group-row">
+                    <label for="date">Дата доставки</label>
+                    <input type="date" id="date" name="date" required>
+                
+    
+                <!-- Интервал времени -->
+                
+                    <label for="time">Выберите интервал времени</label>
+                    <select id="time" name="time" required>
+                        <option value="07:00-09:00">07:00 - 09:00</option>
+                        <option value="09:00-12:00">09:00 - 12:00</option>
+                        <option value="12:00-15:00">12:00 - 15:00</option>
+                        <option value="15:00-18:00">15:00 - 18:00</option>
+                        <option value="18:00-21:00">18:00 - 21:00</option>
+                    </select>
+                </div>
+    
+                <!-- Кнопка отправки -->
+                <div class="form-group-row">
+                    <button class="form" id="back-to-cart" type="button"> <= Назад</button>
+                    <button class="form-submit" type="submit">Оформить заказ</button>
+                </div>
+            </form>
+        </div>
+
+
+
+
+
+    </main>
+
+	<div>
+        <footer>
+            <div id="pie_izq">
+                <ul id="redes-sociales">
+                    <li><a href="https://t.me/" target="_blank" class="telegram-icon"><i class="fa fa-telegram" aria-hidden="true"></i></a></li>
+                    <li><a href="https://wa.me/79312606980" target="_blank" class="whatsapp-icon"><i class="fa fa-whatsapp" aria-hidden="true"></i></a></li>
+                    <li><a href="#" target="_blank" class="email-icon"><i class="fa fa-envelope-o" aria-hidden="true"></i></a></li>
+                </ul>
+                
+            </div>
+            <div id="pie_der">
+            <p>&copy; 2025 studio VikanikS</p>
+            </div>
+
+            <div id="arriba">
+                <a href="#header_izq"><i class="fa fa-arrow-up fa-2x" aria-hidden="true"></i></a>
+            </div>
+        </footer>
+    </div>
+   
+    <script type="module" src="/js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head layout:fragment="head">
+    <title>TaFe - Co | Корзина</title>
+</head>
+
+<body>
+
+<section layout:fragment="header" th:replace="fragments/header :: header"></section>
+
+<nav layout:fragment="nav" th:replace="fragments/nav :: nav"></nav>
+
+<main layout:fragment="content">
+    <section id="tablas">
+        <h3>Корзина покупок</h3>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Изображение</th>
+                <th scope="col">Наименование</th>
+                <th scope="col">Количество</th>
+                <th scope="col">Цена</th>
+                <th scope="col">Стоимость</th>
+                <th scope="col">Удалить</th>
+            </tr>
+            </thead>
+            <tbody id="cart-items">
+            <!-- Динамически заполняется cartUI.js -->
+            </tbody>
+            <tfoot>
+            <tr>
+                <th scope="row" colspan="4">
+                    <button id="checkout-button" class="checkout-button">
+                        Сделать заказ на сумму - <span id="total-price">0₽</span>
+                    </button>
+                </th>
+                <td id="total-items" scope="row" colspan="2"></td>
+            </tr>
+            </tfoot>
+        </table>
+    </section>
+</main>
+
+<footer layout:fragment="footer" th:replace="fragments/footer :: footer"></footer>
+
+<section layout:fragment="scroll-top" th:replace="fragments/scroll-top :: scroll-top"></section>
+
+<script type="module" th:src="@{/js/cart/cartUI.js}"></script>
+
+</body>
+</html>

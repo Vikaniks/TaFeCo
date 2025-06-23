@@ -1,0 +1,1368 @@
+@charset "UTF-8";
+
+@import url(all.min.css);
+
+
+:root {
+    --alturaCabecera: 130px;
+    --alturaPie: 60px;
+    --alturaMenu:25px;
+    --anchuraElemMenu:180px;
+
+    --paddingGeneral: 10px;
+
+    --sizeFuenteMenu: 20px;
+
+	--colorPrincipal: #367f25;
+	--colorPrincipalClaro:#41b143;
+	--colorPrincipalOscuro: #084303;
+
+	--colorContraste: #8ef861;
+	--colorContrasteClaro: #f2e0cb;
+
+    --fondoClaro: #fcf9e5;
+    --fondoOscuro: #ddccba;
+
+    --fuenteSerif:"Garamond";
+    --fuenteSans:"Helvetica";
+
+    --margen: 1rem;
+    --margen-pequeno: .5rem;
+
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: var(--fuenteSans);
+}
+
+/* Estilos de la cabecera */
+header {
+    height: var(--alturaCabecera);
+	background-image: url('../img/flow_fon.png'); /* путь к изображению */
+	background-size: cover; /* Изображение растягивается по всему контейнеру */
+	background-position: center; /* Центрирование изображения */
+	background-repeat: no-repeat; /* Отключаем повторение изображения */
+	padding: var(--paddingGeneral);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    position: relative;
+}
+
+#header_izq {
+    width: 100%;
+    padding: var(--paddingGeneral);
+}
+
+
+#header_der {
+    width: 15%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    
+}
+
+
+.cart-container {
+    position: relative;
+    display: inline-block;
+    margin: 0 3px; /* Отступы для контейнера */
+}
+.cart-count {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    background-color: var(--colorContraste);
+    color: var(--colorPrincipalOscuro);
+    border-radius: 50%;
+    border: 2px solid var(--colorPrincipalOscuro);
+    font-size: 1em;
+    font-weight: bold;
+    width: 30px; /* Фиксированная ширина */
+    height: 30px; /* Фиксированная высота */
+    line-height: 30px; /* Выравниваем текст по центру */
+    text-align: center; /* Центрируем текст */
+}
+
+
+.user-container {
+    cursor: pointer; /* Добавляем указатель при наведении на изображение */
+}
+
+
+.dropdown-menu {
+    display: none; /* Скрываем меню по умолчанию */
+    position: absolute; /* Абсолютное позиционирование относительно контейнера */
+    top: 100%; /* Расстояние от верхней границы изображения */
+    right: 0; /* Выравниваем по правой границе */
+    background-color: var(--fondoClaro); /* Белый фон */
+    border: 1px solid #ccc; /* Границы меню */
+    border-radius: 10px; /* Скругление углов */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+    z-index: 10000; /* Поверх других элементов */
+    width: 120px; /* Определяем ширину меню */
+    pointer-events: visible; /* Разрешаем взаимодействие с меню */
+}
+
+.dropdown-menu ul {
+    list-style: none; /* Убираем стандартные маркеры списка */
+    margin: 0;
+    padding: 5px 0;
+}
+
+.dropdown-menu li {
+    padding: 10px; /* Отступы внутри пунктов меню */
+    text-align: center; /* Выравниваем текст по центру */
+    cursor: pointer; /* Курсор при наведении */
+}
+
+.dropdown-menu li:hover {
+    background-color: var(--colorContrasteClaro); /* Подсветка при наведении */
+}
+
+.dropdown-menu a {
+    text-decoration: none; /* Убираем подчёркивание текста */
+    color: var(--colorPrincipalOscuro); /* Цвет текста */
+    display: block; /* Делаем весь элемент кликабельным */
+}
+
+.user-container:hover .dropdown-menu,
+.dropdown-menu:hover {
+    display: block;
+}
+
+.user-container {
+    position: relative;
+    display: inline-block;
+    margin: 0 7px 0 3px; /* Отступы для контейнера */
+    cursor: pointer; 
+}
+
+
+h1 {
+    color: var(--colorContraste);
+    font-family: var(--fuenteSerif);
+    font-size: 48px;
+    padding: 20px 0 -5px 0;
+	display: flex; /* Используем Flexbox для выравнивания содержимого */
+	flex-direction: row; /* Направление flex-контейнера по горизонтали */
+	justify-content: center; /* Выравнивание содержимого по горизонтали (центр) */
+	align-items: flex-end; /* Выравнивание содержимого по вертикали (по нижнему краю) */
+}
+h2 {
+    color: var(--colorPrincipalOscuro);
+    font-family: var(--fuenteSerif);
+    font-size: 32px;
+	display: flex; /* Используем Flexbox для выравнивания содержимого */
+	flex-direction: row; /* Направление flex-контейнера по горизонтали */
+	justify-content: center; /* Выравнивание содержимого по горизонтали (центр) */
+	align-items: flex-end; /* Выравнивание содержимого по вертикали (по нижнему краю) */
+}
+h3 {
+    color: var(--colorPrincipalOscuro);
+    font-family: var(--fuenteSerif);
+    font-size: 24px;
+    font-style: italic;
+	display: flex; /* Используем Flexbox для выравнивания содержимого */
+	flex-direction: row; /* Направление flex-контейнера по горизонтали */
+	justify-content: center; /* Выравнивание содержимого по горизонтали (центр) */
+	align-items: center; /* Выравнивание содержимого по вертикали */
+    padding-bottom: 10px;
+}
+
+h4 {
+    color: var(--colorPrincipalOscuro);
+    font-family: var(--fuenteSerif);
+    font-size: 20px;
+    font-style: italic;
+	display: flex; /* Используем Flexbox для выравнивания содержимого */
+	flex-direction: row; /* Направление flex-контейнера по горизонтали */
+	justify-content: center; /* Выравнивание содержимого по горизонтали (центр) */
+	align-items: center; /* Выравнивание содержимого по вертикали */
+    padding: 20px 0;
+}
+p {
+    color: var(--colorPrincipalOscuro);
+    font-size: 1.1em;
+    font-family: var(--fuenteSans);
+    text-align: justify;
+    padding: 5px 0;
+    overflow-wrap: break-word;
+}
+a {
+    text-decoration: none;
+    font-size: 0.8em;
+    font-family: var(--fuenteSans);
+}
+a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+.text-orders {
+    color: var(--colorPrincipalOscuro);
+    font-size: 1.1em;
+    font-family: var(--fuenteSans);
+    text-align: center;
+    padding: 5px 0;
+    overflow-wrap: break-word;
+}
+
+/*estilos de la barra de menu*/
+
+nav {
+    background-color: var(--colorPrincipalClaro);
+    max-width: 100%;
+    position: relative; /* Убедимся, что nav является родительским элементом */
+    z-index: 10; /* Установим уровень над другими элементами */
+}
+
+
+nav ul {
+    display: block;
+    text-align: center;
+    list-style: none; 
+    position: relative;
+    
+}
+
+
+nav ul li {
+    list-style: none;
+	display: inline-flex;
+	position: relative;
+    white-space: nowrap; /* Оставить текст в одну строку */
+    
+}
+
+
+.enlace_menu {
+    display: inline-block;
+    width: var(--anchuraElemMenu);
+    height:var(--alturaMenu);
+    text-decoration: none;
+    font-weight: bolder;
+    font-size: var(--sizeFuenteMenu);
+    color: var(--colorPrincipalOscuro);
+    padding: 10px 15px;
+    display: block;
+   
+}
+.enlace_menu2 {
+    display: inline-block;
+    width: var(--anchuraElemMenu);
+    height:var(--alturaMenu);
+    text-decoration: none;
+    font-size: 1em;
+    color: var(--colorPrincipalOscuro);
+    padding: 5px 5px;
+    display: block;
+   
+}
+
+
+.enlace_menu:visited, .enlace_menu2:visited {
+    background-color: var(--colorContraste);
+    color: var(--colorPrincipalOscuro);
+}
+
+
+.enlace_menu:hover, .enlace_menu2:hover {
+    background-color: var(--colorContraste);
+    color: var(--colorPrincipalOscuro);
+}
+
+
+
+.enlace_menu:active, .enlace_menu2:active {
+    background-color: var(--colorContraste);
+    color: var(--colorPrincipalOscuro);
+}
+
+ul .submenu, .submenu2 {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--colorPrincipalClaro);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 10px 0;
+    min-width: 0px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    list-style: none;  /* Убираем маркеры списка */
+    z-index: 1000;
+    
+}
+
+li:hover > .submenu, li:hover > .submenu2 {
+    display: block;
+}
+
+
+.submenu li, .submenu2 li {
+    display: block; 
+    width: 100%;  /* Ширина подменю */
+}
+
+.submenu li a {
+    padding: 8px 10px;
+    color: var(--colorPrincipalOscuro);
+    font-size: 20px;
+    text-decoration: none;
+    display: block;
+    width: calc(100% - 20px); /* Вычитаем padding */
+    
+}
+.submenu2 li a {
+    padding: 8px 10px;
+    color: var(--colorPrincipalOscuro);
+    font-size: 15px;
+    text-decoration: none;
+    display: block;
+    width: calc(100% - 20px); /* Вычитаем padding */
+    
+}
+
+.submenu li a:hover {
+    background-color: var(--colorContraste);
+    color: var(--colorPrincipal);
+}
+
+
+/* estilos del cuerpo*/
+main{
+    background-color: var(--fondoOscuro);
+    padding: 8px 12px;
+    min-height: calc(100vh - (var(--alturaCabecera) + var(--alturaPie) + var(--alturaMenu) + calc(4 * var(--paddingGeneral))));
+}
+
+
+section{
+    background-color: var(--fondoClaro);
+    padding:10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(40, 36, 36, 0.3);
+	color: var(--colorPrincipalOscuro);
+}
+
+
+
+
+.product-card-container, .promo-item-container {
+    display: flex;
+    flex-direction: column; /* Размещаем карточки вертикально */
+    gap: 5px; /* Добавляем отступы между карточками */
+}
+
+.product-card, .promo-item {
+    background-color: var(--fondoClaro);
+    border: 1px solid #084303;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    display: flex;
+    flex-direction: row; /* Горизонтальное содержание карточки */
+    align-items: center;
+    width: calc(100% - 20px); /* Устанавливаем ширину карточки */
+    overflow: hidden;
+}
+
+.product-image {
+    flex: 0 0 30%; /* Занимает не более 30% от ширины карточки */
+    max-width: 25%;
+    height: auto;
+    border-radius: 5px;
+    margin: 0 10px; /* Отступ справа от изображения */
+    box-sizing: border-box;
+}
+
+.product-details, .promo-item p {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px 20px;
+    flex-grow: 1; /* Занимаем оставшееся пространство */
+    overflow: hidden; /* Скрываем переполнение */
+    text-overflow: ellipsis; /* Добавляем многоточие, если текст выходит за границы */
+    white-space: nowrap; /* Оставляем текст в одну строку */
+    box-sizing: border-box; /* Учитываем padding и border в размерах */
+}
+
+.product-title {
+    font-size: 1.3em;
+    margin-top: 5px;
+    white-space: normal; /* Разрешаем переносы внутри текста */
+    overflow: hidden; /* Скрываем переполнение */
+    text-overflow: ellipsis; /* Добавляем многоточие, если текст выходит за границы */
+}
+.product-description {
+    font-size: 1em;
+    color: var(--colorPrincipalOscuro);
+    margin: 0;
+    overflow: hidden;
+
+    display: block; /* Делаем элемент блочным */
+    text-overflow: ellipsis; /* Добавляем многоточие */
+    white-space: normal; /* Позволяем перенос строк */
+    word-wrap: break-word; /* Разрешаем перенос слов */
+    
+    line-height: 1.5em; /* Высота строки */
+    max-height: 4.5em; /* Ограничиваем высоту (3 строки * 1.5em) */
+}
+.product-description:hover {
+    overflow: visible; /* Показываем весь текст при наведении */
+    max-height: none; /* Убираем ограничение по высоте */
+    white-space: normal; /* Разрешаем переносы строк */
+}
+
+.product-info {
+    display: flex;
+    gap: 20px; /* Добавляем расстояние между элементами */
+    align-items: center; /* Выравниваем их по центру */
+}
+
+.product-unit,
+.product-price {
+    font-size: 1.2em;
+    color: var(--colorPrincipalOscuro);
+}
+.product-price{
+    font-weight: bold;
+}
+
+.product-quantity {
+    margin: 5px 0;
+}
+
+.product-quantity label {
+    display: inline-block; /* Делаем label блочным элементом */
+    margin: 10px; /* Добавляем отступы вокруг */
+    padding: 5px; /* Добавляем внутренний отступ */
+}
+/* Контейнер для количества товара */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.quantity-btn-decrease,
+.quantity-btn-increase {
+    border: 1px solid var(--colorPrincipalOscuro);
+    background-color: var(--fondoOscuro);
+    color: var(--colorPrincipalOscuro);
+    padding: 5px 15px;
+    
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: background-color 0.3s;
+    gap: 7px;
+    height: 25px;
+}
+
+
+input[type="text"].quantity-input {
+    min-width: 40px; /* Увеличиваем ширину */
+    font-size: 1em;
+    text-align: center; /* Размещаем число по центру */
+    border: 1px solid var(--colorPrincipalOscuro);
+    border-radius: 5px;
+    height: 25px;
+    margin: 0 10px; /* Отступы между кнопками и полем ввода */
+    flex-grow: 1; /* Заполняет оставшееся пространство между кнопками */
+    box-sizing: border-box; /* Учитываем padding и border в размерах */
+}
+
+.add-to-cart-btn {
+    background-color: var(--colorPrincipal);
+    color: var(--fondoClaro);
+    border: 1px solid var(--colorPrincipalOscuro);
+    padding: 10px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
+    align-self: center;
+    margin-top: 10px; /* Отступ сверху для кнопки */
+    width: 100%; /* Занимает всю ширину карточки */
+    box-sizing: border-box; /* Учитываем padding и border в размерах */
+    display: flex; /* Используем Flexbox для выравнивания содержимого */
+    justify-content: center; /* Центрируем содержимое кнопки по горизонтали */
+    align-items: center; /* Центрируем содержимое кнопки по вертикали */
+    height: 30px; /* Устанавливаем высоту кнопки */ 
+}
+
+.add-to-cart-btn:hover {
+    background-color: var(--colorPrincipalClaro);
+}
+
+/* Общие стили для таблицы */
+#tablas {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 20px; /* если нужно */
+  }
+  
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto; /* Центрируем таблицу */
+    background-color: var(--fondoClaro);
+    color: var(--colorPrincipalOscuro);
+    font-family: var(--fuenteSans); /* Шрифт для текста */
+    font-size: 1em; /* Размер шрифта */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Лёгкая тень для таблицы */
+    border-radius: 10px; /* Скругляем углы таблицы */
+    overflow: hidden; /* Скрываем переполнение, чтобы скругление работало корректно */
+}  
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    border-spacing: 10px; 
+}
+
+.custom-table th:nth-child(1),
+.custom-table td:nth-child(1), /* Скрывает "Изображение" */
+
+.custom-table th:nth-child(6),
+.custom-table td:nth-child(6) { /* Скрывает "Удалить" */
+    display: none;
+}
+
+.custom-table td:nth-child(3) button {
+    display: none; /* Скрывает только кнопки в 3-м столбце */
+}
+
+.custom-table tfoot td {
+    display: table-cell !important;
+}
+
+
+thead tr th {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px 0;
+    text-align: center;
+    font-size: 1em;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.pdf-header,
+.pdf-footer {
+    display: none;
+}
+
+.pdf-header,
+.pdf-footer {
+    text-align: center;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+}
+
+.pdf-header h2 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.pdf-header p,
+.pdf-footer p {
+    font-size: 12px;
+    margin: 3px 0;
+}
+
+.pdf-footer {
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+
+
+.cart-quantity {
+    position: relative; /* Устанавливаем относительное позиционирование */
+    display: table-cell; /* Делаем элемент ячейкой таблицы */
+    border: 1px solid #ddd; /* Добавляем границы, как у всех `td` */
+    border-radius: 5px; /* Скругляем углы */
+    padding: 5px; /* Внутренний отступ */
+    text-align: center; /* Выравниваем содержимое */
+    font-size: 1em; /* Размер шрифта */
+    min-width: 120px; /* Минимальная ширина */
+        
+}
+
+
+     .button-remove, .button-decrease, .button-increase {
+        background-color: var(--fondoOscuro);
+        color: var(--colorPrincipalOscuro);
+        border: solid 1px var(--colorPrincipalOscuro);
+        padding: 0 10px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-size: 0.8em;
+        transition: background-color 0.3s;
+        gap: 5px;
+        min-width: 25px; /* Уменьшаем ширину кнопки */
+        min-height: 25px; /* Уменьшаем высоту кнопки */
+    }
+    
+        
+    .button-decrease {
+        position: absolute;
+        left: 10px; /* Прижимаем к левому краю */
+    }
+    
+    .button-increase {
+        position: absolute;
+        right: 10px; /* Прижимаем к правому краю */
+    }
+    
+    tbody tr .cart-remove button:hover {
+        background-color: var(--colorPrincipalClaro);
+    }
+
+
+thead th {
+    background-color: var(--fondoOscuro);
+    font-weight: bold;
+}
+
+tbody tr:hover {
+    background-color: var(--colorContrasteClaro);
+}
+
+tfoot {
+    width: 100%;
+    background-color: var(--fondoOscuro);
+    padding: 10px 0;
+}
+
+tfoot tr{
+    width: 100%;
+    background-color: var(--fondoOscuro);
+    padding: 10px 0;
+}
+tfoot th {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 0;
+    
+}
+tfoot td {
+    text-align: center;
+    font-weight: bold;
+    padding: 12px 0;
+}
+
+tfoot th button:hover {
+    background-color: var(--colorContraste);
+}
+.checkout-button {
+    background-color: var(--colorPrincipalClaro);
+    color: var(--colorPrincipalOscuro);
+    border: 1px solid var(--colorPrincipalOscuro);
+    padding: 7px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-style: italic; /* Делает текст наклонным */
+    font-weight: bold;  /* Делает текст жирным */
+    transition: background-color 0.3s;
+    align-self: center; 
+}
+
+/* Скрываем первую колонку (Изображение) */
+.final-order th:first-child,
+.final-order td:first-child {
+    display: none;
+}
+
+/* Скрываем последнюю колонку, кроме ячейки с id="total-items" */
+.final-order th:last-child:not(#total-items),
+.final-order td:last-child:not(#total-items) {
+    display: none;
+}
+
+
+
+
+
+/* Формуляр для заказа товара*/
+
+
+        .form-container {
+            max-width: 90%;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: var(--colorContrasteClaro);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h3 {
+            text-align: center;
+            
+        }
+        .form-group-radio {
+            margin: 0 45px;
+            align-items: center; /* Выравниваем элементы по центру по вертикали */
+            font-size: 1em; /* Увеличиваем размер шрифта */
+            color: var(--colorPrincipalOscuro); /* Цвет текста */
+            font-family: var(--fuenteSans); /* Шрифт для текста */
+            padding: 10px; /* Отступы вокруг группы радио-кнопок */
+            display: flex; /* Используем flexbox для выравнивания содержимого */
+            flex-direction: row; /* Горизонтальное расположение радио-кнопок */
+            gap: 10px; /* Расстояние между радио-кнопками */
+            justify-content: space-between; /* Центрируем содержимое по горизонтали */
+            flex-wrap: wrap; /* Позволяем переносить элементы на новую строку при необходимости */
+                        
+        }
+        .form-group-radio label {
+            cursor: pointer; /* Курсор при наведении на label */
+            display: flex; /* Используем flexbox для выравнивания содержимого label */
+            align-items: center; /* Выравниваем элементы по центру по вертикали */
+            gap: 5px; /* Расстояние между текстом и радио-кнопкой */
+            font-size: 1em; /* Увеличиваем размер шрифта */
+        }
+
+        .fake-radio {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--colorPrincipalOscuro);
+            position: relative;
+            margin-right: 5px;
+        }
+        
+        .fake-radio::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            background-color: var(--colorPrincipal);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+        
+        .selected .fake-radio::before {
+            display: block;
+        }
+        
+
+        .form-group-row {
+            position: relative;
+            margin-bottom: 10px;
+            display: flex; /* Устанавливаем flex-контейнер */
+            flex-wrap: wrap;
+            justify-content: flex-start; /* Выравниваем элементы по левому краю */
+            align-items: center; /* Выравниваем элементы по центру по вертикали */
+            gap: 5px; /* Добавляем расстояние между label и input */
+            width: 100%;
+        }
+
+        .form-group-row input, .form-group-row select, .form-group-row p {
+            flex: 1 1 auto; /* Адаптация размеров */
+            max-width: 100%; /* Элементы не выходят за границы */
+            min-width: 100px; /* Устанавливаем минимальную ширину */
+            padding: 5px 10px; /* Увеличиваем отступы для более крупного поля */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box; /* Включаем учет границ и отступов */
+        }
+        .error-message {
+            position: absolute;
+            top: -75%; /* Размещаем над полем ввода */
+            left: 75%;
+            color: var(--colorPrincipalOscuro);
+            background: rgba(248, 207, 195, 0.883);
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid var(--colorPrincipal);
+            font-size: 12px;
+            display: none; /* Скрываем, пока нет ошибки */
+        }
+        
+
+        .form-submit {
+            position: absolute; /* Абсолютное позиционирование */
+            right: 10px; /* Отступ от правого края родителя */
+            width: 50%;
+            padding: 10px;
+            background-color: var(--colorPrincipalClaro);
+            color: var(--colorPrincipalOscuro);
+            border: 1px solid var(--colorPrincipalOscuro);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            justify-content: center;
+        }
+
+        .form-submit:hover {
+            background-color: var(--colorContraste);
+        }
+
+        .form {
+            background-color: var(--fondoOscuro);
+            color: var(--colorPrincipalOscuro);
+            border: 1px solid var(--colorPrincipalOscuro);
+            padding: 10px 15px;
+            margin: 20px 20px 10px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            gap: 7px;
+        }
+
+        .form:hover {
+            background-color: var(--colorPrincipalClaro);
+        }
+
+        .error {
+            border: 2px solid red !important;
+            background-color: #ffe6e6 !important;
+        }
+        
+        /* Убираем стилизация браузера при автозаполнении */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    background-color: white !important;
+    color: var(--colorPrincipalOscuro) !important;
+}
+#delivery-datetime {
+    padding-left: 10px; /* Задаем отступ перед датой */
+}
+.change-date{
+    color: var(--colorPrincipalOscuro);
+    font-size: 0.9em; /* Увеличиваем размер шрифта */
+    font-family: var(--fuenteSans); /* Шрифт для текста */
+    text-decoration: underline; /* Подчеркиваем текст */
+
+}
+
+/* Стили для контейнера с формой регистрации */
+.container-row {
+    display: flex; /* Устанавливаем Flexbox для горизонтального расположения */
+    flex-direction: row; /* Явно указываем направление: в строку */
+    justify-content: space-between; /* Равномерно распределяем элементы с промежутками */
+    align-items: flex-start; /* Выравниваем дочерние элементы по верхнему краю */
+    width: 100%; /* Устанавливаем ширину родительского контейнера */
+    box-sizing: border-box; /* Гарантируем корректный расчёт ширины с padding и border */
+    margin: 0 auto; /* Выравниваем по центру */
+    
+}
+
+
+
+.container-row1 {
+    width: 58%; /* Ширина первого контейнера */
+    margin: 5px 2px 5px 10px; /* Отступы: сверху, справа, снизу, слева */
+    padding: 10px 5px 60px 5px;
+    background-color: var(--colorContrasteClaro);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative; /* Устанавливаем позиционирование контейнера */
+}
+
+.container-row2 {
+    width:35%; /* Ширина второго контейнера */
+    margin: 5px 10px 5px 2px; /* Отступы: сверху, справа, снизу, слева */
+    padding: 10px 15px 60px 10px;
+    background-color: var(--colorContrasteClaro);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative; /* Устанавливаем позиционирование контейнера */
+}
+
+.submit {
+    position: absolute; /* Абсолютное позиционирование */
+    bottom: 15px; /* Привязываем кнопку к нижней части контейнера */
+    left: 50%; /* Центрируем кнопку по горизонтали */
+    transform: translateX(-50%); /* Исправляем центрирование */
+    width: 60%; /* Устанавливаем определённую ширину кнопки */
+    padding: 10px;
+    background-color: var(--colorPrincipalClaro);
+    color: var(--colorPrincipalOscuro);
+    border: 1px solid var(--colorPrincipalOscuro);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center; /* Выравнивание текста по центру */
+    transition: background-color 0.3s;
+}
+
+.submit:hover {
+    background-color: var(--colorContraste);
+}
+
+/* Стили для личного кабинета */
+.personal-account {
+    display: flex; /* Используем Flexbox */
+    gap: 20px; /* Отступ между колонками */
+    width: 100%; /* Полная ширина страницы */
+    box-sizing: border-box; /* Включаем padding и border в расчёт ширины */
+}
+
+.profile-section {
+    flex: 1; /* Левая часть занимает 1/3 */
+    max-width: 33%; /* Ограничиваем ширину в 1/3 */
+    padding: 20px;
+    background-color: var(--colorContrasteClaro); /* Лёгкий фон для отделения */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.orders-section {
+    flex: 2; /* Правая часть занимает оставшиеся 2/3 */
+    padding: 20px;
+    background-color: var(--colorContrasteClaro);
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.orders-container {
+    margin-top: 20px;
+}
+
+/*.order, .no-orders {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f7f7f7;
+    text-align: center;
+}*/
+.button-group {
+    display: flex;
+    align-content: row;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.button-yes, .button-no {
+    width: 25%; /* Устанавливаем определённую ширину кнопки */
+    padding: 10px;
+    background-color: var(--fondoOscuro);
+    color: var(--colorPrincipalOscuro);
+    border: 2px solid var(--colorPrincipalOscuro);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center; /* Выравнивание текста по центру */
+    transition: background-color 0.3s;
+}
+
+.button-no:hover {
+    background-color: var(--colorPrincipalClaro);
+}
+.button-yes:hover {
+    background-color: var(--colorPrincipalClaro);
+}
+
+/* Стили для методов доставки */
+.delivery-methods {
+    position: relative; /* Устанавливаем позиционирование для li, чтобы submenu позиционировалось относительно него */
+    display: inline-block; /* Делаем элементы списка строчными блоками */
+    margin: 5px 25px; /* Отступы между элементами списка */
+}
+.delivery-methods li {
+    margin: 10px 25px; /* Отступы между элементами списка */
+    font-size: 1.1em;
+    font-family: var(--fuenteSans);
+}
+
+.delivery-info {
+    padding: 15px;
+    font-family: var(--fuenteSans);
+    border-radius: 8px;
+    line-height: 1.6;
+}
+
+.delivery-info .highlight {
+    color: var(--colorPrincipalOscuro); 
+    font-weight: bold;
+}
+
+
+
+
+
+
+
+/* Медиа-запрос для ширины экрана менее 425px */
+@media (max-width: 768px) {
+    header {
+        background-color: var(--colorPrincipal);
+        background-image: none;
+        color: var(--colorPrincipalOscuro);
+    }
+    #header_der {
+        width: 10%;
+    }
+    nav {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: var(--margen);
+    }
+
+    nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px; /* Расстояние между элементами */
+        padding: 0;
+    }
+
+    nav ul li {
+        flex: 1 1 1 calc(30% - 5px); /* Три элемента в строке */
+        display: flex;
+        justify-content: center;
+        list-style: none;
+    }
+
+    .enlace_menu {
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding: 5px 15px;
+        text-align: center;
+    }
+
+    .enlace_submenu {
+        display: block;
+        max-width: 100%; /* Не выходит за пределы */
+        word-wrap: break-word; /* Перенос по словам */
+        overflow-wrap: break-word; /* Альтернативный вариант переноса */
+        white-space: normal; /* Позволяет перенос строк */
+        text-align: center; /* Центрируем текст */
+        padding: 10px;
+        
+    }
+
+    
+
+
+	#arriba {
+	display: none;
+	}
+
+   
+    table, thead, tbody, tfoot, th, td, tr {
+        display: block;
+        
+   }
+   
+   tr::after {
+    content: "";
+    display: block;
+    height: 5px; /* Высота разрыва */
+    background-color: var(--colorPrincipalClaro); /* Цвет разрыва */
+}
+
+
+    /* Скрываем изображения */
+    td:first-child, thead th {
+        display: none;
+    }
+
+    /* Делаем колонки 2, 3 и 4 отдельными строками */
+    tbody td:nth-child(2), tbody td:nth-child(3), tbody td:nth-child(4) {
+        
+        display: block;
+        text-align: left; /* Выравниваем текст */
+    }
+
+    .custom-table tbody tr {
+        display: flex;
+        flex-direction: row; /* Размещаем элементы */
+        flex-wrap: wrap; /* Разрешает перенос строк */
+        justify-content: space-between; /* Размещает элементы равномерно */
+        border-bottom: 5px solid var(--colorPrincipalClaro);
+    }
+    
+    /* Делаем колонки 2, 3 и 4 отдельными строками только внутри custom-table */
+    .custom-table tbody td:nth-child(2),
+    .custom-table tbody td:nth-child(3),
+    .custom-table tbody td:nth-child(4) {
+        display: inline-block;
+        box-sizing: border-box; /* Учитываем padding и border в размерах */
+        padding: 10px; /* Добавляем отступы для лучшего восприятия */
+        text-align: center; /* Выравниваем текст */
+    }
+    
+    /* Колонка 2 занимает всю ширину только внутри custom-table */
+    .custom-table tbody td:nth-child(2) {
+        width: 100%;
+    }
+    
+    
+
+    /* Добавляем заголовки к колонкам 2, 3 и 4 */
+    tbody td:nth-child(2){
+        display: flex;
+        flex-direction: row;
+        font-weight: bold;
+        justify-content: center;
+        align-items: center;
+        
+    }
+
+    td:nth-child(3)::before {
+        content: "Кол-во:  ";
+        font-size: medium;
+    }
+
+    td:nth-child(4)::before {
+        content: "Цена: ";
+        font-size: medium;
+    }
+    .custom-table td:nth-child(3)::before,
+    .custom-table td:nth-child(4)::before {
+    content: none; /* Убирает текст перед элементом */
+    font-size: 0; /* Убирает размер шрифта */
+    }
+
+    /* Устанавливаем вертикальное расположение для колонки выбора количества */
+    td:nth-child(5) {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        justify-content: center;
+    }
+
+    td:nth-child(5)::before {
+        
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    /* Перемещаем стоимость на отдельную строку */
+    td:nth-child(5) {
+        width: calc(100%-40px);
+        display: block;
+    }
+
+    td:nth-child(5)::before {
+        content: "Стоимость: ";
+        font-weight: bold;
+    }
+
+    
+    tfoot td {
+        text-align: center;
+        padding-top: 10px;
+        display: block;
+        font-weight: bold;
+    }
+
+    .container-row {
+        flex-direction: column; /* Устанавливаем направление контейнеров в колонку */
+        align-items: stretch; /* Растягиваем элементы на всю ширину */
+    }
+
+    .container-row2 {
+        width: 93%; /* Ширина 100% */
+        order: 1; /* Отображаем container-row2 первым */
+        margin: 0; /* Убираем внешние отступы */
+        
+    }
+
+    .container-row1 {
+        width: 100%; /* Делаем ширину контейнеров одинаковой */
+        max-width: 93%; /* Ограничиваем ширину до 93% */
+        order: 2; /* Отображаем container-row1 вторым */
+        margin: 0 auto; /* Центрируем контейнеры */
+    }
+
+    .submit {
+        width: 80%; /* Можно сделать кнопку более адаптивной */
+        
+    }
+
+    .button-decrease, .button-increase {
+        width: 25px; /* Уменьшаем ширину кнопки */
+        height: 25px; /* Уменьшаем высоту кнопки */
+        font-size: 12px; /* Уменьшаем размер текста */
+        padding: 5px; /* Уменьшаем внутренние отступы */
+        position: static; /* Возвращаем обычное поведение */
+        margin: 0 10px; /* Уменьшаем отступы между кнопками */
+    }
+
+    td.cart-quantity span{
+        flex-grow: 1; /* Заполняет пространство между кнопками */
+        text-align: center;
+        margin: 0 10px; /* Уменьшаем отступы между кнопками и полем ввода */
+    }
+    
+    .form-group-radio {
+        display: inline-block; /* Устанавливаем строчный блочный элемент */
+        margin-bottom: 0; /* Убираем отступ снизу */
+        text-align: left; /* Выравниваем текст по краю  */
+    }
+}
+    
+
+
+
+/*Estilo del pie*/
+footer{
+    background-color: var(--colorPrincipal);
+    height:var(--alturaPie);
+   
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+#pie_izq {
+    width: 70%;
+	display: flex;
+	flex-wrap: wrap;
+    justify-content: center;
+    list-style: none;
+}
+#redes-sociales {
+    display: flex;
+    align-items: center; 
+    justify-content: space-around;
+
+    list-style: none;
+}
+    
+#redes-sociales li {
+    display: inline-flex;     /* Используем inline-flex для элементов списка */
+    padding: 0 25px;          /* Добавляем отступы между элементами */
+}
+
+#pie_der {
+    width: 30%;
+}
+
+footer p{
+    
+    font-size: 1rem;
+    color:var(--colorPrincipalClaro);
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    list-style: none; 
+    position: relative;
+
+}
+
+.telegram-icon {
+    font-size: 40px; /* Размер иконки */
+    color: var(--colorContraste);   /* Цвет иконки */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.telegram-icon:hover {
+    color: #429fd9; /* Цвет иконки при наведении */
+}
+
+.whatsapp-icon {
+    font-size: 40px; /* Размер иконки */
+    color: var(--colorContraste);   /* Цвет иконки */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.whatsapp-icon:hover {
+    color: var(--colorPrincipalOscuro); /* Цвет иконки при наведении */
+}
+
+.email-icon {
+    font-size: 40px; /* Размер иконки */
+    color: var(--colorContraste);   /* Цвет иконки */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.email-icon:hover {
+    color: var(--colorPrincipalOscuro); /* Цвет иконки при наведении */
+}
+
+#arriba {
+    position: fixed;
+    bottom: var(--margen);
+    right: 1.5rem;
+    background-color: transparent;
+    
+    text-decoration: none;
+  
+}
+#arriba a {
+    color: inherit; /* Наследуем цвет родительского элемента */
+    text-decoration: none;
+}
+
+#arriba a i {
+    color: #1fb311; /* Изменяем цвет стрелки */
+    transition: color 0.3s; /* Добавляем анимацию изменения цвета */
+}
+
+#arriba a i:hover {
+    color: #82e66e; /* Цвет стрелки при наведении курсора */
+}
+
+
+	
+    @media (min-width: 768px) {
+        .product-card-container {
+            flex-direction: row; /* Размещаем карточки горизонтально */
+            flex-wrap: wrap; /* Переносим карточки на следующую строку, если не хватает места */
+            gap: 10px; /* Добавляем отступы между карточками */
+        }
+        
+        .product-card {
+            width: calc(50% - 30px); /* Устанавливаем ширину карточки на 33% минус отступ */
+            margin-bottom: 20px; /* Добавляем нижний отступ для карточек */
+        }
+    }
+    @media (min-width: 1024px) {
+        .product-card-container {
+            flex-direction: row; /* Размещаем карточки горизонтально */
+            flex-wrap: wrap; /* Переносим карточки на следующую строку, если не хватает места */
+            gap: 10px; /* Добавляем отступы между карточками */
+        }
+        
+        .product-card {
+            width: calc(33% - 30px); /* Устанавливаем ширину карточки на 33% минус отступ */
+            margin-bottom: 20px; /* Добавляем нижний отступ для карточек */
+        }
+    }
+    
+    							

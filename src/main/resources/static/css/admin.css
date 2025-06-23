@@ -1,0 +1,39 @@
+@charset "UTF-8";
+
+@import url(all.min.css);
+
+
+:root {
+    --alturaCabecera: 30px;
+    --alturaPie: 20px;
+    --alturaMenu:25px;
+    --anchuraElemMenu:180px;
+
+    --paddingGeneral: 10px;
+
+    --sizeFuenteMenu: 20px;
+
+	--colorPrincipal: #367f25;
+	--colorPrincipalClaro:#41b143;
+	--colorPrincipalOscuro: #084303;
+
+	--colorContraste: #8ef861;
+	--colorContrasteClaro: #f2e0cb;
+
+    --fondoClaro: #fcf9e5;
+    --fondoOscuro: #ddccba;
+
+    --fuenteSerif:"Garamond";
+    --fuenteSans:"Helvetica";
+
+    --margen: 1rem;
+    --margen-pequeno: .5rem;
+
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: var(--fuenteSans);
+}

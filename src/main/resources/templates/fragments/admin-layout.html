@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <title>Админ-панель</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" th:href="@{/img/Pollo.svg}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+    <link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" />
+</head>
+
+<body>
+<header th:replace="include/admin-header :: header"></header>
+<header th:replace="include/admin-nav :: nav"></header>
+<main layout:fragment="content"></main>
+<footer th:replace="include/admin-footer :: footer"></footer>
+</body>
+</html>

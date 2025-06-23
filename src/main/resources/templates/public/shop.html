@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+
+<head>
+    <title>TaFe & Co</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" th:href="@{/img/Pollo.svg}" />
+    <link rel="stylesheet" th:href="@{/css/styles_2.css}" />
+    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}" />
+</head>
+
+<body>
+
+<div th:replace="include/header :: header"></div>
+<div th:replace="include/nav :: nav"></div>
+
+<!-- Основной блок -->
+<main layout:fragment="content">
+    <div class="product-card-container">
+        <div class="product-card" th:each="product : ${products}">
+            <img th:src="@{${product.imageUrl}}" alt="Product Image" class="product-image"  src=""/>
+            <div class="product-details">
+                <h3 class="product-title" th:text="${product.name}">Продукт</h3>
+                <p class="product-unit" th:text="${product.unit}">единица</p>
+                <p class="product-price" th:text="${product.price} + ' руб.'">цена</p>
+                <div class="product-quantity">
+                    <label>Количество:</label>
+                    <input type="number" min="1" value="1">
+                </div>
+                <button class="add-to-cart-btn">Добавить в корзину</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="include/footer :: footer"></div>
+
+<script type="module" src="/js/main.js"></script>
+
+</body>
+</html>

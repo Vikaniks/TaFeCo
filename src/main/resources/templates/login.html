@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="icon" href="images/Pollo.svg">
+    	
+	<link rel="stylesheet" href="styles_2.css">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+	<title>TaFe - Co</title>
+</head>
+
+<body>
+
+	<div>
+        <header>
+            <div id="header_izq">
+                <h1>TaФe & Co</h1>
+                <h2>Фермерское хозяйство</h2>
+            </div>
+    
+            <div id="header_der">
+                <div class="cart-container">
+                    <a href="card.html">
+                        <img src="images/cart.svg" alt="acceso a cart" width="50px" height="50px">
+                    </a>
+                    <div class="cart-count" id="cart-count">0</div>
+                </div>
+                
+                <div class="user-container">
+                    <a href="register.html">
+                        <img src="images/user-309995.svg" alt="acceso a user" width="50px" height="50px">
+                    </a>
+                    <div class="dropdown-menu">
+                        <ul>
+                            <li><a href="register.html">Личный кабинет</a></li>
+                            <li><a href="public/index.html" id="logout">Выйти</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+        </header>
+    </div>
+    
+    
+
+	<div>
+        <nav id="menu">
+            <ul>
+                <li>
+                    <a href="public/index.html" class="enlace_menu">О нас</a>
+                </li>
+                <li>
+                    <a href="public/shop.html" class="enlace_menu">Магазин</a>
+                    
+                    <ul class="submenu">
+                                    <li><a href="egg.html" class="enlace_menu">Яйцо</a></li>
+                                    <li><a href="milk.html" class="enlace_menu">Молоко</a></li>
+                                    <li><a href="chiken.html" class="enlace_menu">Мясо птицы</a></li>
+                                    <li><a href="chiken_joven.html" class="enlace_menu">Живая птица</a></li>
+                                    <li><a href="vegetables.html" class="enlace_menu">Овощи</a></li>
+                                    <li><a href="green.html" class="enlace_menu">Зелень</a></li>           
+                                    <li><a href="conserva.html" class="enlace_menu">Закрутки</a></li>
+                                </ul>
+                                
+                </li>
+                <li>
+                    <a href="sale.html" class="enlace_menu">Акции</a>
+                </li>
+                <li>
+                    <a href="condition.html" class="enlace_menu">Доставка и оплата</a>
+                </li>
+                
+                
+            </ul>
+        </nav>
+    </div>
+
+
+	<main>
+
+        <div class="container-row">
+            <!-- Левая вертикальная часть -->
+            <div class="container-row2">
+                <h3>Профиль</h3>
+                <p>Пользователь: <strong></strong></p>
+                <p>Логин: <strong></strong></p>
+                <p>Телефон: <strong></strong></p>
+                <p>Адрес: <strong></strong></p>
+                
+                <h4>Сменить данные или пароль</h4>
+            <form id="change-password-form">
+                <div class="form-group-row">
+                    <input type="tel" placeholder="Новый номер телефона" required>
+                </div>
+                <div class="form-group-row">
+                    <input type="text" placeholder="Новый адрес пользователя" required>
+                </div>
+                <div class="form-group-row">
+                    <input type="password" placeholder="Новый пароль" required>
+                </div>
+                    <div class="form-group-row">
+                    <input type="password" placeholder="Повторите новый пароль" required>
+                </div>
+                    
+                    <button type="submit" class="submit">Сменить данные</button>
+                
+                </form>
+            </div>
+        
+            <!-- Правая основная часть -->
+            <div class="container-row1">
+                <h3>История заказов</h3>
+                <div class="orders-container" id="orders-container">
+                    <!-- Если заказы есть -->
+                    <!-- <div class="order">
+                        <p><strong>Заказ №12345</strong></p>
+                        <p>Дата: 12.03.2023</p>
+                        <p>Сумма: 4 500 ₽</p>
+                    </div> -->
+        
+                    <!-- Если заказы недоступны 
+                    <div class="container-row">
+                        <p>Упс! Здесь пока ничего нет...
+                        <img src="images/empty.png" alt="Упс!" style="max-width: 250px; height: auto; opacity: 1; margin: 0 auto;">
+                        </p>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+        
+
+
+    </main>
+
+	<div>
+        <footer>
+            <div id="pie_izq">
+                <ul id="redes-sociales">
+                    <li><a href="https://t.me/" target="_blank" class="telegram-icon"><i class="fa fa-telegram" aria-hidden="true"></i></a></li>
+                    <li><a href="https://wa.me/79312606980" target="_blank" class="whatsapp-icon"><i class="fa fa-whatsapp" aria-hidden="true"></i></a></li>
+                    <li><a href="#" target="_blank" class="email-icon"><i class="fa fa-envelope-o" aria-hidden="true"></i></a></li>
+                </ul>
+                
+            </div>
+            <div id="pie_der">
+            <p>&copy; 2025 studio VikanikS</p>
+            </div>
+
+            <div id="arriba">
+                <a href="#header_izq"><i class="fa fa-arrow-up fa-2x" aria-hidden="true"></i></a>
+            </div>
+        </footer>
+    </div>
+
+
+    
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const ordersContainer = document.getElementById("orders-container");
+
+            // Проверяем наличие данных о незавершённом заказе в localStorage
+            const orderData = JSON.parse(localStorage.getItem("orderData"));
+
+            if (orderData) {
+                // Если незавершённый заказ есть, выводим сообщение с кнопками
+                const orderMessage = document.createElement("div");
+                orderMessage.classList.add("order-message");
+                orderMessage.innerHTML = `
+                    <p class="text-orders"> ${orderData.name}, ваш заказ не завершён. Хотите продолжить?</p>
+                    <div class="button-group">
+                        <button class="button-yes" id="continue-order">Да</button>
+                        <button class="button-no" id="cancel-order">Нет</button>
+                    </div>
+                `;
+
+                ordersContainer.appendChild(orderMessage);
+
+                // Обработка кнопки "Да"
+                document.getElementById("continue-order").addEventListener("click", function () {
+                    window.location.href = "finalOrder.html"; // Перенаправляем на страницу финального заказа
+                });
+
+                // Обработка кнопки "Нет"
+                document.getElementById("cancel-order").addEventListener("click", function () {
+                    // Удаляем данные незавершённого заказа из localStorage
+                    localStorage.removeItem("orderData");
+
+                    // Обнуляем корзину (пример: удаляем данные корзины)
+                    localStorage.removeItem("cart-items");
+
+                    // Убираем сообщение о незавершённом заказе
+                    ordersContainer.innerHTML = `
+                        <p>Упс! Здесь пока ничего нет...
+                        <img src="images/empty.png" alt="Упс!" style="max-width: 250px; height: auto; opacity: 1; margin: 0 auto;">
+                        </p>
+                    `;
+                });
+            } else {
+                // Если незавершённый заказ отсутствует, выводим сообщение о пустой истории
+                ordersContainer.innerHTML = `
+                    <p>Упс! Здесь пока ничего нет...
+                    <img src="images/empty.png" alt="Упс!" style="max-width: 250px; height: auto; opacity: 1; margin: 0 auto;">
+                    </p>
+                `;
+            }
+        });
+    </script>
+<script type="module" src="/js/main.js"></script>
+</body>
+
+</html>

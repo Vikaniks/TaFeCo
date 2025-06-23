@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="icon" href="images/Pollo.svg">
+    	
+	<link rel="stylesheet" href="styles_2.css">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+	<title>TaFe - Co</title>
+</head>
+
+<body>
+
+	<div>
+        <header>
+            <div id="header_izq">
+                <h1>TaФe & Co</h1>
+                <h2>Фермерское хозяйство</h2>
+            </div>
+    
+            <div id="header_der">
+                <div class="cart-container">
+                    <a href="card.html">
+                        <img src="images/cart.svg" alt="acceso a cart" width="50px" height="50px">
+                    </a>
+                    <div class="cart-count" id="cart-count">0</div>
+                </div>
+                
+                <div class="user-container">
+                    <a href="register.html">
+                        <img src="images/user-309995.svg" alt="acceso a user" width="50px" height="50px">
+                    </a>
+                    <div class="dropdown-menu">
+                        <ul>
+                            <li><a href="register.html">Личный кабинет</a></li>
+                            <li><a href="public/index.html" id="logout">Выйти</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+        </header>
+    </div>
+    
+    
+
+	<div>
+        <nav id="menu">
+            <ul>
+                <li>
+                    <a href="public/index.html" class="enlace_menu">О нас</a>
+                </li>
+                <li>
+                    <a href="public/shop.html" class="enlace_menu">Магазин</a>
+                    
+                    <ul class="submenu">
+                                    <li><a href="egg.html" class="enlace_submenu">Яйцо</a></li>
+                                    <li><a href="milk.html" class="enlace_submenu">Молоко</a></li>
+                                    <li><a href="chiken.html" class="enlace_submenu">Мясо птицы</a></li>
+                                    <li><a href="chiken_joven.html" class="enlace_submenu">Живая птица</a></li>
+                                    <li><a href="vegetables.html" class="enlace_submenu">Овощи</a></li>
+                                    <li><a href="green.html" class="enlace_submenu">Зелень</a></li>           
+                                    <li><a href="conserva.html" class="enlace_submenu">Закрутки</a></li>
+                                </ul>
+                                
+                </li>
+                <li>
+                    <a href="sale.html" class="enlace_menu">Акции</a>
+                </li>
+                <li>
+                    <a href="condition.html" class="enlace_menu">Доставка и оплата</a>
+                </li>
+                
+                
+            </ul>
+        </nav>
+    </div>
+
+
+	<main>
+
+    <div class="container-row">
+        <div class="container-row1">          
+            <!-- Секция заказа -->
+            <h3>Ваш заказ</h3>
+            <section id="tablas">
+                    
+                <table class="final-order">
+                    <thead>
+                        <tr>
+                        <th scope="col">Изображение</th>
+                        <th scope="col">Товар</th>
+                        <th scope="col">Количество</th>
+                        <th scope="col">Цена</th>
+                        <th scope="col">Стоимость</th>
+                        <th scope="col">Удалить</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items">
+                        <!-- Товары будут загружены сюда -->
+                        
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th scope="row" colspan="4">Итого:</th>
+                            <td id="total-items" colspan="4"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </section>
+        </div>
+     
+
+        
+    
+            <!-- Секция данных получателя -->
+            <div class="container-row2">
+                <h3>Данные для доставки</h3>
+                <div class="form-group-row">
+                    <p>Получатель: <strong><span id="recipient"></span></strong></p>
+                    <p>Телефон: <strong><span id="phone"></span></strong></p>
+                    <p>Адрес доставки: <strong><span id="address"></span></strong></p>
+                   
+                    <p>Дата-время доставки:<strong><span id="delivery-datetime"></span></strong></p>
+                     <!-- Дата и время доставки -->
+                     <label for="date" class="change-date">Изменить  дату  доставки</label>
+                     <input type="date" id="date" name="date">
+             
+                     <label for="time" class="change-date">Изменить интервал времени</label>
+                     <select id="time" name="time">
+                         <option value="07:00-09:00">07:00 - 09:00</option>
+                         <option value="09:00-12:00">09:00 - 12:00</option>
+                         <option value="12:00-15:00">12:00 - 15:00</option>
+                         <option value="15:00-18:00">15:00 - 18:00</option>
+                         <option value="18:00-21:00">18:00 - 21:00</option>
+                     </select>
+                </div>
+                <div class="form-group-row">
+                    <label for="comment" class="change-date">Комментарий к заказу</label>
+                    <input id="comment" type="text" placeholder="Комментарий к заказу">
+                        <!-- Основной адрес и возможность добавить новый -->
+                    </input>
+                </div>
+
+                <!-- Выбор способа оплаты -->
+            <div class="section" id="payment-method">
+                <h3>Выберите способ оплаты</h3>
+                <div class="form-group-row">
+                    <select id="payment-option" required>
+                        <option value="" disabled selected>Выберите способ оплаты</option>
+                        <option value="cash">Оплата наличными при доставке</option>
+                        <option value="card">Банковская карта</option>
+                      </select>
+                      
+                </div>
+            </div>
+                   
+                <button class="submit" id="confirm-order">Оплата и заказ</button>
+                    
+            </div>
+        </div>
+        <p class="consent">*Нажатием кнопки оплаты, подтверждаю заказ и обработку персональных данных</p>
+        </div>
+        
+    </div>
+
+        <div class="container-row">
+    
+ </main>
+
+ <div>
+    <footer>
+        <div id="pie_izq">
+            <ul id="redes-sociales">
+                <li><a href="https://t.me/" target="_blank" class="telegram-icon"><i class="fa fa-telegram" aria-hidden="true"></i></a></li>
+                <li><a href="https://wa.me/79312606980" target="_blank" class="whatsapp-icon"><i class="fa fa-whatsapp" aria-hidden="true"></i></a></li>
+                <li><a href="#" target="_blank" class="email-icon"><i class="fa fa-envelope-o" aria-hidden="true"></i></a></li>
+            </ul>
+            
+        </div>
+        <div id="pie_der">
+        <p>&copy; 2025 studio VikanikS</p>
+        </div>
+
+        <div id="arriba">
+            <a href="#header_izq"><i class="fa fa-arrow-up fa-2x" aria-hidden="true"></i></a>
+        </div>
+    </footer>
+</div>
+
+
+   
+<script type="module" src="/js/main.js" defer></script>
+    
+</body>
+
+</html>
