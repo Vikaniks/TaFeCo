@@ -16,7 +16,9 @@ public interface ProductMapper {
 
     // Entity → DTO
     @Mapping(source = "categorise.id", target = "categorise")
+    @Mapping(source = "categorise.type", target = "type")
     @Mapping(source = "dimension.id", target = "dimension")
+    @Mapping(source = "dimension.dimension", target = "dimensionName")
     ProductDTO toDTO(Product product);
 
     // DTO → Entity (новый объект)

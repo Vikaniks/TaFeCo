@@ -21,9 +21,9 @@ public class PageController {
         return "public/login";
     }
 
-    @GetMapping("/card")
-    public String card() {
-        return "public/card";
+    @GetMapping("/cart")
+    public String cart() {
+        return "public/cart";
     }
 
     @GetMapping("/shop")

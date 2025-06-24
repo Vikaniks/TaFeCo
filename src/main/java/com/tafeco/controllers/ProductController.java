@@ -34,10 +34,7 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public String findAll(Model model) {
-        List<ProductDTO> products = productService.findAll();
-        model.addAttribute("products", products);
-        return "product_list";
+    public List<ProductDTO> findAll() {
+        return productService.findAll();
     }
-
 }

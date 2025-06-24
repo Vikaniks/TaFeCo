@@ -40,6 +40,7 @@ public class SecurityConfig {
                                 "/register",
                                 "/login",
                                 "/css/**",
+                                "/products",
                                 "/js/**",
                                 "/img/**",
                                 "/fonts/**",

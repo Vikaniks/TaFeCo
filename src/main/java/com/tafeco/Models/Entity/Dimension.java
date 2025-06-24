@@ -3,8 +3,6 @@ package com.tafeco.Models.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.Serial;
-import java.io.Serializable;
 
 @Getter
 @Setter

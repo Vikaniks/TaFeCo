@@ -17,7 +17,10 @@ public class ProductDTO {
     private String description;
 
     private Integer categorise;
+    private String type;
     private Long dimension;
+    private String dimensionName;
+
 
     private Set<PhotoDTO> photos;
     private Set<ArchiveDTO> archives;
@@ -34,12 +37,18 @@ public class ProductDTO {
         // Категория
         if (product.getCategorise() != null) {
             dto.setCategorise(product.getCategorise().getId());
+            dto.setType(product.getCategorise().getType());
         }
 
-        // Размерность
         if (product.getDimension() != null) {
+            System.out.println("Dimension id: " + product.getDimension().getId());
+            System.out.println("Dimension name: " + product.getDimension().getDimension());
             dto.setDimension(product.getDimension().getId());
+            dto.setDimensionName(product.getDimension().getDimension());
+        } else {
+            System.out.println("Dimension is null!");
         }
+
 
         // Фото
         if (product.getPhotos() != null) {

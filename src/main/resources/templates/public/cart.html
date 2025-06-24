@@ -4,12 +4,16 @@
       layout:decorate="~{fragments/layout}">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaFe - Co</title>
+    <title>TaFe & Co</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" th:href="@{/img/Pollo.svg}" />
     <link rel="stylesheet" th:href="@{/css/styles_2.css}" />
-    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -37,7 +41,7 @@
             <tr>
                 <th scope="row" colspan="4">
                     <button id="checkout-button" class="checkout-button">
-                        Сделать заказ на сумму - <span id="total-price">0₽</span>
+                        Сделать заказ <span id="total-price"></span>
                     </button>
                 </th>
                 <td id="total-items" scope="row" colspan="2"></td>
@@ -49,7 +53,7 @@
 
 <div th:replace="include/footer :: footer"></div>
 
-<script type="module" src="/js/main.js"></script>
+<script type="module" th:src="@{/js/main.js}"></script>
 <!-- <script src="/js/lib/jspdf.umd.min.js"></script>-->
 </body>
 

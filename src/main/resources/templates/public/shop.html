@@ -10,7 +10,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" th:href="@{/img/Pollo.svg}" />
     <link rel="stylesheet" th:href="@{/css/styles_2.css}" />
-    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+
 </head>
 
 <body>
@@ -20,26 +25,15 @@
 
 <!-- Основной блок -->
 <main layout:fragment="content">
-    <div class="product-card-container">
-        <div class="product-card" th:each="product : ${products}">
-            <img th:src="@{${product.imageUrl}}" alt="Product Image" class="product-image"  src=""/>
-            <div class="product-details">
-                <h3 class="product-title" th:text="${product.name}">Продукт</h3>
-                <p class="product-unit" th:text="${product.unit}">единица</p>
-                <p class="product-price" th:text="${product.price} + ' руб.'">цена</p>
-                <div class="product-quantity">
-                    <label>Количество:</label>
-                    <input type="number" min="1" value="1">
-                </div>
-                <button class="add-to-cart-btn">Добавить в корзину</button>
-            </div>
-        </div>
+    <div class="product-cart-container" id="product-list">
+
     </div>
+
 </main>
 
 <div th:replace="include/footer :: footer"></div>
 
-<script type="module" src="/js/main.js"></script>
+<script type="module" th:src="@{/js/main.js}"></script>
 
 </body>
 </html>

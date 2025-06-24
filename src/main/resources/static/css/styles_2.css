@@ -358,7 +358,7 @@ section{
 
 
 
-.product-card-container, .promo-item-container {
+.product-cart-container, .promo-item-container {
     display: flex;
     flex-direction: column; /* Размещаем карточки вертикально */
     gap: 5px; /* Добавляем отступы между карточками */
@@ -1260,13 +1260,14 @@ footer{
     display: flex;
     align-items: center; 
     justify-content: space-around;
-
+    max-height: 20px;
     list-style: none;
 }
     
 #redes-sociales li {
     display: inline-flex;     /* Используем inline-flex для элементов списка */
-    padding: 0 25px;          /* Добавляем отступы между элементами */
+    padding: 0 25px;
+
 }
 
 #pie_der {
@@ -1353,7 +1354,7 @@ footer p{
         }
     }
     @media (min-width: 1024px) {
-        .product-card-container {
+        .product-cart-container {
             flex-direction: row; /* Размещаем карточки горизонтально */
             flex-wrap: wrap; /* Переносим карточки на следующую строку, если не хватает места */
             gap: 10px; /* Добавляем отступы между карточками */
