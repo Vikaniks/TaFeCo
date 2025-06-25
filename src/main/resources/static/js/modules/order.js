@@ -1,4 +1,6 @@
 // order.js
+import { saveFormToStorage, restoreFormFromStorage } from './storage.js';
+
 
 export function setupOrderForm() {
     const form = document.getElementById('order-form');
@@ -51,6 +53,32 @@ export function setupOrderForm() {
         if (fixedPositions.includes(phoneInput.selectionStart) && (event.key === "Backspace" || event.key === "Delete")) {
             event.preventDefault();
         }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = new FormData(form);
+            const response = await fetch('/api/order', {
+                method: 'POST',
+                body: data
+            });
+            if (response.ok) {
+                localStorage.removeItem('orderData');
+                window.location.href = '/order/success';
+            } else {
+                alert("Ошибка оформления заказа");
+            }
+        });
+        form.addEventListener("input", () => {
+            const formData = {
+                name: nameInput.value,
+                surname: surnameInput.value,
+                phone: phoneInput.value,
+                email: emailInput.value
+            };
+            localStorage.setItem("orderData", JSON.stringify(formData));
+        });
+
+
     });
 
     function showErrorMessage(field, message) {
@@ -165,7 +193,7 @@ export function setupOrderForm() {
         const orderData = getOrderData();
         localStorage.setItem("orderData", JSON.stringify(orderData));
 
-        window.location.href = "finalOrder.html";
+        window.location.href = "/finalOrder";
     });
 
     populateForm();
@@ -188,6 +216,13 @@ export function populateFinalOrder() {
     recipientEl.textContent = `${orderData.name || "Не указано"} ${orderData.surname || "Не указано"}`;
     document.getElementById("phone").textContent = orderData.phone || "Не указано";
     document.getElementById("address").textContent = `${orderData.city || "Не указано"}, ${orderData.barrio || "Не указано"}, ${orderData.address || "Не указано"}`;
+
+    if (dateInput && orderData.date) {
+        dateInput.value = orderData.date;
+    }
+    if (timeSelect && orderData.time) {
+        timeSelect.value = orderData.time;
+    }
 
     function formatDate(dateString) {
         if (!dateString) return "Не указано";
@@ -256,15 +291,29 @@ export function setupConfirmButton() {
                 return; // остановить выполнение
             }
 
-            // 🔄 Обновляем paymentOption в localStorage
+            //  Обновляем paymentOption в localStorage
             const orderData = JSON.parse(localStorage.getItem("orderData")) || {};
             if (paymentSelect) {
                 orderData.paymentOption = paymentSelect.value;
                 localStorage.setItem("orderData", JSON.stringify(orderData));
+                 // сразу обновить отображение
+                        if (paymentDisplay) {
+                            const paymentText = {
+                                "cash": "Оплата наличными при доставке",
+                                "card": "Банковская карта"
+                            }[orderData.paymentOption] || "Не указано";
+                            paymentDisplay.textContent = paymentText;
+                        }
+            }
+            const cart = JSON.parse(localStorage.getItem('cart-items')) || {};
+            const cartEmpty = Object.keys(cart).length === 0;
+            if (cartEmpty) {
+                alert("Ваша корзина пуста. Добавьте товары перед подтверждением заказа.");
+                return;
             }
 
             // Переход на страницу подтверждения
-            window.location.href = "confirmar_order.html";
+            window.location.href = "/confirmar_order";
         });
     }
 }

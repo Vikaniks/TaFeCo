@@ -14,12 +14,14 @@ import {
     populateFinalOrder,
     getOrderData,
     setupConfirmButton,
-    downloadPDF
+    downloadPDF,
 } from './modules/order.js';
 
 import { setupAuthForm } from './modules/auth.js';
 import { setupUserMenu, updateUserNameDisplay } from './modules/user.js';
 import { renderProductList } from './modules/shop.js';
+import { saveFormToStorage, restoreFormFromStorage } from './modules/storage.js';
+
 
 
 // Глобальные функции
@@ -34,7 +36,7 @@ window.renderCartPage = renderCartPage;
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 console.log('DOM загружен');
     updateCartCount();
     renderCartPage();
@@ -43,6 +45,8 @@ console.log('DOM загружен');
     updateUserNameDisplay();
     downloadPDF();
     renderProductList();
+    restoreFormFromStorage();
+
 
 
     // Показываем имя пользователя
@@ -70,7 +74,7 @@ console.log('DOM загружен');
     if (loginButton) {
         loginButton.addEventListener("click", (event) => {
             event.preventDefault();
-            window.location.href = "register.html";
+            window.location.href = "/register";
         });
     }
 
@@ -86,14 +90,28 @@ console.log('DOM загружен');
     const checkoutButton = document.getElementById("checkout-button");
     if (checkoutButton) {
         checkoutButton.addEventListener("click", () => {
-            window.location.href = "order.html";
+            const loggedIn = localStorage.getItem("loggedIn");
+
+            if (loggedIn === "true") {
+                window.location.href = "/finalOrder"; // уже авторизован
+            } else {
+                window.location.href = "/order"; // гость
+            }
         });
     }
+
 
     // Страница оформления заказа
     if (document.getElementById("order-form")) {
         setupOrderForm();
+
     }
+
+
+    /*const form = document.getElementById('order-form');
+      form.addEventListener('input', saveFormToStorage);
+
+      */
 
     // Страница finalOrder.html
     if (document.getElementById("recipient")) {
@@ -137,10 +155,10 @@ console.log('DOM загружен');
     }
     if (window.location.pathname === '/cart') {
             renderCartPage();
-        }
+    }
+
 
 
 });
-
 
 

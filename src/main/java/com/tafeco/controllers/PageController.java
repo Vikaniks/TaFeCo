@@ -83,5 +83,9 @@ public class PageController {
     public String vegetables() {
         return "public/vegetables";
     }
+    @GetMapping("/test")
+    public String test() {
+        return "public/test";
+    }
 }
 

@@ -1,83 +1,67 @@
-@charset "UTF-8";
-
-@import url(all.min.css);
-
-
+/* =========================================
+   Root Variables
+========================================= */
 :root {
     --alturaCabecera: 120px;
     --alturaPie: 60px;
-    --alturaMenu:25px;
-    --anchuraElemMenu:180px;
-
+    --alturaMenu: 25px;
+    --anchuraElemMenu: 180px;
     --paddingGeneral: 10px;
-
     --sizeFuenteMenu: 20px;
 
-	--colorPrincipal: #367f25;
-	    --colorPrincipalClaro:#41b143;
-	    --colorPrincipalOscuro: #084303;
+    --colorPrincipal: #367f25;
+    --colorPrincipalClaro: #41b143;
+    --colorPrincipalOscuro: #084303;
 
-	    --colorContraste: #8ef861;
-	    --colorContrasteOscuro: rgb(255, 201, 100);
-	    --colorContrasteClaro: #57c992;
+    --colorContraste: #8ef861;
+    --colorContrasteOscuro: rgb(255, 201, 100);
+    --colorContrasteClaro: #57c992;
 
     --fondoClaro: #fcf9e5;
     --fondoOscuro: #ddccba;
 
-    --fuenteSerif:"Garamond";
-    --fuenteSans:"Helvetica";
+    --fuenteSerif: "Garamond";
+    --fuenteSans: "Helvetica";
 
     --margen: 1rem;
     --margen-pequeno: .5rem;
-
 }
 
-
+/* =========================================
+   Reset & Global
+========================================= */
 * {
     margin: 0;
     padding: 0;
-
     font-family: var(--fuenteSans);
 }
 
-/* Estilos de la cabecera */
+/* =========================================
+   Header
+========================================= */
 header {
     height: var(--alturaCabecera);
-	background-image: url('images/flow_fon.png'); /* путь к изображению */
-	background-size: cover; /* Изображение растягивается по всему контейнеру */
-	background-position: center; /* Центрирование изображения */
-	background-repeat: no-repeat; /* Отключаем повторение изображения */
-	            
-    
+    background-image: url('images/flow_fon.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     padding: var(--paddingGeneral);
-
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: flex-end;
 }
 
-#header_izq {
-    width: 95%;
-}
-
-
+#header_izq { width: 95%; }
 #header_der {
     width: 5%;
-
     display: flex;
-    flex-direction: row;
     justify-content: flex-end;
     align-items: flex-end;
 }
+#header_der img { padding-left: var(--paddingGeneral); }
 
-#header_der img {
-    padding-left: var(--paddingGeneral);
-}
-.cart-container {
-    position: relative;
-    display: inline-block;
-}
+/* Корзина */
+.cart-container { position: relative; display: inline-block; }
 .cart-count {
     position: absolute;
     top: -5px;
@@ -90,88 +74,65 @@ header {
     font-weight: bold;
 }
 
+/* Заголовки */
+h1, h2 {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    font-family: var(--fuenteSerif);
+}
 h1 {
     color: var(--colorContraste);
-    font-family: var(--fuenteSerif);
     font-size: 48px;
-	display: flex; /* Используем Flexbox для выравнивания содержимого */
-	flex-direction: row; /* Направление flex-контейнера по горизонтали */
-	justify-content: center; /* Выравнивание содержимого по горизонтали (центр) */
-	align-items: flex-end; /* Выравнивание содержимого по вертикали (по нижнему краю) */
 }
 h2 {
     color: var(--colorPrincipalOscuro);
-    font-family: var(--fuenteSerif);
     font-size: 36px;
-	display: flex; /* Используем Flexbox для выравнивания содержимого */
-	flex-direction: row; /* Направление flex-контейнера по горизонтали */
-	justify-content: center; /* Выравнивание содержимого по горизонтали (центр) */
-	align-items: flex-end; /* Выравнивание содержимого по вертикали (по нижнему краю) */
 }
 
-/*estilos de la barra de menu*/
-
+/* =========================================
+   Navigation Menu
+========================================= */
 nav {
     background-color: var(--colorPrincipalClaro);
     max-width: 100%;
-    position: relative; /* Убедимся, что nav является родительским элементом */
-    z-index: 10; /* Установим уровень над другими элементами */
+    position: relative;
+    z-index: 10;
 }
-
-
 nav ul {
     display: block;
-    
     text-align: center;
-    list-style: none; 
-    position: relative;
-    
-}
-
-
-nav ul li {
     list-style: none;
-	display: inline-flex;
-	position: relative;
-    white-space: nowrap; /* Оставить текст в одну строку */
-    
+    position: relative;
 }
-
+nav ul li {
+    display: inline-flex;
+    position: relative;
+    white-space: nowrap;
+}
 
 .enlace_menu {
     display: inline-block;
-    
     width: var(--anchuraElemMenu);
-    height:var(--alturaMenu);
-
+    height: var(--alturaMenu);
     text-decoration: none;
     font-weight: bolder;
     font-size: var(--sizeFuenteMenu);
     color: var(--colorPrincipalOscuro);
-
     padding: 10px 15px;
-    display: block;
-
-    
 }
-
-.enlace_menu:visited{
-    color: var(--colorPrincipalOscuro);
-}
-
-
-.enlace_menu:hover{
+.enlace_menu:hover {
     background-color: var(--colorContraste);
-    color: var(--colorPrincipalOscuro);
 }
-
-
-
-.enlace_menu:active{
+.enlace_menu:active {
     background-color: var(--colorContrasteOscuro);
     color: var(--colorContrasteClaro);
 }
+.enlace_menu:visited {
+    color: var(--colorPrincipalOscuro);
+}
 
+/* Подменю */
 ul .submenu {
     display: none;
     position: absolute;
@@ -181,420 +142,259 @@ ul .submenu {
     background-color: var(--colorPrincipalClaro);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     padding: 10px 0;
-    min-width: 0px;
     border-radius: 5px;
-    box-sizing: border-box;
-    list-style: none;  /* Убираем маркеры списка */
     z-index: 1000;
-    
 }
-
-li:hover > .submenu {
-    display: block;
-}
-
-
-.submenu li {
-    display: block; 
-    width: 100%;  /* Ширина подменю */
-}
-
+li:hover > .submenu { display: block; }
 .submenu li a {
     padding: 8px 20px;
-    color: #333;
-    text-decoration: none;
     display: block;
-    width: calc(100% - 40px); /* Вычитаем padding */
-    
+    color: #333;
 }
-
 .submenu li a:hover {
     background-color: var(--colorContraste);
     color: var(--colorPrincipal);
 }
 
-
-/* estilos del cuerpo*/
-main{
+/* =========================================
+   Main Content
+========================================= */
+main {
     background-color: var(--fondoOscuro);
-    padding:var(--paddingGeneral);
+    padding: var(--paddingGeneral);
     min-height: calc(100vh - (var(--alturaCabecera) + var(--alturaPie) + var(--alturaMenu) + calc(4 * var(--paddingGeneral))));
 }
-
-
-section{
+section {
     background-color: var(--fondoClaro);
-    padding:var(--paddingGeneral);
+    padding: var(--paddingGeneral);
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(40, 36, 36, 0.3);
-	color: var(--colorPrincipalOscuro);
+    color: var(--colorPrincipalOscuro);
 }
 
-
-
-
+/* Товары */
 .product-cart-container {
     display: flex;
-    flex-direction: column; /* Размещаем карточки вертикально */
-    gap: 5px; /* Добавляем отступы между карточками */
-
+    flex-direction: column;
+    gap: 5px;
 }
-
 .product-card {
+    display: flex;
     background-color: var(--fondoClaro);
     border: 1px solid #084303;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 10px;
-    display: flex;
-    flex-direction: row; /* Горизонтальное содержание карточки */
-    align-items: center;
-    width: calc(100% - 20px); /* Устанавливаем ширину карточки */
     overflow: hidden;
-
+    width: calc(100% - 20px);
 }
-
 .product-image {
-    flex: 0 0 27%; /* Занимает не более 20% от ширины карточки */
+    flex: 0 0 27%;
     max-width: 27%;
-    height: auto;
+    margin-right: 20px;
     border-radius: 5px;
-    margin-right: 20px; /* Отступ справа от изображения */
-    box-sizing: border-box;
 }
-
 .product-details {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    flex-grow: 1;
     padding: 0 20px;
-    flex-grow: 1; /* Занимаем оставшееся пространство */
-    overflow: hidden; /* Скрываем переполнение */
-    text-overflow: ellipsis; /* Добавляем многоточие, если текст выходит за границы */
-    white-space: nowrap; /* Оставляем текст в одну строку */
-    box-sizing: border-box; /* Учитываем padding и border в размерах */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
-
 .product-title {
     font-size: 1.3em;
     margin: 10px 0;
-    white-space: normal; /* Разрешаем переносы внутри текста */
-    overflow: hidden; /* Скрываем переполнение */
-    text-overflow: ellipsis; /* Добавляем многоточие, если текст выходит за границы */
+    white-space: normal;
 }
-
-.product-unit,
-.product-price {
+.product-unit, .product-price {
     font-size: 1.2em;
     margin: 5px 0;
-    
 }
-.product-price{
-    font-weight: bold;
-}
+.product-price { font-weight: bold; }
 
-.product-quantity {
-    margin: 15px 0;
-}
-
-.product-quantity label {
-    margin-right: 5px;
-}
-
-
-.quantity-btn.decrease,
-.quantity-btn.increase {
-    padding: 0 5px; /* Немного увеличиваем кнопку "-" */
-    border: 1px solid var(--colorPrincipalOscuro);
-}
 input[type="number"] {
-    width: 50px; /* Увеличиваем ширину */
+    width: 50px;
     font-size: 1em;
-    text-align: center; /* Размещаем число по центру */
+    text-align: center;
     border: 1px solid var(--colorPrincipalOscuro);
     border-radius: 5px;
 }
-
+.quantity-btn.decrease, .quantity-btn.increase {
+    padding: 0 5px;
+    border: 1px solid var(--colorPrincipalOscuro);
+}
 .add-to-cart-btn {
     background-color: var(--colorPrincipal);
     color: var(--fondoClaro);
-    border: none;
-    padding: 10px 10px;
+    padding: 10px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1em;
+    border: none;
     transition: background-color 0.3s;
-    align-self: flex-start; /* Выравниваем кнопку по началу */
 }
-
 .add-to-cart-btn:hover {
     background-color: var(--colorPrincipalClaro);
 }
 
-/* Общие стили для таблицы */
+/* =========================================
+   Table Styles
+========================================= */
 #tablas {
     width: 100%;
-    max-width: 100%;
-    box-sizing: border-box; /* Учитываем padding и border в общих размерах */
-    overflow-x: auto; /* Добавляем горизонтальную прокрутку, если таблица выходит за границы */
+    overflow-x: auto;
 }
-
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 0;
 }
-
 th, td {
     border: 1px solid #ddd;
     padding: 8px;
-    text-align: left;
 }
-
 thead th {
     background-color: var(--fondoOscuro);
     font-weight: bold;
 }
-
+tfoot th, tfoot td {
+    text-align: center;
+    font-weight: bold;
+}
 tbody tr:hover {
     background-color: var(--fondoOscuro);
 }
-tfoot tr{
-    width: 100%;
-    background-color: var(--fondoOscuro);
-}
-tfoot th {
-    text-align: center;
-    font-weight: bold;
-}
-tfoot td {
-    text-align: center;
-    font-weight: bold;
-}
 
-/* Медиа-запрос для ширины экрана менее 425px */
-@media (max-width: 768px) {
-    table, thead, tbody, tfoot, th, td, tr {
-        display: block;
-        width: calc(100%-40px);
-    }
-
-    /* Скрываем изображения */
-    td:first-child, th, tfoot tr th:first-child {
-        display: none;
-    }
-
-    /* Делаем колонки 2, 3 и 4 отдельными строками */
-    td:nth-child(2), td:nth-child(3), td:nth-child(4) {
-        width: calc(100%-40px);
-        display: block;
-    }
-
-    /* Добавляем заголовки к колонкам 2, 3 и 4 */
-    tbody tr td:nth-child(2)::before {
-        content: "Наименование: ";
-        font-weight: bold;
-    }
-
-    td:nth-child(3)::before {
-        content: "Количество: ";
-        font-weight: bold;
-    }
-
-    td:nth-child(4)::before {
-        content: "Цена: ";
-        font-weight: bold;
-    }
-
-    /* Устанавливаем вертикальное расположение для колонки выбора количества */
-    td:nth-child(5) {
-        display: flex;
-        flex-direction: column;
-        width: calc(100%-40px);
-    }
-
-    td:nth-child(5)::before {
-        content: "Выбрать кол-во: ";
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    /* Перемещаем стоимость на отдельную строку */
-    td:nth-child(6) {
-        width: calc(100%-40px);
-        display: block;
-    }
-
-    td:nth-child(6)::before {
-        content: "Стоимость: ";
-        font-weight: bold;
-    }
-
-    
-    tfoot td {
-        text-align: center;
-        padding-top: 10px;
-        display: block;
-        font-weight: bold;
-    }
-}
-
-
-/*Estilo del pie*/
-footer{
+/* =========================================
+   Footer
+========================================= */
+footer {
     background-color: var(--colorPrincipal);
-    height:var(--alturaPie);
-   
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
+    height: var(--alturaPie);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
 #pie_izq {
     width: 70%;
-	display: flex;
-	flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    list-style: none;
 }
 #redes-sociales {
     display: flex;
-    align-items: center; 
+    align-items: center;
     justify-content: space-around;
-
     list-style: none;
 }
-    
 #redes-sociales li {
-    display: inline-flex;     /* Используем inline-flex для элементов списка */
-    padding: 0 25px;          /* Добавляем отступы между элементами */
+    display: inline-flex;
+    padding: 0 25px;
 }
-
-#pie_der {
-    width: 30%;
-}
-
-footer p{
-    
+#pie_der { width: 30%; }
+footer p {
     font-size: 1rem;
-    color:var(--colorPrincipalClaro);
+    color: var(--colorPrincipalClaro);
     font-weight: bold;
-    display: block;
     text-align: center;
-    list-style: none; 
-    position: relative;
-
 }
 
-.telegram-icon {
-    font-size: 40px; /* Размер иконки */
-    color: var(--colorContraste);   /* Цвет иконки */
-    text-decoration: none;
-    transition: color 0.3s;
-}
-.telegram-icon:hover {
-    color: #429fd9; /* Цвет иконки при наведении */
-}
-
-.whatsapp-icon {
-    font-size: 40px; /* Размер иконки */
-    color: var(--colorContraste);   /* Цвет иконки */
-    text-decoration: none;
-    transition: color 0.3s;
-}
-.whatsapp-icon:hover {
-    color: var(--colorPrincipalOscuro); /* Цвет иконки при наведении */
-}
-
+/* Соцсети */
+.telegram-icon,
+.whatsapp-icon,
 .email-icon {
-    font-size: 40px; /* Размер иконки */
-    color: var(--colorContraste);   /* Цвет иконки */
-    text-decoration: none;
+    font-size: 40px;
+    color: var(--colorContraste);
     transition: color 0.3s;
+    text-decoration: none;
 }
-.email-icon:hover {
-    color: var(--colorPrincipalOscuro); /* Цвет иконки при наведении */
-}
+.telegram-icon:hover { color: #429fd9; }
+.whatsapp-icon:hover,
+.email-icon:hover { color: var(--colorPrincipalOscuro); }
 
+/* =========================================
+   Scroll To Top
+========================================= */
 #arriba {
     position: fixed;
     bottom: var(--margen);
     right: 1.5rem;
     background-color: transparent;
-    
-    text-decoration: none;
-  
 }
-#arriba a {
-    color: inherit; /* Наследуем цвет родительского элемента */
-    text-decoration: none;
-}
-
+#arriba a { color: inherit; text-decoration: none; }
 #arriba a i {
-    color: #1fb311; /* Изменяем цвет стрелки */
-    transition: color 0.3s; /* Добавляем анимацию изменения цвета */
+    color: #1fb311;
+    transition: color 0.3s;
 }
-
 #arriba a i:hover {
-    color: #82e66e; /* Цвет стрелки при наведении курсора */
+    color: #82e66e;
 }
 
-@media (max-width: 768px) {
+/* =========================================
+   Responsive Media Queries
+========================================= */
+
+/* Mobile (0 - 767px) */
+@media (max-width: 767px) {
     nav {
         position: sticky;
         top: 0;
         z-index: 1000;
-		padding: var(--margen);
-		
-	nav ul li{
-		display: flex;
-		justify-content: center;
-        }
+        padding: var(--margen);
     }
-						
-	.enlace_menu {
-	display: flex;
-	flex-wrap: wrap;
-        
-    justify-content: flex-start;
-    font-size: 24px;
+    nav ul li {
+        display: flex;
+        justify-content: center;
     }
-	#arriba {
-	display: none;
-	}}
-	
-    @media (min-width: 768px) {
-        .product-cart-container {
-            flex-direction: row; /* Размещаем карточки горизонтально */
-            flex-wrap: wrap; /* Переносим карточки на следующую строку, если не хватает места */
-            gap: 10px; /* Добавляем отступы между карточками */
-        }
-        
-        .product-card {
-            width: calc(50% - 30px); /* Устанавливаем ширину карточки на 33% минус отступ */
-            margin-bottom: 20px; /* Добавляем нижний отступ для карточек */
-        }
+    .enlace_menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        font-size: 24px;
     }
-    @media (min-width: 1024px) {
-        .product-cart-container {
-            flex-direction: row; /* Размещаем карточки горизонтально */
-            flex-wrap: wrap; /* Переносим карточки на следующую строку, если не хватает места */
-            gap: 10px; /* Добавляем отступы между карточками */
-        }
-        
-        .product-card {
-            width: calc(33% - 30px); /* Устанавливаем ширину карточки на 33% минус отступ */
-            margin-bottom: 20px; /* Добавляем нижний отступ для карточек */
-        }
+    #arriba {
+        display: none;
     }
-    @media (max-width: 320px) {
-        .quantity-controls {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 5px; /* Добавляем отступы между элементами */
-        }
-    
-        
+    table, thead, tbody, tfoot, th, td, tr {
+        display: block;
+        width: 100%;
     }
-    							
+    td:first-child, th, tfoot tr th:first-child {
+        display: none;
+    }
+    td:nth-child(2), td:nth-child(3), td:nth-child(4), td:nth-child(6) {
+        display: block;
+        width: 100%;
+    }
+    td:nth-child(2)::before { content: "Наименование: "; font-weight: bold; }
+    td:nth-child(3)::before { content: "Количество: "; font-weight: bold; }
+    td:nth-child(4)::before { content: "Цена: "; font-weight: bold; }
+    td:nth-child(5) {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    td:nth-child(5)::before {
+        content: "Выбрать кол-во: ";
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    td:nth-child(6)::before {
+        content: "Стоимость: ";
+        font-weight: bold;
+    }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .product-cart-container {
+        display: flex;
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .product-card {
+        width: calc(50% - 20px);
+        margin-bottom: 20px;
+    }
+}
+

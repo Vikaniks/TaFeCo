@@ -58,6 +58,7 @@ public class SecurityConfig {
                                 "/confirmar_order",
                                 "/finalOrder",
                                 "/order",
+                                "/test",
                                 "/error"
                         ).permitAll()
                         .requestMatchers("/api/user").hasRole("USER")

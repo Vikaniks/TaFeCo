@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>DaData Test</title>
+</head>
+<body>
+<input id="city" name="city" type="text" placeholder="Введите город" />
+
+<!-- 1. jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- 2. DaData Suggestions -->
+<script src="https://cdn.jsdelivr.net/npm/suggestions-jquery@latest/dist/js/jquery.suggestions.min.js"></script>
+
+<!-- 3. Инициализация плагина (без type="module"!) -->
+<script>
+    $(function () {
+      $('#city').suggestions({
+        token: '50c5ef072a8b754bec28a7a5fd524d8c1d23d7cb', // Подставь свой реальный токен
+        type: 'ADDRESS',
+        onSelect: function (suggestion) {
+          console.log('Выбрано:', suggestion);
+        }
+      });
+    });
+</script>
+
+<!-- 4. Остальной JS (можно модульный) -->
+<script type="module" src="/js/main.js"></script>
+</body>
+</html>
