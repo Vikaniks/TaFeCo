@@ -570,11 +570,9 @@ th, td {
 
 .pdf-header,
 .pdf-footer {
-    display: none;
-}
-
-.pdf-header,
-.pdf-footer {
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
     text-align: center;
     margin: 20px 0;
     font-family: Arial, sans-serif;
@@ -595,6 +593,18 @@ th, td {
     border-top: 1px solid #ccc;
     padding-top: 10px;
 }
+
+/* Показывать при генерации PDF */
+.pdf-visible {
+    visibility: visible !important;
+    height: auto !important;
+}
+
+/* Защита от разрыва строк внутри таблицы */
+table, thead, tbody, tr, td, th {
+    page-break-inside: avoid !important;
+}
+
 
 
 
@@ -748,7 +758,7 @@ tfoot th button:hover {
           min-width: 150px;
           display: flex;
           flex-direction: column;
-
+          align-item: center;
         }
 
         .fake-radio {
@@ -875,6 +885,35 @@ tfoot th button:hover {
     text-decoration: underline; /* Подчеркиваем текст */
 
 }
+
+.payment-description {
+    display: none; /* Скрыт по умолчанию */
+}
+#comment-block {
+  display: none;
+}
+
+.summary-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.summary-block,
+.delivery-block {
+  flex: 1 1 200px;
+  max-width: 500px;
+  min-width: 200px;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
 
 /* Стили для контейнера с формой регистрации */
 .container-row {
@@ -1240,6 +1279,24 @@ tfoot th button:hover {
         margin-bottom: 0; /* Убираем отступ снизу */
         text-align: left; /* Выравниваем текст по краю  */
     }
+    .summary-container {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .summary-block {
+        order: 1;
+        flex: 0 1 auto;
+        height: auto;
+      }
+
+      .delivery-block {
+        order: 2;
+        flex: 0 1 auto;
+        width: auto;
+        height: auto;
+      }
 }
 
 

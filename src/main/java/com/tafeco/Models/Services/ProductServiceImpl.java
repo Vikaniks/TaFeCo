@@ -189,11 +189,9 @@ public class ProductServiceImpl implements IProductService {
 
 
     @Override
-    public ProductDTO findByProduct(String productName) {
-        Product product = productRepository.findByProduct(productName);
-        if (product == null) {
-            throw new ResourceNotFoundException("Продукт с названием '" + productName + "' не найден");
-        }
+    public ProductDTO findByProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Продукт с ID " + productId + " не найден"));
         return productMapper.toDTO(product);
     }
 

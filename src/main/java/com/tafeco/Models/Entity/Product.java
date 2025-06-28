@@ -1,10 +1,9 @@
 package com.tafeco.Models.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +11,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "order")
 @Entity
 @Table(name="products")
 public class Product  {
@@ -35,20 +34,25 @@ public class Product  {
     private boolean active = true;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name="categorise")
     private Categorise categorise;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Archive> archives = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "dimension_id")
+    @JsonIgnore
     private Dimension dimension;
 
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private Set<Store> stores = new HashSet<>();
 }

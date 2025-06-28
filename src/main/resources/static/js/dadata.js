@@ -1,8 +1,15 @@
 async function initDaData() {
+  const pathname = window.location.pathname;
+  if (!pathname.includes('order') && !pathname.includes('register')) {
+    // Выход, если не нужная страница
+    return;
+  }
+
   if (typeof $.fn.suggestions !== 'function') {
     console.error('DaData Suggestions плагин не загружен');
     return;
   }
+
 
   const token = '50c5ef072a8b754bec28a7a5fd524d8c1d23d7cb';
 

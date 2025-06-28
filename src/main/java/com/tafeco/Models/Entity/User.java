@@ -1,5 +1,6 @@
 package com.tafeco.Models.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,6 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "users")
 public class User {
@@ -43,6 +43,7 @@ public class User {
     private Set<RoleUser> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Order> orders = new HashSet<>();
 
     @Column(nullable = false)

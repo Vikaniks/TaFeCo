@@ -33,7 +33,13 @@
      const productCard = buttonElement.closest('.product-card');
      if (!productCard) return;
 
-     const productName = productCard.querySelector('.product-title')?.textContent.trim();
+     const productId = parseInt(productCard.dataset.id, 10);
+         if (!productId) {
+             console.error('Ошибка: productId отсутствует или некорректен');
+             return;
+         }
+     const productName = productCard.dataset.name;
+     /*const productName = productCard.querySelector('.product-title')?.textContent.trim();*/
      const quantityInput = productCard.querySelector('.quantity-input');
      const quantity = parseInt(quantityInput?.value || '1');
      const image = productCard.querySelector('img')?.src;
@@ -51,11 +57,19 @@
      // Загружаем текущую корзину из localStorage (на всякий случай)
      const currentCart = JSON.parse(localStorage.getItem('cart-items') || '{}');
 
-     if (currentCart[productName]) {
-         currentCart[productName].quantity += quantity;
-     } else {
-         currentCart[productName] = { quantity, image, unit, price, category };
-     }
+     if (currentCart[productId]) {
+             currentCart[productId].quantity += quantity;
+         } else {
+             currentCart[productId] = {
+                 id: productId,
+                 productName,
+                 quantity,
+                 price,
+                 image,
+                 unit,
+                 category
+             };
+         }
 
      // Сохраняем в localStorage и обновляем отображение
      localStorage.setItem('cart-items', JSON.stringify(currentCart));
@@ -74,7 +88,7 @@
      cartItemsContainer.innerHTML = '';
      let totalSum = 0;
 
-     Object.entries(cart).forEach(([productName, product]) => {
+     Object.entries(cart).forEach(([productId, product]) => {
          const row = document.createElement('tr');
 
          // Картинка
@@ -82,7 +96,7 @@
          imgCell.className = 'cart-img';
          const img = document.createElement('img');
          img.src = product.image;
-         img.alt = productName;
+         img.alt = productId;
          img.width = 50;
          img.height = 50;
          imgCell.appendChild(img);
@@ -90,15 +104,15 @@
          // Название
          const nameCell = document.createElement('td');
          nameCell.className = 'cart-name';
-         nameCell.textContent = productName;
+         nameCell.textContent = product.productName;
 
          // Кол-во и кнопки +
          const quantityCell = document.createElement('td');
          quantityCell.className = 'cart-quantity';
          quantityCell.innerHTML = `
-             <button class="button-decrease" onclick="decreaseCartItem('${productName}')">-</button>
+             <button class="button-decrease" onclick="decreaseCartItem('${productId}')">-</button>
              <span>${product.quantity} ${product.unit}</span>
-             <button class="button-increase" onclick="increaseCartItem('${productName}')">+</button>
+             <button class="button-increase" onclick="increaseCartItem('${productId}')">+</button>
          `;
 
          // Цена за штуку
@@ -131,12 +145,14 @@
      });
 
      totalItemsDisplay.textContent = `сумма: ${totalSum.toLocaleString('ru-RU', { minimumFractionDigits: 2 })} руб.`;
+     localStorage.setItem('totalSum', totalSum.toFixed(2));
+
  }
 
  // Увеличить количество товара в корзине
- export function increaseCartItem(productName) {
-     if (cart[productName]) {
-         cart[productName].quantity++;
+ export function increaseCartItem(productId) {
+     if (cart[productId]) {
+         cart[productId].quantity++;
          localStorage.setItem('cart-items', JSON.stringify(cart));
          renderCartPage();
          updateCartCount();
@@ -144,9 +160,9 @@
  }
 
  // Уменьшить количество товара в корзине
- export function decreaseCartItem(productName) {
-     if (cart[productName] && cart[productName].quantity > 1) {
-         cart[productName].quantity--;
+ export function decreaseCartItem(productId) {
+     if (cart[productId] && cart[productId].quantity > 1) {
+         cart[productId].quantity--;
          localStorage.setItem('cart-items', JSON.stringify(cart));
          renderCartPage();
          updateCartCount();
@@ -154,8 +170,8 @@
  }
 
  // Удалить товар из корзины
- export function removeFromCart(productName) {
-     delete cart[productName];
+ export function removeFromCart(productId) {
+     delete cart[productId];
      localStorage.setItem('cart-items', JSON.stringify(cart));
      renderCartPage();
      updateCartCount();

@@ -16,7 +16,7 @@ public class NotificationServiceImpl implements INotificationService {
     @Override
     public void notifyManager(Order order) {
         emailSender.send(order);
-        whatsappSender.send(order);
+        //whatsappSender.send(order);
     }
 
     @Override

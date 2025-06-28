@@ -2,17 +2,16 @@ package com.tafeco.Models.Services.Impl;
 
 import com.tafeco.DTO.DTO.OrderDTO;
 import com.tafeco.DTO.DTO.OrderDetailDTO;
-import com.tafeco.Models.Entity.Order;
 import com.tafeco.Models.Entity.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
+
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface IOrderService {
-    OrderDTO create(OrderDTO dto);
+    OrderDTO create(OrderDTO dto, String username);
     OrderDTO getById(int id);
     List<OrderDTO> getAll();
     void deleteOrder(int id);

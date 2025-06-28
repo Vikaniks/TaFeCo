@@ -7,6 +7,7 @@ import com.tafeco.Models.Services.Impl.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -17,8 +18,9 @@ public class OrderController {
     private final IOrderService orderService;
 
     @PostMapping
-    public OrderDTO create(@RequestBody OrderDTO dto) {
-        return orderService.create(dto);
+    public OrderDTO create(@RequestBody OrderDTO dto, Principal principal) {
+        String username = principal != null ? principal.getName() : null;
+        return orderService.create(dto, username);
     }
 
     @GetMapping("/{id}")

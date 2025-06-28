@@ -6,7 +6,6 @@ import com.tafeco.DTO.Mappers.OrderDetailMapper;
 import com.tafeco.DTO.Mappers.OrderMapper;
 import com.tafeco.Models.DAO.IOrderDAO;
 import com.tafeco.Models.DAO.IProductDAO;
-import com.tafeco.Models.DAO.IStoreDAO;
 import com.tafeco.Models.DAO.IUserDAO;
 import com.tafeco.Models.Entity.*;
 import com.tafeco.Models.Services.Impl.INotificationService;
@@ -15,6 +14,7 @@ import com.tafeco.Models.Services.Impl.IProductStockService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements IOrderService {
@@ -39,43 +40,68 @@ public class OrderServiceImpl implements IOrderService {
     private final IProductStockService productStockService;
 
     @Override
-    public OrderDTO create(OrderDTO dto) {
-        User user = userRepository.findById(dto.getUser())
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+    @Transactional
+    public OrderDTO create(OrderDTO dto, String username) {
 
-        Order order = orderMapper.toEntity(dto);
-        order.setUser(user);
-        order.setOrderDate(LocalDate.now());
-        order.setStatus(OrderStatus.NEW);
+        Order order = new Order();
 
-        Set<OrderItem> items = dto.getItems().stream().map(itemDto -> {
-            Product product = productRepository.findById(itemDto.getProduct())
-                    .orElseThrow(() -> new RuntimeException("Продукт не найден"));
+        // 1. Пользователь: авторизованный или null (гость)
+        User user = null;
+        if (dto.getUser() != null) {
+            user = userRepository.findById(dto.getUser())
+                    .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+        } else if (username != null && !username.isBlank()) {
+            user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+        }
+        order.setUser(user); // может быть null для гостя
 
-            OrderItem item = new OrderItem();
-            item.setProduct(product);
-            item.setQuantity(itemDto.getQuantity());
-            item.setPriceAtOrderTime(itemDto.getPriceAtOrderTime());
-            item.setOrder(order);
-            return item;
-        }).collect(Collectors.toSet());
+        // 2. Дата заказа — используем из DTO, если есть, иначе — текущая
+        if (dto.getOrderDate() != null) {
+            order.setOrderDate(dto.getOrderDate());
+        } else {
+            order.setOrderDate(LocalDate.now());
+        }
 
+        // 3. Статус заказа — из DTO или NEW
+        order.setStatus(dto.getStatus() != null ? dto.getStatus() : OrderStatus.NEW);
+
+        // 4. Позиции заказа
+        Set<OrderItem> items = dto.getItems().stream()
+                .map(itemDto -> {
+                    // Ищем продукт по ID
+                    Product product = productRepository.findById(itemDto.getProduct())
+                            .orElseThrow(() -> new RuntimeException("Продукт не найден: ID = " + itemDto.getProduct()));
+
+                    OrderItem item = new OrderItem();
+                    item.setProduct(product);
+                    item.setQuantity(itemDto.getQuantity());
+                    item.setPriceAtOrderTime(itemDto.getPriceAtOrderTime()); // уже передаётся с фронта
+                    item.setOrder(order); // устанавливаем связь
+                    return item;
+                })
+                .collect(Collectors.toSet());
         order.setItems(items);
-        order.setTotalPrice(
-                items.stream()
-                        .map(i -> i.getPriceAtOrderTime().multiply(BigDecimal.valueOf(i.getQuantity())))
-                        .reduce(BigDecimal.ZERO, BigDecimal::add)
-        );
 
-        // Сохраняем заказ
+        // 5. Общая цена — пересчитываем (на всякий случай)
+        BigDecimal total = items.stream()
+                .map(i -> i.getPriceAtOrderTime().multiply(BigDecimal.valueOf(i.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        order.setTotalPrice(total);
+
+        // 6. Сохраняем заказ (каскадно сохранятся и позиции)
         Order savedOrder = orderRepository.save(order);
 
-        // Отправляем уведомление менеджеру
+        OrderDTO result = orderMapper.toDTO(savedOrder);
+
+
+        // 7. Отправка уведомления менеджеру
         notificationService.notifyManager(savedOrder);
 
-        return orderMapper.toDTO(savedOrder);
-    }
+        // 8. Возвращаем OrderDTO
+        return result;
 
+    }
 
     @Override
     public OrderDTO getById(int id) {

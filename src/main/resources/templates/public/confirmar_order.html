@@ -4,12 +4,19 @@
       layout:decorate="~{fragments/layout}">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaFe - Co</title>
+    <title>TaFe & Co</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" th:href="@{/img/Pollo.svg}" />
     <link rel="stylesheet" th:href="@{/css/styles_2.css}" />
-    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@22.6.0/dist/css/suggestions.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/suggestions-jquery@22.6.0/dist/js/jquery.suggestions.min.js"></script>
 </head>
 
 <body>
@@ -25,14 +32,17 @@
                 <p>Подтверждение заказа</p>
             </div>
 
-            <h3>Оформлен заказ Nº<span id="number_order"></span><span id="data-order"></span></h3>
+            <h3>Оформлен заказ -<span id="number_order"></span></h3>
                 <div class="form-group-row">
                     <p>Получатель: <strong><span id="recipient"></span></strong></p>
                     <p>Телефон: <strong><span id="phone"></span></strong></p>
                     <p>Адрес доставки: <strong><span id="address"></span></strong></p>
                    
                     <p>Дата-время доставки:<strong><span id="delivery-datetime"></span></strong></p>
-                    <p>Метод оплаты:<strong><span id="payment-option-text"></span></strong></p>
+                    <p>Метод оплаты:  <strong><span id="payment-option-text"></span></strong></p>
+                    <p>Комментарий: <span id="comment-display"></span></p>
+
+
                 </div>
             <table class="custom-table">
                 <thead>
@@ -48,74 +58,47 @@
                 </thead>
                 <tbody id="cart-items">
                     <!-- Товары будут загружены сюда -->
-                    <p><strong>Итого: <span id="total-sum">0 ₽</span></strong></p>
-                    <p><strong>Скидка: <span id="discount">0 ₽</span></strong></p>
-                    <p><strong>К оплате: <span id="total-payment">0 ₽</span></strong></p>
                 </tbody>
                 <tfoot>
-                    <tr>
-                        <th scope="row" >
-                            <td id="go-home" colspan="1">
-                                <a href="index.html" id="go-home-link">На главную</a>
-                            </td>
-                            <td id="download" colspan="1">
-                                <a href="#" id="download-pdf">Скачать в PDF</a>
-                            </td>
-                            <td id="total-items" colspan="2"></td>
-                        </th>
-                        
-                    </tr>
+                <tr>
+                    <td id="go-home" colspan="1">
+                        <a href="/" id="go-home-link">На главную</a>
+                    </td>
+                    <td id="download" colspan="1">
+                        <a href="#" id="download-pdf">Скачать в PDF</a>
+                    </td>
+                    <td id="total-items" colspan="2"></td>
+                </tr>
                 </tfoot>
+
             </table>
+
+            <div class="summary-container">
+                <div class="delivery-block">
+                    <p>Информация о доставке:</p>
+                    <p>Бесплатно при сумме свыше 3000 ₽</p>
+                    <p>Ожидайте звонка менеджера</p>
+                </div>
+                <div class="summary-block">
+                    <p><strong>Итого: <span id="total-sum"></span></strong></p>
+                    <p><strong><span id="delivery-cost"></span></strong></p>
+                    <p><strong>К оплате: <span id="total-payment"></span></strong></p>
+                </div>
+            </div>
+
+
             <div class="pdf-footer">
                 <p>Спасибо за покупку!</p>
-                <p>Контакты: example@mail.com | +7 (123) 456-78-90</p>
+                <p>Контакты: tafeco.ferma@mail.com</p>
             </div>
         </section>
+
+
     
  </main>
 
 <div th:replace="include/footer :: footer"></div>
 <script type="module" src="/static/js/main.js"></script>
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-    const paymentDisplay = document.getElementById("payment-option-text");
-    if (!paymentDisplay) {
-        console.warn("Элемент #payment-option-text не найден");
-        return;
-    }
-
-    const orderDataRaw = localStorage.getItem("orderData");
-    if (!orderDataRaw) {
-        console.warn("orderData в localStorage отсутствует");
-        return;
-    }
-
-    let orderData;
-    try {
-        orderData = JSON.parse(orderDataRaw);
-    } catch (e) {
-        console.error("Ошибка парсинга orderData:", e);
-        return;
-    }
-
-    const paymentTextMap = {
-        "cash": "Оплата наличными при доставке",
-        "card": "Банковская карта"
-    };
-
-    paymentDisplay.textContent = paymentTextMap[orderData.paymentOption] || "Не указано";
-});
-
-</script>
-
-
-<script src="/static/js/lib/html2pdf.bundle.min.js"></script>
-<script src="/static/js/lib/jspdf.umd.min.js"></script>
-
-
     
 </body>
 

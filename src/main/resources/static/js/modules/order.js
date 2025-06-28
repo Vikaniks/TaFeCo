@@ -53,33 +53,15 @@ export function setupOrderForm() {
         if (fixedPositions.includes(phoneInput.selectionStart) && (event.key === "Backspace" || event.key === "Delete")) {
             event.preventDefault();
         }
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const data = new FormData(form);
-            const response = await fetch('/api/order', {
-                method: 'POST',
-                body: data
-            });
-            if (response.ok) {
-                localStorage.removeItem('orderData');
-                window.location.href = '/order/success';
-            } else {
-                alert("Ошибка оформления заказа");
-            }
-        });
-        form.addEventListener("input", () => {
-            const formData = {
-                name: nameInput.value,
-                surname: surnameInput.value,
-                phone: phoneInput.value,
-                email: emailInput.value
-            };
-            localStorage.setItem("orderData", JSON.stringify(formData));
-        });
-
-
     });
+
+    // Навешиваем после всех input-элементов
+    form.addEventListener("input", () => {
+        const userData = getUserData();
+        localStorage.setItem("userData", JSON.stringify(userData));
+    });
+
+
 
     function showErrorMessage(field, message) {
         const errorSpan = field.nextElementSibling;
@@ -136,37 +118,48 @@ export function setupOrderForm() {
         return isValid;
     }
 
-    function getOrderData() {
+    function getUserData() {
         return {
-            name: nameInput.value.trim(),
-            surname: surnameInput.value.trim(),
-            phone: phoneInput.value.trim(),
-            email: emailInput.value.trim(),
-            city: document.getElementById("city")?.value.trim() || "",
-            barrio: document.getElementById("barrio")?.value.trim() || "",
-            address: document.getElementById("address")?.value.trim() || "",
-            addressExtra: document.getElementById("address-extra")?.value.trim() || "",
+            name: document.getElementById("name")?.value.trim() || "",
+            surname: document.getElementById("surname")?.value.trim() || "",
+            phone: document.getElementById("phone")?.value.trim() || "",
+            email: document.getElementById("email")?.value.trim() || "",
+            locality: document.getElementById("locality")?.value.trim() || "",  // Город
+            district: document.getElementById("district")?.value.trim() || "",  // Район
+            region: document.getElementById("region")?.value.trim() || "",      // Регион
+            street: document.getElementById("street")?.value.trim() || "",      // Улица
+            house: document.getElementById("house")?.value.trim() || "",        // Дом
+            apartment: document.getElementById("apartment")?.value.trim() || "",// Квартира
+            addressExtra: document.getElementById("address-extra")?.value.trim() || "", // Доп. информация
             date: document.getElementById("date")?.value.trim() || "",
-            time: document.getElementById("time")?.value.trim() || "",
-            paymentOption: document.getElementById("payment-option")?.value || "cash"
+            time: document.getElementById("time")?.value || "",
+            paymentOption: document.getElementById("payment-option")?.value || "cash",
         };
     }
 
+
     // Заполняем поля, если данные есть в localStorage
     function populateForm() {
-        const orderData = localStorage.getItem("orderData");
-        if (orderData) {
-            const tempData = JSON.parse(orderData);
-            if (tempData.name) nameInput.value = tempData.name;
-            if (tempData.surname) surnameInput.value = tempData.surname;
-            if (tempData.phone) phoneInput.value = tempData.phone;
-            if (tempData.email) emailInput.value = tempData.email;
-            if (tempData.city) document.getElementById("city").value = tempData.city;
-            if (tempData.barrio) document.getElementById("barrio").value = tempData.barrio;
-            if (tempData.address) document.getElementById("address").value = tempData.address;
-            if (tempData.addressExtra) document.getElementById("address-extra").value = tempData.addressExtra;
-            if (tempData.date) document.getElementById("date").value = tempData.date;
-            if (tempData.time) document.getElementById("time").value = tempData.time;
+        const userData = localStorage.getItem("userData");
+        if (!userData) return;
+
+        const tempData = JSON.parse(userData);
+
+        if (tempData.name) document.getElementById("name").value = tempData.name;
+        if (tempData.surname) document.getElementById("surname").value = tempData.surname;
+        if (tempData.phone) document.getElementById("phone").value = tempData.phone;
+        if (tempData.email) document.getElementById("email").value = tempData.email;
+        if (tempData.locality) document.getElementById("locality").value = tempData.locality;
+        if (tempData.district) document.getElementById("district").value = tempData.district;
+        if (tempData.region) document.getElementById("region").value = tempData.region;
+        if (tempData.street) document.getElementById("street").value = tempData.street;
+        if (tempData.house) document.getElementById("house").value = tempData.house;
+        if (tempData.apartment) document.getElementById("apartment").value = tempData.apartment;
+        if (tempData.addressExtra) document.getElementById("address-extra").value = tempData.addressExtra;
+        if (tempData.date) document.getElementById("date").value = tempData.date;
+        if (tempData.time) document.getElementById("time").value = tempData.time;
+        if (tempData.paymentOption && document.getElementById("payment-option")) {
+            document.getElementById("payment-option").value = tempData.paymentOption;
         }
     }
 
@@ -189,9 +182,14 @@ export function setupOrderForm() {
             alert("Исправьте данные перед отправкой!");
             return;
         }
+        const commentInput = document.getElementById("comment");
+        if (commentInput) {
+            sessionStorage.setItem("orderComment", commentInput.value.trim());
+        }
 
-        const orderData = getOrderData();
-        localStorage.setItem("orderData", JSON.stringify(orderData));
+
+        const userData = getUserData();
+        localStorage.setItem("userData", JSON.stringify(userData));
 
         window.location.href = "/finalOrder";
     });
@@ -202,7 +200,6 @@ export function setupOrderForm() {
 // final order.js
 
 export function populateFinalOrder() {
-    const orderData = JSON.parse(localStorage.getItem("orderData")) || {};
     const dateInput = document.getElementById("date");
     const timeSelect = document.getElementById("time");
     const deliveryDateTime = document.getElementById("delivery-datetime");
@@ -210,18 +207,35 @@ export function populateFinalOrder() {
     const paymentSelect = document.getElementById("payment-option");
     const paymentDisplay = document.getElementById("payment-option-text");
 
+
+    const userData = JSON.parse(localStorage.getItem("userData")) || {};
+
     if (!recipientEl) return; // если нет получателя, выходим (не на нужной странице)
 
     // Отображаем основные данные
-    recipientEl.textContent = `${orderData.name || "Не указано"} ${orderData.surname || "Не указано"}`;
-    document.getElementById("phone").textContent = orderData.phone || "Не указано";
-    document.getElementById("address").textContent = `${orderData.city || "Не указано"}, ${orderData.barrio || "Не указано"}, ${orderData.address || "Не указано"}`;
+    recipientEl.textContent = `${userData.name || "Не указано"} ${userData.surname || "Не указано"}`;
+    document.getElementById("phone").textContent = userData.phone || "Не указано";
+    // Адрес
+        const addressEl = document.getElementById("address");
+        if (addressEl) {
+            const parts = [
+                userData.region,
+                userData.locality,
+                userData.district,
+                userData.street,
+                userData.house,
+                userData.apartment,
+                userData.addressExtra
+            ].filter(Boolean); // убираем пустые значения
 
-    if (dateInput && orderData.date) {
-        dateInput.value = orderData.date;
+            addressEl.textContent = parts.join(", ") || "Не указано";
+        }
+
+    if (dateInput && userData.date) {
+        dateInput.value = userData.date;
     }
-    if (timeSelect && orderData.time) {
-        timeSelect.value = orderData.time;
+    if (timeSelect && userData.time) {
+        timeSelect.value = userData.time;
     }
 
     function formatDate(dateString) {
@@ -241,17 +255,17 @@ export function populateFinalOrder() {
             deliveryDateTime.innerHTML = `${formattedDate} &nbsp;|&nbsp; ${time}`;
 
             // Обновляем localStorage
-            orderData.date = date;
-            orderData.time = time;
-            localStorage.setItem("orderData", JSON.stringify(orderData));
+            userData.date = date;
+            userData.time = time;
+            localStorage.setItem("userData", JSON.stringify(userData));
         } else {
             deliveryDateTime.textContent = "Выберите дату и время";
         }
     }
 
-    // Отображаем дату и время из orderData, если есть
-    if (orderData.date && orderData.time && deliveryDateTime) {
-        deliveryDateTime.innerHTML = `${formatDate(orderData.date)} &nbsp;|&nbsp; ${orderData.time}`;
+    // Отображаем дату и время из userData, если есть
+    if (userData.date && userData.time && deliveryDateTime) {
+        deliveryDateTime.innerHTML = `${formatDate(userData.date)} &nbsp;|&nbsp; ${userData.time}`;
     } else if (deliveryDateTime) {
         deliveryDateTime.textContent = "Не указано";
     }
@@ -267,22 +281,28 @@ export function populateFinalOrder() {
         const paymentText = {
             "cash": "Оплата наличными при доставке",
             "card": "Банковская карта"
-        }[orderData.paymentOption] || "Не указано";
+        }[userData.paymentOption] || "Не указано";
 
         paymentDisplay.textContent = paymentText;
     }
+    // Отображаем комментарий к заказу из sessionStorage
+       const comment = sessionStorage.getItem("orderComment");
+       const commentDisplay = document.getElementById("comment");
+
+           if (comment && commentDisplay) {
+           commentDisplay.textContent = comment;
+       }
+
+       sessionStorage.removeItem("orderComment");
+
 }
-
-
-export function getOrderData() {
-    return JSON.parse(localStorage.getItem("orderData")) || {};
-}
-
 
 
 export function setupConfirmButton() {
     const confirmBtn = document.getElementById("confirm-order");
     const paymentSelect = document.getElementById("payment-option");
+    const paymentDisplay = document.getElementById("payment-option-text");
+
 
     if (confirmBtn) {
         confirmBtn.addEventListener("click", () => {
@@ -292,19 +312,22 @@ export function setupConfirmButton() {
             }
 
             //  Обновляем paymentOption в localStorage
-            const orderData = JSON.parse(localStorage.getItem("orderData")) || {};
+            const userData = JSON.parse(localStorage.getItem("userData")) || {};
             if (paymentSelect) {
-                orderData.paymentOption = paymentSelect.value;
-                localStorage.setItem("orderData", JSON.stringify(orderData));
+                userData.paymentOption = paymentSelect.value;
+                localStorage.setItem("userData", JSON.stringify(userData));
                  // сразу обновить отображение
                         if (paymentDisplay) {
-                            const paymentText = {
-                                "cash": "Оплата наличными при доставке",
-                                "card": "Банковская карта"
-                            }[orderData.paymentOption] || "Не указано";
-                            paymentDisplay.textContent = paymentText;
+                                    const paymentText = {
+                                        "cash": "Оплата наличными при доставке",
+                                        "card": "Банковская карта",
+                                        "online": "Онлайн-оплата"
+                                    };
+                                    paymentDisplay.textContent = paymentText[userData.paymentOption] || "Не указано";
+
                         }
-            }
+
+                 }
             const cart = JSON.parse(localStorage.getItem('cart-items')) || {};
             const cartEmpty = Object.keys(cart).length === 0;
             if (cartEmpty) {
@@ -328,11 +351,19 @@ export function downloadPDF() {
 
     pdfListenerInitialized = true;
 
+    // Чтение корзины
     function getCartFromStorage() {
-        const storedCart = localStorage.getItem('cart-items');
-        return storedCart ? JSON.parse(storedCart) : {};
+        const storedCart = localStorage.getItem('orderData'); // или 'cartItems' — см. как ты назвал
+        return storedCart ? JSON.parse(storedCart) : [];
     }
 
+    // Чтение пользовательских данных
+    function getUserDataFromStorage() {
+        const storedUserData = localStorage.getItem('userData');
+        return storedUserData ? JSON.parse(storedUserData) : {};
+    }
+
+    // Рендер корзины
     function renderCartToPDFTable(cart) {
         const cartItemsContainer = document.getElementById('cart-items');
         const totalItemsDisplay = document.getElementById('total-items');
@@ -341,52 +372,203 @@ export function downloadPDF() {
         cartItemsContainer.innerHTML = '';
         let totalSum = 0;
 
-        Object.entries(cart).forEach(([productName, product]) => {
+        cart.forEach((item) => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td><img src="${product.image}" width="50" height="50"></td>
-                <td>${productName}</td>
-                <td>${product.quantity} ${product.unit}</td>
-                <td>${product.price.toFixed(2)} руб.</td>
-                <td>${(product.price * product.quantity).toFixed(2)} руб.</td>
+                <td><img src="${item.image}" width="50" height="50"></td>
+                <td>${item.productName}</td>
+                <td>${item.quantity} ${item.unit || ''}</td>
+                <td>${item.price.toFixed(2)} руб.</td>
+                <td>${(item.price * item.quantity).toFixed(2)} руб.</td>
                 <td></td>
             `;
             cartItemsContainer.appendChild(row);
-            totalSum += product.quantity * product.price;
+            totalSum += item.quantity * item.price;
         });
 
         totalItemsDisplay.textContent = `Сумма: ${totalSum.toFixed(2)} руб.`;
     }
 
-    downloadBtn.addEventListener("click", () => {
+    // Рендер пользовательских данных
+    function renderUserData(userData) {
+        const nameField = document.getElementById('recipient');
+        const phoneField = document.getElementById('phone');
+        const addressField = document.getElementById('address');
+        const deliveryField = document.getElementById('delivery-datetime');
+        const paymentField = document.getElementById('payment-option-text');
+        const commentField = document.getElementById('comment-display');
+
+        if (nameField) nameField.textContent = userData.fullName || '';
+        if (phoneField) phoneField.textContent = userData.phone || '';
+        if (addressField) addressField.textContent = userData.address || '';
+        if (deliveryField) deliveryField.textContent = userData.deliveryDateTime || '';
+        if (paymentField) paymentField.textContent = userData.paymentOption || '';
+        if (commentField) commentField.textContent = userData.comment || '';
+    }
+
+    // Ожидание загрузки изображений
+    function waitForImagesToLoad(element) {
+        const images = element.querySelectorAll("img");
+        const promises = Array.from(images).map(img => {
+            if (img.complete) return Promise.resolve();
+            return new Promise(resolve => {
+                img.onload = img.onerror = resolve;
+            });
+        });
+        return Promise.all(promises);
+    }
+
+    // Нажатие на кнопку
+    downloadBtn.addEventListener("click", (event) => {
+        event.preventDefault();
         const cart = getCartFromStorage();
+        const userData = getUserDataFromStorage();
+
         renderCartToPDFTable(cart);
+        renderUserData(userData);
 
-        const header = document.querySelector('.pdf-header');
-        const footer = document.querySelector('.pdf-footer');
+        const original = document.getElementById("tablas");
+        if (!original) return;
 
-        if (header) header.style.display = 'block';
-        if (footer) footer.style.display = 'block';
+        const clone = original.cloneNode(true);
+        clone.id = "tablas-clone";
+        clone.style.position = 'relative';
+        clone.style.visibility = 'visible';
+        clone.style.top = '0';
+        clone.style.left = '0';
+        clone.style.width = '185mm';
+        clone.style.display = 'block';
+        clone.style.background = 'transparent';
 
-        setTimeout(() => {
-            const element = document.getElementById("tablas");
-            if (!element) return;
+        const table = clone.querySelector('.custom-table');
+        if (table) {
+            table.style.width = '100%';
+            table.style.backgroundColor = 'white';
+            table.style.borderCollapse = 'collapse';
+            const cells = table.querySelectorAll('th, tr, td, tfoot');
+            cells.forEach(cell => {
+                cell.style.backgroundColor = 'white';
+            });
+        }
 
+        const downloadLinkInClone = clone.querySelector('#download-pdf');
+        if (downloadLinkInClone) downloadLinkInClone.remove();
+        const goHomeLinkInClone = clone.querySelector('#go-home-link');
+        if (goHomeLinkInClone) goHomeLinkInClone.remove();
+
+        const header = clone.querySelector('.pdf-header');
+        const footer = clone.querySelector('.pdf-footer');
+        if (header) {
+            header.style.display = 'block';
+            header.classList.add('pdf-visible');
+        }
+        if (footer) {
+            footer.style.display = 'block';
+            footer.classList.add('pdf-visible');
+        }
+
+        document.body.appendChild(clone);
+
+        waitForImagesToLoad(clone).then(() => {
             const opt = {
-                margin: 5,
-                filename: 'order.pdf',
+                margin: 10,
+                filename: 'TaFeCo.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
+                html2canvas: { scale: 1.5, useCORS: true, scrollX: 0, scrollY: 0 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
-            html2pdf().set(opt).from(element).save().then(() => {
-                if (header) header.style.display = 'none';
-                if (footer) footer.style.display = 'none';
+            html2pdf().set(opt).from(clone).save().then(() => {
+                document.body.removeChild(clone);
             });
-        }, 100);
+        });
     });
+}
+
+
+export function updateDeliveryCost() {
+         const totalSum = parseFloat(localStorage.getItem('totalSum')) || 0;
+
+         const totalSumElem = document.getElementById('total-sum');
+           if (totalSumElem) {
+             totalSumElem.textContent = `${totalSum.toFixed(2)} руб.`;
+           }
+
+         let delivery = 0;
+         if (totalSum < 3000) {
+           delivery = 300.00;
+         }
+
+         // Показываем на странице
+         const deliveryElem = document.getElementById('delivery-cost');
+         if (deliveryElem) {
+           deliveryElem.textContent = `Доставка: ${delivery} руб.`;
+         }
+
+         // Можно сохранить доставку тоже
+         localStorage.setItem('deliveryCost', delivery.toString());
+       // Итог = товары - доставка
+         const finalTotal = totalSum + delivery;
+
+         // Показываем итог
+         const totalAmountElem = document.getElementById('total-payment');
+         if (totalAmountElem) {
+           totalAmountElem.textContent = `${finalTotal.toFixed(2)} руб.`;
+         }
+       }
+
+       updateDeliveryCost();
+
+
+export async function createAndRenderOrder() {
+  const orderDataRaw = localStorage.getItem('orderData');
+  if (!orderDataRaw) {
+    alert("Данные заказа отсутствуют");
+    return;
+  }
+
+  let orderData;
+  try {
+    orderData = JSON.parse(orderDataRaw);
+  } catch (e) {
+    alert("Ошибка разбора данных заказа");
+    return;
+  }
+
+  if (!orderData.items || orderData.items.length === 0) {
+    alert("В заказе нет товаров");
+    return;
+  }
+
+  // Принудительно убедимся, что items — массив
+  if (!Array.isArray(orderData.items)) {
+    orderData.items = Object.values(orderData.items);
+  }
+
+  try {
+    const response = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Ошибка при оформлении заказа: ${response.status} ${errorText}`);
+    }
+
+    const createdOrder = await response.json();
+    alert('Заказ успешно отправлен!');
+    localStorage.removeItem('cart-items');
+    localStorage.removeItem('orderData');
+
+    document.getElementById('number_order').textContent = `№ ${createdOrder.id} от ${new Date(createdOrder.orderDate).toLocaleDateString()}`;
+
+  } catch (error) {
+    console.error('Ошибка при создании заказа:', error);
+    alert('Ошибка: ' + error.message);
+  }
 }
 
 

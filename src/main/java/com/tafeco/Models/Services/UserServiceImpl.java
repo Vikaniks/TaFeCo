@@ -52,6 +52,9 @@ public class UserServiceImpl implements IUserService {
         if (userDAO.existsByEmail(dto.getEmail())) {
             throw new RuntimeException("Пользователь с таким email уже существует");
         }
+        if (userDAO.existsByUsername(dto.getUsername())) {
+            throw new RuntimeException("Пользователь с таким именем уже существует");
+        }
 
         User user = userMapper.fromRegisterDTO(dto);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));

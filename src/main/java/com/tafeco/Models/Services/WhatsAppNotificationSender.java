@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @ConfigurationProperties(prefix = "twilio")
 @Getter
@@ -32,11 +34,14 @@ public class WhatsAppNotificationSender {
     }
 
     public void send(Order order) {
+        String id = Objects.toString(order.getId(), "неизвестен");
+        String total = Objects.toString(order.getTotalPrice(), "0.00");
+
         Message message = Message.creator(
                 new com.twilio.type.PhoneNumber(whatsappToNumber),
                 new com.twilio.type.PhoneNumber(whatsappFromNumber),
-                "Новый заказ #" + order.getId() +
-                        ", сумма: " + order.getTotalPrice() + " руб."
+                "Новый заказ #" + id +
+                        ", сумма: " + total + " руб."
         ).create();
 
         log.info("WhatsApp сообщение отправлено с SID: {}", message.getSid());

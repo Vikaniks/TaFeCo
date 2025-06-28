@@ -1,7 +1,6 @@
 import { addToCart } from './cart.js';
 
 export function renderProductList() {
-    console.log('renderProductList вызван');
 
     const container = document.getElementById('product-list');
     if (!container) return;

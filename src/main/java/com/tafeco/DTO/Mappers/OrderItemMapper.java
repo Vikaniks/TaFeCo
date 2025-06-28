@@ -10,19 +10,19 @@ import org.mapstruct.Mapping;
 public interface OrderItemMapper {
 
     @Mapping(source = "product.id", target = "product")
-    @Mapping(source = "order.id", target = "orderId")
     OrderItemDTO toDTO(OrderItem orderItem);
 
-    @Mapping(source = "product", target = "product.id")
-    @Mapping(source = "orderId", target = "order.id")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "order", ignore = true)
+    @Mapping(source = "product", target = "product")
     OrderItem toEntity(OrderItemDTO dto);
 
-    // метод для маппинга Long -> Product
     default Product map(Long productId) {
         if (productId == null) return null;
         Product product = new Product();
         product.setId(productId);
         return product;
     }
-}
 
+
+}

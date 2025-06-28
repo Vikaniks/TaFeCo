@@ -4,6 +4,8 @@ import com.tafeco.DTO.DTO.OrderDTO;
 import com.tafeco.DTO.DTO.OrderItemDTO;
 import com.tafeco.Models.Entity.Order;
 import com.tafeco.Models.Entity.OrderItem;
+import com.tafeco.Models.Entity.User;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -19,7 +21,7 @@ public interface OrderMapper {
     @Mapping(target = "items", qualifiedByName = "orderItemsToDTO")
     OrderDTO toDTO(Order order);
 
-    @Mapping(source = "user", target = "user.id")
+    @Mapping(source = "user", target = "user")
     @Mapping(target = "items", ignore = true)
     Order toEntity(OrderDTO dto);
 
@@ -29,9 +31,15 @@ public interface OrderMapper {
         return items.stream().map(this::mapItem).collect(Collectors.toSet());
     }
 
-    @Mapping(source = "order.id", target = "orderId")
     @Mapping(source = "product.id", target = "product")
     OrderItemDTO mapItem(OrderItem item);
-}
 
+    // Добавим map(Long → User)
+    default User map(Long userId) {
+        if (userId == null) return null;
+        User user = new User();
+        user.setId(userId);
+        return user;
+    }
+}
 

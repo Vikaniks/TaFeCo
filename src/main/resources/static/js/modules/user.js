@@ -44,13 +44,39 @@ const handleRegistration = (event) => {
         password, // В реальном проекте лучше не хранить пароль в localStorage
     };
 
-    // Сохраняем данные в localStorage
-    localStorage.setItem('userProfile', JSON.stringify(userData));
+    fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Ошибка регистрации');
+        }
+        return response.json(); // получаем ответ с ID
+    })
+    .then(data => {
+        console.log('Регистрация успешна, ID:', data.id);
 
-    alert('Регистрация успешна! Добро пожаловать в личный кабинет.');
+        // Сохраняем профиль и ID пользователя
+        localStorage.setItem('userProfile', JSON.stringify({
+            id: data.id,
+            username: data.username,
+            email: data.email,
+            fullName: data.fullName,
+            deliveryAddress: data.deliveryAddress
+        }));
+
+        alert('Вы зарегистрированы!');
+        window.location.href = 'cabinet.html';
+    })
+    .catch(error => {
+        console.error('Ошибка при регистрации:', error);
+        alert('Ошибка при регистрации');
+    });
 
     // Перенаправляем на страницу личного кабинета
-    window.location.href = 'login.html';
+    window.location.href = '/login';
 };
 
 

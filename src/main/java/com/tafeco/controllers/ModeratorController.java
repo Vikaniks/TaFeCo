@@ -113,7 +113,7 @@ public class ModeratorController {
 
     // Получить продукт по точному названию
      @GetMapping("/products/by-product")
-    public ResponseEntity<ProductDTO> getByProduct(@RequestParam String product) {
+    public ResponseEntity<ProductDTO> getByProduct(@RequestParam Long product) {
         return ResponseEntity.ok(productService.findByProduct(product));
     }
 

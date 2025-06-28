@@ -22,7 +22,7 @@ public interface IProductService {
 
     // методы по фильтрации — также возвращают DTO
     List<ProductDTO> findByActive(Boolean active);
-    ProductDTO findByProduct(String productName);
+    ProductDTO findByProduct(Long product);
 
     // методы работы со складами
 

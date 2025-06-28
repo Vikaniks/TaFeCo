@@ -22,20 +22,76 @@ export function saveFormToStorage() {
 }
 
 export function restoreFormFromStorage() {
-  const data = JSON.parse(localStorage.getItem('orderData'));
-  if (!data) return;
-  const form = document.getElementById('order-form');
-  Object.keys(data).forEach(name => {
-    const el = form.elements[name];
-    if (el) el.value = data[name];
+    const data = JSON.parse(localStorage.getItem('orderData'));
+    const form = document.getElementById('order-form');
+    if (!data || !form) return;
+
+    // Восстановление значений
+    Object.keys(data).forEach(name => {
+        const el = form.elements[name];
+        if (el) el.value = data[name];
+    });
+
+    // Автоматическое сохранение при изменениях
+    form.addEventListener("input", () => {
+        const formData = {};
+        Array.from(form.elements).forEach(el => {
+            if (el.name) {
+                formData[el.name] = el.value;
+            }
+        });
+        localStorage.setItem("orderData", JSON.stringify(formData));
+    });
+}
+
+export function saveOrderData() {
+  const orderDate = new Date().toISOString().split('T')[0];
+  const userId = localStorage.getItem('userId');
+
+  const rawItems = JSON.parse(localStorage.getItem('cart-items') || '{}');
+  console.log('rawItems:', rawItems);
+
+  const entries = Object.entries(rawItems);
+
+  if (!entries.length) {
+    alert('Корзина пуста');
+    return null;
+  }
+
+  let totalPrice = 0;
+  const orderItems = entries.map(([key, item]) => {
+    const productId = item.id || item.productId;
+
+    if (!item.quantity || !item.price || !productId) {
+      throw new Error(`Неверные данные товара: ${item.productName || key || 'неизвестно'}`);
+    }
+    const price = parseFloat(item.price);
+    const quantity = parseInt(item.quantity);
+    totalPrice += price * quantity;
+
+    return {
+      id: null,
+      product: parseInt(productId),
+      quantity,
+      priceAtOrderTime: price,
+      orderId: null
+    };
   });
-  form.addEventListener("input", () => {
-      const formData = {
-          name: nameInput.value,
-          surname: surnameInput.value,
-          phone: phoneInput.value,
-          email: emailInput.value
-      };
-      localStorage.setItem("orderData", JSON.stringify(formData));
-  });
+
+  console.log('orderItems:', orderItems);
+  console.log('Array.isArray(orderItems):', Array.isArray(orderItems));
+
+  const orderDTO = {
+    id: 0,
+    orderDate,
+    user: userId ? parseInt(userId) : null,  // гость, если userId нет
+    items: Array.isArray(orderItems) ? orderItems : [orderItems],
+    totalPrice: parseFloat(totalPrice.toFixed(2)),
+    status: 'NEW'
+  };
+
+  console.log('orderDTO:', orderDTO);
+
+  localStorage.setItem('orderData', JSON.stringify(orderDTO));
+  return orderDTO;
 }

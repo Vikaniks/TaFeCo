@@ -12,15 +12,16 @@ import {
 import {
     setupOrderForm,
     populateFinalOrder,
-    getOrderData,
     setupConfirmButton,
     downloadPDF,
+    updateDeliveryCost,
+    createAndRenderOrder
 } from './modules/order.js';
 
 import { setupAuthForm } from './modules/auth.js';
 import { setupUserMenu, updateUserNameDisplay } from './modules/user.js';
 import { renderProductList } from './modules/shop.js';
-import { saveFormToStorage, restoreFormFromStorage } from './modules/storage.js';
+import { saveFormToStorage, restoreFormFromStorage, saveOrderData } from './modules/storage.js';
 
 
 
@@ -33,11 +34,12 @@ window.decreaseQuantity = decreaseQuantity;
 window.addToCart = addToCart;
 window.updateCartCount = updateCartCount;
 window.renderCartPage = renderCartPage;
+window.saveOrderData = saveOrderData;
 
 
 
 document.addEventListener('DOMContentLoaded', async () => {
-console.log('DOM загружен');
+
     updateCartCount();
     renderCartPage();
     setupUserMenu();
@@ -46,7 +48,8 @@ console.log('DOM загружен');
     downloadPDF();
     renderProductList();
     restoreFormFromStorage();
-
+    updateDeliveryCost();
+    saveOrderData()
 
 
     // Показываем имя пользователя
@@ -107,12 +110,6 @@ console.log('DOM загружен');
 
     }
 
-
-    /*const form = document.getElementById('order-form');
-      form.addEventListener('input', saveFormToStorage);
-
-      */
-
     // Страница finalOrder.html
     if (document.getElementById("recipient")) {
         populateFinalOrder();
@@ -156,7 +153,22 @@ console.log('DOM загружен');
     if (window.location.pathname === '/cart') {
             renderCartPage();
     }
+    if (window.location.pathname === '/shop') {
+                renderCartPage();
+        }
 
+    // Страница подтверждения заказа, коммент
+      const comment = sessionStorage.getItem("orderComment");
+      const commentInput = document.getElementById("comment");
+
+      if (comment && comment.trim() !== "") {
+        commentInput.textContent = comment;
+      }
+
+
+    if (window.location.pathname === '/confirmar_order') {
+       createAndRenderOrder();
+    }
 
 
 });
