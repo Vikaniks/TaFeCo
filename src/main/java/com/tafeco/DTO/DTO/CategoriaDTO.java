@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoriaDTO {
-    private int id;
+    private Long id;
     private String type;
 
 }

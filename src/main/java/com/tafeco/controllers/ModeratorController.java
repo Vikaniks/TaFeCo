@@ -84,7 +84,7 @@ public class ModeratorController {
 
     // Удалить категорию по id
     @DeleteMapping("/categories/{id}")
-    public ResponseEntity<?> deleteCategoria(@PathVariable Integer id) {
+    public ResponseEntity<?> deleteCategoria(@PathVariable Long id) {
         boolean deleted = categoriseService.deleteCategoria(id);
         if (!deleted) {
             return ResponseEntity.notFound().build();
@@ -120,7 +120,7 @@ public class ModeratorController {
 
      // Получить продукты по категории
      @GetMapping("/products/by-category")
-    public ResponseEntity<List<ProductDTO>> getByCategory(@RequestParam Integer categoryId) {
+    public ResponseEntity<List<ProductDTO>> getByCategory(@RequestParam Long categoryId) {
         Categorise category = categoriseRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Категория не найдена"));
         return ResponseEntity.ok(productService.findByCategorise(category));

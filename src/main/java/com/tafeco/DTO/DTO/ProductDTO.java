@@ -16,7 +16,7 @@ public class ProductDTO {
     private double price;
     private String description;
 
-    private Integer categorise;
+    private Long categorise;
     private String type;
     private Long dimension;
     private String dimensionName;

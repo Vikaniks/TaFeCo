@@ -6,10 +6,11 @@ import java.util.List;
 
 public interface ICategoriseService {
     CategoriaDTO create(CategoriaDTO dto);
-    CategoriaDTO getById(int id);
+    CategoriaDTO getById(Long id);
     List<CategoriaDTO> getAll();
-    CategoriaDTO update(int id, CategoriaDTO dto);
-    boolean deleteCategoria(Integer id);
+    CategoriaDTO update(Long id, CategoriaDTO dto);
+    boolean deleteCategoria(Long id);
+
 
 }
 

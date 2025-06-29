@@ -13,15 +13,15 @@ import {
     setupOrderForm,
     populateFinalOrder,
     setupConfirmButton,
-    downloadPDF,
     updateDeliveryCost,
-    createAndRenderOrder
+    createAndRenderOrder,
+    generatePDF
 } from './modules/order.js';
 
 import { setupAuthForm } from './modules/auth.js';
 import { setupUserMenu, updateUserNameDisplay } from './modules/user.js';
-import { renderProductList } from './modules/shop.js';
-import { saveFormToStorage, restoreFormFromStorage, saveOrderData } from './modules/storage.js';
+import { renderProductList, renderProductListByCategory } from './modules/shop.js';
+import { saveFormToStorage, restoreFormFromStorage, saveOrderData, saveUserData } from './modules/storage.js';
 
 
 
@@ -40,16 +40,18 @@ window.saveOrderData = saveOrderData;
 
 document.addEventListener('DOMContentLoaded', async () => {
 
+console.log("main.js загружен");
+
     updateCartCount();
     renderCartPage();
     setupUserMenu();
     setupAuthForm();
     updateUserNameDisplay();
-    downloadPDF();
-    renderProductList();
     restoreFormFromStorage();
     updateDeliveryCost();
-    saveOrderData()
+    saveOrderData();
+    saveUserData();
+
 
 
     // Показываем имя пользователя
@@ -129,10 +131,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateUserNameDisplay();
     }
 
-    if (document.getElementById("download-pdf")) {
-        downloadPDF();
-    }
-
     if (document.getElementById("cart-items")) {
         renderCartPage();
     }
@@ -150,12 +148,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
+
+    const downloadBtn = document.getElementById("download-pdf");
+        if (!downloadBtn) return;
+
+        downloadBtn.addEventListener("click", async (event) => {
+            event.preventDefault();
+            await generatePDF();
+        });
+
+
     if (window.location.pathname === '/cart') {
             renderCartPage();
     }
-    if (window.location.pathname === '/shop') {
-                renderCartPage();
-        }
+
 
     // Страница подтверждения заказа, коммент
       const comment = sessionStorage.getItem("orderComment");
@@ -165,12 +171,59 @@ document.addEventListener('DOMContentLoaded', async () => {
         commentInput.textContent = comment;
       }
 
+});
+window.addEventListener('load', async () => {
 
-    if (window.location.pathname === '/confirmar_order') {
-       createAndRenderOrder();
+if (window.location.pathname !== '/confirmar_order') return;
+  const savedOrderRaw = localStorage.getItem('createdOrder');
+
+  if (savedOrderRaw) {
+    try {
+      const createdOrder = JSON.parse(savedOrderRaw);
+
+      const orderDataRaw = localStorage.getItem('orderData');
+      let items = [];
+
+      if (orderDataRaw) {
+        const orderData = JSON.parse(orderDataRaw);
+        items = Array.isArray(orderData.items)
+          ? orderData.items
+          : Object.values(orderData.items || {});
+      }
+
+      if (createdOrder?.id) {
+        renderFinalOrderPage(createdOrder, items);
+        return;
+      }
+    } catch (e) {
+      console.warn('Ошибка в сохранённых данных заказа:', e);
     }
+  }
 
-
+  await createAndRenderOrder();
+});
+document.querySelectorAll('.category-link').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const categoryId = link.dataset.categoryId;
+    renderProductListByCategory(categoryId);
+  });
 });
 
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log("DOMContentLoaded fired");
+
+    const params = new URLSearchParams(window.location.search);
+    const categoryId = params.get("id");
+    console.log("categoryId из URL:", categoryId, typeof categoryId);
+
+    if (categoryId && categoryId !== 'null' && categoryId !== 'undefined') {
+      console.log("Выполняем renderProductListByCategory");
+      renderProductListByCategory(categoryId);
+    } else {
+      console.log("Выполняем renderProductList");
+      renderProductList();
+    }
+
+});
 

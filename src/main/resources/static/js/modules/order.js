@@ -1,5 +1,5 @@
 // order.js
-import { saveFormToStorage, restoreFormFromStorage } from './storage.js';
+import { saveFormToStorage, restoreFormFromStorage, saveUserData } from './storage.js';
 
 
 export function setupOrderForm() {
@@ -345,7 +345,7 @@ export function setupConfirmButton() {
 
 let pdfListenerInitialized = false;
 
-export function downloadPDF() {
+/*export function downloadPDF() {
     const downloadBtn = document.getElementById("download-pdf");
     if (!downloadBtn || pdfListenerInitialized) return;
 
@@ -398,7 +398,7 @@ export function downloadPDF() {
         const paymentField = document.getElementById('payment-option-text');
         const commentField = document.getElementById('comment-display');
 
-        if (nameField) nameField.textContent = userData.fullName || '';
+        if (nameField) nameField.textContent = userData.username || '';
         if (phoneField) phoneField.textContent = userData.phone || '';
         if (addressField) addressField.textContent = userData.address || '';
         if (deliveryField) deliveryField.textContent = userData.deliveryDateTime || '';
@@ -484,7 +484,7 @@ export function downloadPDF() {
             });
         });
     });
-}
+} */
 
 
 export function updateDeliveryCost() {
@@ -506,7 +506,7 @@ export function updateDeliveryCost() {
            deliveryElem.textContent = `Доставка: ${delivery} руб.`;
          }
 
-         // Можно сохранить доставку тоже
+         // Сохранить доставку тоже
          localStorage.setItem('deliveryCost', delivery.toString());
        // Итог = товары - доставка
          const finalTotal = totalSum + delivery;
@@ -520,8 +520,75 @@ export function updateDeliveryCost() {
 
        updateDeliveryCost();
 
+function getUserDataFromStorage() {
+  const raw = localStorage.getItem('userData');
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw);
+  } catch (e) {
+    console.error('Ошибка при чтении userData:', e);
+    return {};
+  }
+}
+
+function renderCartToPDFTable(items) {
+    const tableBody = document.getElementById('cart-items');
+    const totalItemsDisplay = document.getElementById('total-items');
+    if (!tableBody || !totalItemsDisplay) return;
+
+    const cart = JSON.parse(localStorage.getItem('cart-items') || '{}');
+
+    tableBody.innerHTML = '';
+    let totalSum = 0;
+
+    items.forEach((item, index) => {
+        const productId = item.product;
+        const cartProduct = cart[productId] || {};
+
+        const productName = cartProduct.productName || 'Название отсутствует';
+        const unit = cartProduct.unit || '';
+        const price = item.priceAtOrderTime ?? cartProduct.price ?? 0;
+
+        const row = document.createElement('tr');
+
+        const numberCell = document.createElement('td');
+        numberCell.textContent = index + 1;
+
+        const nameCell = document.createElement('td');
+        nameCell.textContent = productName;
+
+        const quantityCell = document.createElement('td');
+        quantityCell.textContent = `${item.quantity || 1} ${unit}`;
+
+        const priceCell = document.createElement('td');
+        priceCell.textContent = `${price.toFixed(2)} ₽`;
+
+        const sum = price * (item.quantity || 1);
+        totalSum += sum;
+
+        const totalCell = document.createElement('td');
+        totalCell.textContent = `${sum.toFixed(2)} ₽`;
+
+        row.appendChild(numberCell);
+        row.appendChild(nameCell);
+        row.appendChild(quantityCell);
+        row.appendChild(priceCell);
+        row.appendChild(totalCell);
+
+        tableBody.appendChild(row);
+    });
+
+    totalItemsDisplay.textContent = `Сумма: ${totalSum.toFixed(2)} руб.`;
+}
 
 export async function createAndRenderOrder() {
+
+  const existing = localStorage.getItem('createdOrder');
+    if (existing) {
+      console.log('Заказ уже создан, повторное создание не требуется.');
+      return;
+    }
+
   const orderDataRaw = localStorage.getItem('orderData');
   if (!orderDataRaw) {
     alert("Данные заказа отсутствуют");
@@ -537,11 +604,10 @@ export async function createAndRenderOrder() {
   }
 
   if (!orderData.items || orderData.items.length === 0) {
-    alert("В заказе нет товаров");
     return;
   }
 
-  // Принудительно убедимся, что items — массив
+  // Убедимся, что items — массив
   if (!Array.isArray(orderData.items)) {
     orderData.items = Object.values(orderData.items);
   }
@@ -559,17 +625,142 @@ export async function createAndRenderOrder() {
     }
 
     const createdOrder = await response.json();
-    alert('Заказ успешно отправлен!');
-    localStorage.removeItem('cart-items');
-    localStorage.removeItem('orderData');
+    localStorage.setItem('createdOrder', JSON.stringify(createdOrder));
 
-    document.getElementById('number_order').textContent = `№ ${createdOrder.id} от ${new Date(createdOrder.orderDate).toLocaleDateString()}`;
+    alert('Заказ успешно отправлен!');
+
+    // Отобразим номер и дату заказа
+    const orderNumberEl = document.getElementById('number_order');
+    if (orderNumberEl) {
+      const formattedDate = new Date(createdOrder.orderDate).toLocaleDateString();
+      orderNumberEl.textContent = `№ ${createdOrder.id} от ${formattedDate}`;
+    }
+
+    // Отрисовать данные пользователя
+    const userData = getUserDataFromStorage();
+    saveUserData(userData);
+
+    // Отрисовать корзину
+    renderCartToPDFTable(orderData.items);
+
+    const pdfBtn = document.getElementById('download-pdf');
+      if (pdfBtn) {
+        pdfBtn.style.display = 'inline-block';
+      }
+
+      let timeoutId;
+      // Автоочистка через 10 минут
+      function startTimer() {
+        timeoutId = setTimeout(clearDataAndRedirect, 600000);
+      }
+      function resetTimer() {
+        clearTimeout(timeoutId);
+        startTimer();
+      }
+      startTimer();
+      // Сброс таймера при активности
+      document.addEventListener('mousemove', resetTimer);
+      document.addEventListener('keydown', resetTimer);
+
+     window.addEventListener('pagehide', (e) => {
+       if (!e.persisted) {
+         clearDataAndRedirect();
+       }
+     });
 
   } catch (error) {
     console.error('Ошибка при создании заказа:', error);
     alert('Ошибка: ' + error.message);
   }
+
 }
 
+function clearDataAndRedirect() {
+  localStorage.removeItem('createdOrder');
+  localStorage.removeItem('orderData');
+  localStorage.removeItem('cart-items');
+  updateCartCount();
+
+  console.log('Заказ очищен. Переход на главную страницу...');
+  window.location.href = '/';
+}
+
+export async function generatePDF() {
+    const original = document.getElementById("tablas");
+    if (!original) return;
+
+    const clone = original.cloneNode(true);
+    clone.id = "tablas-clone";
+    clone.style.position = 'relative';
+    clone.style.visibility = 'visible';
+    clone.style.top = '0';
+    clone.style.left = '0';
+    clone.style.width = '185mm';
+    clone.style.display = 'block';
+    clone.style.background = 'transparent';
+
+    // Стилизация таблицы
+    const table = clone.querySelector('.custom-table');
+    if (table) {
+        table.style.width = '100%';
+        table.style.tableLayout = 'fixed';
+        table.style.backgroundColor = 'white';
+        table.style.borderCollapse = 'collapse';
+        const cells = table.querySelectorAll('th, tr, td, tfoot, tbody');
+        cells.forEach(cell => {
+            cell.style.backgroundColor = 'white';
+        });
+
+    }
+
+
+    // Удаление ненужных элементов
+    const downloadLinkInClone = clone.querySelector('#download-pdf');
+    if (downloadLinkInClone) downloadLinkInClone.remove();
+
+    const goHomeLinkInClone = clone.querySelector('#go-home-link');
+    if (goHomeLinkInClone) goHomeLinkInClone.remove();
+
+    // Показываем заголовки/футеры
+    const header = clone.querySelector('.pdf-header');
+    const footer = clone.querySelector('.pdf-footer');
+    if (header) {
+        header.style.display = 'block';
+        header.classList.add('pdf-visible');
+    }
+    if (footer) {
+        footer.style.display = 'block';
+        footer.classList.add('pdf-visible');
+    }
+
+    document.body.appendChild(clone);
+
+    await waitForImagesToLoad(clone);
+
+    const opt = {
+        margin: 10,
+        filename: `TaFeCo-заказ.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, scrollX: 0, scrollY: 0},
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
+    await html2pdf().set(opt).from(clone).save();
+
+    document.body.removeChild(clone);
+}
+
+// Ожидаем загрузку всех изображений
+function waitForImagesToLoad(element) {
+    const images = element.querySelectorAll("img");
+    const promises = Array.from(images).map(img => {
+        if (img.complete) return Promise.resolve();
+        return new Promise(resolve => {
+            img.onload = img.onerror = resolve;
+        });
+    });
+    return Promise.all(promises);
+}
 
 

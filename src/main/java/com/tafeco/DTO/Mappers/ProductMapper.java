@@ -45,7 +45,7 @@ public interface ProductMapper {
 
     // Помощники для id → Entity
     @Named("idToCategorise")
-    default Categorise idToCategorise(Integer id) {
+    default Categorise idToCategorise(Long id) {
         if (id == null) return null;
         Categorise c = new Categorise();
         c.setId(id);

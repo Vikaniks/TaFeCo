@@ -27,7 +27,7 @@ public class CategoriseServiceImpl implements ICategoriseService {
     }
 
     @Override
-    public CategoriaDTO getById(int id) {
+    public CategoriaDTO getById(Long id) {
         Categorise categorise = categoriseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         return categoriseMapper.toDTO(categorise);
@@ -39,7 +39,7 @@ public class CategoriseServiceImpl implements ICategoriseService {
     }
 
     @Override
-    public CategoriaDTO update(int id, CategoriaDTO dto) {
+    public CategoriaDTO update(Long id, CategoriaDTO dto) {
         Categorise categorise = categoriseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
@@ -48,7 +48,7 @@ public class CategoriseServiceImpl implements ICategoriseService {
     }
 
     @Override
-    public boolean deleteCategoria(Integer id) {
+    public boolean deleteCategoria(Long id) {
         Optional<Categorise> categoryOpt = categoriseRepository.findById(id);
         if (categoryOpt.isEmpty()) {
             return false;
@@ -64,6 +64,8 @@ public class CategoriseServiceImpl implements ICategoriseService {
         categoriseRepository.delete(category);
         return true;
     }
+
+
 
 }
 

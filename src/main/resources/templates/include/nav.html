@@ -4,6 +4,11 @@
         <li>
             <a th:href="@{/shop}" class="enlace_menu">Магазин</a>
             <ul class="submenu">
+                <li th:each="categoria : ${categorias}">
+                    <a th:href="@{/shop(id=${categoria.id != null ? categoria.id : ''})}"
+                       th:text="${categoria.type}" class="enlace_submenu"></a>
+                </li>
+                <!--
                 <li><a th:href="@{/egg}" class="enlace_submenu">Яйцо</a></li>
                 <li><a th:href="@{/milk}" class="enlace_submenu">Молоко</a></li>
                 <li><a th:href="@{/chiken}" class="enlace_submenu">Мясо птицы</a></li>
@@ -11,6 +16,7 @@
                 <li><a th:href="@{/vegetables}" class="enlace_submenu">Овощи</a></li>
                 <li><a th:href="@{/green}" class="enlace_submenu">Зелень</a></li>
                 <li><a th:href="@{/conserva}" class="enlace_submenu">Закрутки</a></li>
+                -->
             </ul>
         </li>
         <li><a th:href="@{/sale}" class="enlace_menu">Акции</a></li>

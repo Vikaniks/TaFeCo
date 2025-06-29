@@ -3,6 +3,7 @@ package com.tafeco.controllers;
 import com.tafeco.DTO.DTO.CategoriaDTO;
 import com.tafeco.Models.Services.Impl.ICategoriseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class CategoriseController {
     }
 
     @GetMapping("/{id}")
-    public CategoriaDTO getById(@PathVariable int id) {
+    public CategoriaDTO getById(@PathVariable Long id) {
         return categoriseService.getById(id);
     }
 
@@ -30,13 +31,22 @@ public class CategoriseController {
     }
 
     @PutMapping("/{id}")
-    public CategoriaDTO update(@PathVariable int id, @RequestBody CategoriaDTO dto) {
+    public CategoriaDTO update(@PathVariable Long id, @RequestBody CategoriaDTO dto) {
         return categoriseService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable Long id) {
         categoriseService.deleteCategoria(id);
     }
+
+    @GetMapping("/category")
+    public String showCategoryPage(@RequestParam Long id, Model model) {
+        model.addAttribute("categoryId", id);
+        return "category"; // шаблон category.html
+    }
+
+
+
 }
 

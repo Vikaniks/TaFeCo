@@ -568,6 +568,10 @@ th, td {
     font-size: 1.2em;
 }
 
+#download-pdf {
+  display: none;
+}
+
 .pdf-header,
 .pdf-footer {
     visibility: hidden;

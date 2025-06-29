@@ -53,17 +53,12 @@ export function saveOrderData() {
 
   const entries = Object.entries(rawItems);
 
-  if (!entries.length) {
-    alert('Корзина пуста');
-    return null;
-  }
-
   let totalPrice = 0;
   const orderItems = entries.map(([key, item]) => {
     const productId = item.id || item.productId;
 
     if (!item.quantity || !item.price || !productId) {
-      throw new Error(`Неверные данные товара: ${item.productName || key || 'неизвестно'}`);
+      throw new Error(`Неверные данные товара: ${item.productId || key || 'неизвестно'}`);
     }
     const price = parseFloat(item.price);
     const quantity = parseInt(item.quantity);
@@ -95,3 +90,35 @@ export function saveOrderData() {
   localStorage.setItem('orderData', JSON.stringify(orderDTO));
   return orderDTO;
 }
+
+// user
+export function saveUserData(userData) {
+  if (!userData || typeof userData !== 'object') return;
+
+  const mappings = {
+    name: 'name',
+    surname: 'surname',
+    phone: 'phone',
+    email: 'email',
+    locality: 'locality',
+    district: 'district',
+    region: 'region',
+    street: 'street',
+    house: 'house',
+    apartment: 'apartment',
+    addressExtra: 'address-extra',
+    date: 'date',
+    time: 'time',
+    paymentOption: 'payment-option'
+  };
+
+  for (const key in mappings) {
+    const el = document.getElementById(mappings[key]);
+    if (el && userData[key]) {
+      el.textContent = userData[key];
+    }
+  }
+}
+
+
+
