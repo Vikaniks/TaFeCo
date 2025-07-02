@@ -17,23 +17,21 @@ public interface IUserDAO extends JpaRepository<User, Long> {
 
     List<User> findAllByActive(boolean active);
 
-    Optional<User> findByUsername(String username);
-
     boolean existsByEmail(String email);
 
     @Query("""
         select u from User u
-        where (:username is null or lower(u.username) like lower(concat('%', :username, '%')))
+        where (:name is null or lower(u.name) like lower(concat('%', :name, '%')))
           and (:email is null or lower(u.email) like lower(concat('%', :email, '%')))
     """)
     Page<User> findWithFilters(
-            @Param("username") String username,
+            @Param("name") String name,
             @Param("email") String email,
             Pageable pageable
     );
 
     Optional<User> findByEmail(String email);
 
-    boolean existsByUsername(String username);
+
 }
 

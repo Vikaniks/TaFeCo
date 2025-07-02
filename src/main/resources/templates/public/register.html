@@ -26,58 +26,80 @@
 <main layout:fragment="content">
         <div class="container-row">
             <div class="container-row1">
-            
-                <h3>Регистрация нового пользователя</h3>
-                <form id="register-form">
+              <h3>Регистрация нового пользователя</h3>
+                <form id="register-form" autocomplete="on">
                     <div class="form-group-row">
-                        <input type="text" id="name" placeholder="Имя" required>
-                        <input type="text" id="surname" placeholder="Фамилия" required>
+                        <input type="text" id="name" placeholder="Имя*" required>
+                        <input type="text" id="surname" placeholder="Фамилия*" required>
+                        <span class="error-message"></span>
                     </div>
                     <div class="form-group-row">
-                        <input type="tel" id="phone" placeholder="Телефон" required>
-                        <input type="email" id="email" placeholder="Email" required>
+                        <input type="tel" id="phone" placeholder="Телефон*" required>
+                        <input type="email" id="email" placeholder="Email*" required>
+                        <span class="error-message"></span>
                     </div>
                     <div class="form-group-row">
-                        <select id="city" name="city" required>
-                            <option value="Санкт-Петербург">Санкт-Петербург</option>
-                            <option value="Пушкин">Пушкин</option>
-                            <option value="Гатчина">Гатчина</option>
-                            <option value="Волосово">Волосово</option>
-                        </select>
+                        <div class="field">
+                            <input type="text" id="locality" name="locality" required placeholder="Город*" autocomplete="address-level3">
+                        </div>
+                        <div class="field">
+                            <input type="text" id="district" name="district" placeholder="Район" autocomplete="address-level2">
+                        </div>
+                        <div class="field">
+                            <input type="text" id="region" name="region" required placeholder="Регион" autocomplete="address-level1">
+                        </div>
+                        <span class="error-message"></span>
                     </div>
-                        <div class="form-group-row">
-                        <input type="text" id="address" placeholder="Адрес" required>
+                    <div class="form-group-row">
+                        <div class="field">
+                            <input type="text" id="street" name="street" required placeholder="Улица*" autocomplete="address-line1">
+                        </div>
+
+                        <div class="field">
+                            <input type="text" id="house" name="house" required placeholder="Дом*" autocomplete="address-line2">
+                        </div>
+                        <div class="field">
+                            <input type="text" id="apartment" name="apartment" required placeholder="Квартира*" autocomplete="address-line3">
+                        </div>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="form-group-row">
+
+                        <label for="address-extra">Дополнительная информация</label>
+                        <input type="text" id="address-extra" name="addressExtra" placeholder="Дополнительная информация" autocomplete="off">
+
+                        <span class="error-message"></span>
                     </div>
                 
                     <div class="form-group-row">
-                        <input type="password" id="password" placeholder="Пароль, c заглавной буквой, 1 цифрой" required>
-                        <input type="password" id="confirm-password" placeholder="Подтверждение пароля" required>
+                        <label for="password">Пароль*</label>
+                        <input type="password" id="password" placeholder="Пароль латинскими буквами, c заглавной и минимум 1 цифрой" required autocomplete="off">
+                    </div>
+                    <div class="form-group-row">
+                        <input type="password" id="confirm-password" placeholder="Подтверждение пароля" required autocomplete="off">
                     </div>
                 
                     <button type="submit" class="submit" id="register">Зарегистрироваться</button>
                 </form>
             </div>
-        
+
        
         <div class="container-row2">
-        
-            
-                <h3>Вход в личный кабинет</h3>
+              <h3>Вход в личный кабинет</h3>
                 <form id="login-form">
                     <div class="form-group-row">
-                        <input type="email" id="email" placeholder="Email" required>
+                        <input type="email" id="login-email" placeholder="Email" required>
                     </div>
                     <div class="form-group-row">
-                        <input type="password" id="password" placeholder="Пароль" required>
+                        <input type="password" id="login-password" placeholder="Пароль" required autocomplete="current-password">
                     </div>
                     <button type="submit" class="submit" id="login">Войти</button>
-                    
                 </form>
-            </div>
+        </div>
         
         </div>
         
-        <script>
+    <!--    <script>
     // Предварительное заполнение полей формы
     document.addEventListener('DOMContentLoaded', () => { 
         
@@ -171,58 +193,18 @@
         */
     
   </script>
+  -->
 
-<!--<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const emailInput = document.getElementById("email");
-        const passwordInput = document.getElementById("password");
-        const loginForm = document.getElementById("login-form");
-        const chooseSection = document.getElementById("choose-section");
-        const finalOrderBtn = document.getElementById("final-order-btn");
-        const loginBtn = document.getElementById("login");
-
-        // Проверяем, есть ли данные в localStorage
-        const savedEmail = localStorage.getItem("email");
-        const savedPassword = localStorage.getItem("password");
-
-        if (savedEmail && savedPassword) {
-            // Если данные есть, подставляем их в форму
-            emailInput.value = savedEmail;
-            passwordInput.value = savedPassword;
-        }
-
-        // Обработка отправки формы
-        loginForm.addEventListener("submit", function (event) {
-            event.preventDefault();
-
-            const email = emailInput.value;
-            const password = passwordInput.value;
-
-            if (email && password) {
-                // Сохраняем данные в localStorage
-                localStorage.setItem("email", email);
-                localStorage.setItem("password", password);
-
-                // Показать выбор действий
-                loginForm.style.display = "none"; // Скрываем форму
-                chooseSection.style.display = "block"; // Показываем секцию выбора
-            } else {
-                alert("Пожалуйста, заполните все поля.");
-            }
-        });
-
-        
-        // Обработка кнопки "Login"
-        loginBtn.addEventListener("click", function () {
-            window.location.href = "login.html";
-        });
-    });
-</script>-->
 
 
 </main>
 
 <div th:replace="include/footer :: footer"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/suggestions-jquery@22.6.0/dist/js/jquery.suggestions.min.js"></script>
+
+<script src="/js/dadata.js"></script>
 <script type="module" src="/static/js/main.js"></script>
 
 </body>

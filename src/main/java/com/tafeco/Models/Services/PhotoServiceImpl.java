@@ -8,6 +8,7 @@ import com.tafeco.Models.DAO.IProductDAO;
 import com.tafeco.Models.Entity.Photo;
 import com.tafeco.Models.Entity.Product;
 import com.tafeco.Models.Services.Impl.IPhotoService;
+import com.tafeco.config.FileStorageProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,7 @@ public class PhotoServiceImpl implements IPhotoService {
     private final IPhotoDAO photoRepository;
     private final IProductDAO productRepository;
     private final PhotoMapper photoMapper;
+    private final FileStorageProperties fileStorageProperties;
 
 
     @Override
@@ -54,7 +56,7 @@ public class PhotoServiceImpl implements IPhotoService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Продукт не найден"));
         // 2. Генерация имени и путь
-        String uploadDir = "uploads/photos/";
+        String uploadDir = fileStorageProperties.getUploadDir();
         String originalFilename = file.getOriginalFilename();
         String newFilename = UUID.randomUUID() + "_" + originalFilename;
         Path filePath = Paths.get(uploadDir + newFilename);

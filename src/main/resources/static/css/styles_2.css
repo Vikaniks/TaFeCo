@@ -55,7 +55,7 @@ header {
 
 #header_izq {
     width: 100%;
-    padding: var(--paddingGeneral);
+    padding-left: 110px;
 }
 
 
@@ -143,13 +143,41 @@ header {
     margin: 0 7px 0 3px; /* Отступы для контейнера */
     cursor: pointer;
 }
+.flower-container {
+    position: absolute;
+    bottom: 120%; /* Над иконкой */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    pointer-events: none; /* Не мешает кликам по user.svg */
+}
+
+.flower-img {
+    width: 100%;
+    height: 100%;
+}
+
+.username {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--colorContrasteClaro);
+    white-space: nowrap;
+    pointer-events: none;
+    text-align: center;
+    white-space: pre-line;
+}
 
 
 h1 {
     color: var(--colorContraste);
     font-family: var(--fuenteSerif);
-    font-size: 48px;
-    padding: 20px 0 -5px 0;
+    font-size: 46px;
+    padding-bottom: 20px;
 	display: flex; /* Используем Flexbox для выравнивания содержимого */
 	flex-direction: row; /* Направление flex-контейнера по горизонтали */
 	justify-content: center; /* Выравнивание содержимого по горизонтали (центр) */
@@ -159,6 +187,7 @@ h2 {
     color: var(--colorPrincipalOscuro);
     font-family: var(--fuenteSerif);
     font-size: 32px;
+    padding-bottom: 10px;
 	display: flex; /* Используем Flexbox для выравнивания содержимого */
 	flex-direction: row; /* Направление flex-контейнера по горизонтали */
 	justify-content: center; /* Выравнивание содержимого по горизонтали (центр) */
@@ -1004,14 +1033,7 @@ tfoot th button:hover {
     margin-top: 20px;
 }
 
-/*.order, .no-orders {
-    margin-bottom: 15px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f7f7f7;
-    text-align: center;
-}*/
+
 .button-group {
     display: flex;
     align-content: row;
@@ -1065,11 +1087,105 @@ tfoot th button:hover {
     font-weight: bold;
 }
 
+/*Estilo del pie*/
+footer{
+    background-color: var(--colorPrincipal);
+    height:var(--alturaPie);
 
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
 
+#pie_izq {
+    width: 70%;
+	display: flex;
+	flex-wrap: wrap;
+    justify-content: center;
+    list-style: none;
+}
+#redes-sociales {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 
+    list-style: none;
+}
 
+#redes-sociales li {
+    display: inline-flex;     /* Используем inline-flex для элементов списка */
+    padding: 0 25px;          /* Добавляем отступы между элементами */
+}
 
+#pie_der {
+    width: 30%;
+}
+
+footer p{
+
+    font-size: 1rem;
+    color:var(--colorPrincipalClaro);
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    list-style: none;
+    position: relative;
+
+}
+
+.telegram-icon {
+    font-size: 40px; /* Размер иконки */
+    color: var(--colorContraste);   /* Цвет иконки */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.telegram-icon:hover {
+    color: #429fd9; /* Цвет иконки при наведении */
+}
+
+.whatsapp-icon {
+    font-size: 40px; /* Размер иконки */
+    color: var(--colorContraste);   /* Цвет иконки */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.whatsapp-icon:hover {
+    color: var(--colorPrincipalOscuro); /* Цвет иконки при наведении */
+}
+
+.email-icon {
+    font-size: 40px; /* Размер иконки */
+    color: var(--colorContraste);   /* Цвет иконки */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.email-icon:hover {
+    color: var(--colorPrincipalOscuro); /* Цвет иконки при наведении */
+}
+
+#arriba {
+    position: fixed;
+    bottom: var(--margen);
+    right: 1.5rem;
+    background-color: transparent;
+
+    text-decoration: none;
+
+}
+#arriba a {
+    color: inherit; /* Наследуем цвет родительского элемента */
+    text-decoration: none;
+}
+
+#arriba a i {
+    color: #1fb311; /* Изменяем цвет стрелки */
+    transition: color 0.3s; /* Добавляем анимацию изменения цвета */
+}
+
+#arriba a i:hover {
+    color: #82e66e; /* Цвет стрелки при наведении курсора */
+}
 
 /* Медиа-запрос для ширины экрана менее 425px */
 @media (max-width: 768px) {
@@ -1077,7 +1193,32 @@ tfoot th button:hover {
         background-color: var(--colorPrincipal);
         background-image: none;
         color: var(--colorPrincipalOscuro);
+        height: 120px;
+        padding-bottom: 0;
     }
+    #header_izq {
+        padding-left: 15px;
+    }
+
+    h1 {
+        font-size: 40px;
+        padding: 10px 0 10px 0;
+        display: flex; /* Используем Flexbox для выравнивания содержимого */
+    	flex-direction: row; /* Направление flex-контейнера по горизонтали */
+    	justify-content: flex-start; /* Выравнивание содержимого по горизонтали (центр) */
+    	align-items: flex-start; /* Выравнивание содержимого по вертикали (по нижнему краю) */
+    }
+    h2 {
+        font-size: 25px;
+        max-width: 200px;
+        overflow-wrap: break-word;
+        white-space: normal;
+    	display: flex; /* Используем Flexbox для выравнивания содержимого */
+    	flex-direction: row; /* Направление flex-контейнера по горизонтали */
+    	justify-content: flex-start;/* Выравнивание содержимого по горизонтали (центр) */
+    	align-items: flex-end; /* Выравнивание содержимого по вертикали (по нижнему краю) */
+    }
+
     #header_der {
         width: 10%;
     }
@@ -1086,6 +1227,9 @@ tfoot th button:hover {
         top: 0;
         z-index: 1000;
         padding: var(--margen);
+        max-height: 50px; /* или height: 80px; */
+        overflow: hidden;
+        padding: 5px;
     }
 
     nav ul {
@@ -1108,7 +1252,7 @@ tfoot th button:hover {
         display: flex;
         justify-content: center;
         width: 100%;
-        padding: 5px 15px;
+        padding: 0 15px;
         text-align: center;
     }
 
@@ -1119,12 +1263,9 @@ tfoot th button:hover {
         overflow-wrap: break-word; /* Альтернативный вариант переноса */
         white-space: normal; /* Позволяет перенос строк */
         text-align: center; /* Центрируем текст */
-        padding: 10px;
+        padding: 5px;
 
     }
-
-
-
 
 	#arriba {
 	display: none;
@@ -1247,7 +1388,7 @@ tfoot th button:hover {
     .container-row2 {
         width: 93%; /* Ширина 100% */
         order: 1; /* Отображаем container-row2 первым */
-        margin: 0; /* Убираем внешние отступы */
+        margin: 5px 0; /* Убираем внешние отступы */
 
     }
 
@@ -1255,7 +1396,7 @@ tfoot th button:hover {
         width: 100%; /* Делаем ширину контейнеров одинаковой */
         max-width: 93%; /* Ограничиваем ширину до 93% */
         order: 2; /* Отображаем container-row1 вторым */
-        margin: 0 auto; /* Центрируем контейнеры */
+        margin: 5px auto; /* Центрируем контейнеры */
     }
 
     .submit {
@@ -1302,111 +1443,6 @@ tfoot th button:hover {
         height: auto;
       }
 }
-
-
-
-
-/*Estilo del pie*/
-footer{
-    background-color: var(--colorPrincipal);
-    height:var(--alturaPie);
-
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-}
-
-#pie_izq {
-    width: 70%;
-	display: flex;
-	flex-wrap: wrap;
-    justify-content: center;
-    list-style: none;
-}
-#redes-sociales {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-
-    list-style: none;
-}
-
-#redes-sociales li {
-    display: inline-flex;     /* Используем inline-flex для элементов списка */
-    padding: 0 25px;          /* Добавляем отступы между элементами */
-}
-
-#pie_der {
-    width: 30%;
-}
-
-footer p{
-
-    font-size: 1rem;
-    color:var(--colorPrincipalClaro);
-    font-weight: bold;
-    display: block;
-    text-align: center;
-    list-style: none;
-    position: relative;
-
-}
-
-.telegram-icon {
-    font-size: 40px; /* Размер иконки */
-    color: var(--colorContraste);   /* Цвет иконки */
-    text-decoration: none;
-    transition: color 0.3s;
-}
-.telegram-icon:hover {
-    color: #429fd9; /* Цвет иконки при наведении */
-}
-
-.whatsapp-icon {
-    font-size: 40px; /* Размер иконки */
-    color: var(--colorContraste);   /* Цвет иконки */
-    text-decoration: none;
-    transition: color 0.3s;
-}
-.whatsapp-icon:hover {
-    color: var(--colorPrincipalOscuro); /* Цвет иконки при наведении */
-}
-
-.email-icon {
-    font-size: 40px; /* Размер иконки */
-    color: var(--colorContraste);   /* Цвет иконки */
-    text-decoration: none;
-    transition: color 0.3s;
-}
-.email-icon:hover {
-    color: var(--colorPrincipalOscuro); /* Цвет иконки при наведении */
-}
-
-#arriba {
-    position: fixed;
-    bottom: var(--margen);
-    right: 1.5rem;
-    background-color: transparent;
-
-    text-decoration: none;
-
-}
-#arriba a {
-    color: inherit; /* Наследуем цвет родительского элемента */
-    text-decoration: none;
-}
-
-#arriba a i {
-    color: #1fb311; /* Изменяем цвет стрелки */
-    transition: color 0.3s; /* Добавляем анимацию изменения цвета */
-}
-
-#arriba a i:hover {
-    color: #82e66e; /* Цвет стрелки при наведении курсора */
-}
-
-
 
     @media (min-width: 768px) {
         .product-cart-container {

@@ -15,12 +15,13 @@ console.log('renderProductList called');
             return response.json();
         })
         .then(products => {
+        console.log("Продукты:", products);
             products.forEach((product, index) => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
 
                 const imageUrl = (product.photos && product.photos.length > 0)
-                    ? product.photos[0].photo
+                    ? `/uploads/photos/${product.photos[0].photo}`
                     : '/img/empty.png';
 
                 card.dataset.id = product.id;
@@ -28,7 +29,7 @@ console.log('renderProductList called');
                 card.dataset.price = product.price;
                 card.dataset.description = product.description || '';
                 card.dataset.image = product.photo;
-                card.dataset.unit = product.dimensionName || 'шт.';
+                card.dataset.unit = product.dimension || 'ед.';
                 card.dataset.type = product.type || 'Без категории';
 
                 card.innerHTML = `
@@ -95,15 +96,15 @@ console.log('renderProductListByCategory вызвана с categoryId:', categor
         card.className = 'product-card';
 
         const imageUrl = (product.photos && product.photos.length > 0)
-          ? product.photos[0].photo
+          ? `/uploads/photos/${product.photos[0].photo}`
           : '/img/empty.png';
 
         card.dataset.id = product.id;
         card.dataset.name = product.product;
         card.dataset.price = product.price;
         card.dataset.description = product.description || '';
-        card.dataset.image = imageUrl;
-        card.dataset.unit = product.dimensionName || 'шт.';
+        card.dataset.image = product.photo;
+        card.dataset.unit = product.dimension || 'ед.';
         card.dataset.type = product.type || 'Без категории';
 
         card.innerHTML = `

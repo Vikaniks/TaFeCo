@@ -1,24 +1,24 @@
 package com.tafeco.Models.Services;
 
-import com.tafeco.DTO.DTO.OrderDTO;
-import com.tafeco.DTO.DTO.UserDTO;
-import com.tafeco.DTO.DTO.UserRegisterDTO;
-import com.tafeco.DTO.DTO.UserUpdateDTO;
+import com.tafeco.DTO.DTO.*;
 import com.tafeco.DTO.Mappers.OrderMapper;
 import com.tafeco.DTO.Mappers.UserMapper;
 import com.tafeco.Exception.ResourceNotFoundException;
+import com.tafeco.Models.DAO.IAddressDAO;
 import com.tafeco.Models.DAO.IOrderDAO;
 import com.tafeco.Models.DAO.IRoleUserDAO;
 import com.tafeco.Models.DAO.IUserDAO;
-import com.tafeco.Models.Entity.Order;
-import com.tafeco.Models.Entity.OrderStatus;
-import com.tafeco.Models.Entity.RoleUser;
-import com.tafeco.Models.Entity.User;
-import com.tafeco.Models.Services.Impl.INotificationService;
-import com.tafeco.Models.Services.Impl.IUserService;
+import com.tafeco.Models.Entity.*;
+import com.tafeco.Models.Services.Impl.*;
+import com.tafeco.Security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +39,13 @@ public class UserServiceImpl implements IUserService {
     private final IOrderDAO orderRepository;
     private final OrderMapper orderMapper;
     private final INotificationService emailService;
+    private final ILocalityService localityService;
+    private final IDistrictService districtService;
+    private final IRegionService regionService;
+    private final IStreetService streetService;
+    private final IAddressDAO addressDAO;
+    private AuthenticationManager authenticationManager;
+    private JwtService jwtProvider;
 
     /**
      * Регистрация нового пользователя:
@@ -48,25 +55,52 @@ public class UserServiceImpl implements IUserService {
      * - Сохраняет в базе
      */
     @Override
-    public UserDTO register(UserRegisterDTO dto) {
+    public LoginResponseDTO register(UserRegisterDTO dto) {
         if (userDAO.existsByEmail(dto.getEmail())) {
             throw new RuntimeException("Пользователь с таким email уже существует");
         }
-        if (userDAO.existsByUsername(dto.getUsername())) {
-            throw new RuntimeException("Пользователь с таким именем уже существует");
-        }
 
         User user = userMapper.fromRegisterDTO(dto);
+
+        Address address = user.getAddress();
+        if (address != null) {
+            address.setRegion(regionService.findOrCreateByName(address.getRegion().getName()));
+            address.setDistrict(districtService.findOrCreateByName(address.getDistrict().getName()));
+            address.setLocality(localityService.findOrCreateByName(address.getLocality().getName()));
+            address.setStreet(streetService.findOrCreateByName(address.getStreet().getName()));
+
+            Address savedAddress = addressDAO.save(address);
+            user.setAddress(savedAddress);
+        }
+
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setActive(true); // активируем при регистрации
+        user.setActive(true);
 
         RoleUser defaultRole = roleUserDAO.findByRole("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Роль ROLE_USER не найдена"));
 
-        user.getRoles().add(defaultRole);       // Назначить пользователю базовую роль
+        user.getRoles().add(defaultRole);
 
-        User saved = userDAO.save(user);        // Сохраняем в базу
-        return userMapper.toDTO(saved);         // Вернем DTO
+        User saved = userDAO.save(user);
+
+        // Аутентификация
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // Генерация JWT
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String jwt = jwtProvider.generateToken(userDetails);
+
+        // Получаем роль (предполагаю, что у пользователя одна роль)
+        String role = saved.getRoles().stream()
+                .findFirst()
+                .map(RoleUser::getRole)
+                .orElse("ROLE_USER");
+
+        // Возвращаем DTO с токеном, ролью и данными пользователя
+        return new LoginResponseDTO(jwt, role, userMapper.toDTO(saved));
     }
 
     /**
@@ -75,14 +109,74 @@ public class UserServiceImpl implements IUserService {
      * При передаче пароля — проверяет текущий пароль и меняет его.
      */
     @Override
-    public UserDTO updateUser(String username, UserUpdateDTO dto) {
-        User user = userDAO.findByUsername(username)
+    public UserDTO updateUser(String email, UserUpdateDTO dto) {
+        User user = userDAO.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
         // Обновление простых полей
         if (dto.getEmail() != null) user.setEmail(dto.getEmail());
-        if (dto.getFullName() != null) user.setFullName(dto.getFullName());
-        if (dto.getDeliveryAddress() != null) user.setDeliveryAddress(dto.getDeliveryAddress());
+        if (dto.getPhone() != null) user.setPhone(dto.getPhone());
+        if (dto.getName() != null) user.setName(dto.getName());
+        if (dto.getSurname() != null) user.setSurname(dto.getSurname());
+
+        // Работа с адресом
+        Address address = user.getAddress();
+        if (address == null) {
+            address = new Address();
+        }
+
+        if (dto.getLocality() != null) {
+
+            Locality locality = localityService.findByName(dto.getLocality())
+                    .orElseGet(() -> {
+                        Locality newLocality = new Locality();
+                        newLocality.setName(dto.getLocality());
+                        return localityService.save(newLocality);
+                    });
+            address.setLocality(locality);
+        }
+
+        if (dto.getDistrict() != null) {
+            District district = districtService.findByName(dto.getDistrict())
+                    .orElseGet(() -> {
+                        District newDistrict = new District();
+                        newDistrict.setName(dto.getDistrict());
+                        return districtService.save(newDistrict);
+                    });
+            address.setDistrict(district);
+        }
+
+        if (dto.getRegion() != null) {
+            Region region = regionService.findByName(dto.getRegion())
+                    .orElseGet(() -> {
+                        Region newRegion = new Region();
+                        newRegion.setName(dto.getRegion());
+                        return regionService.save(newRegion);
+                    });
+            address.setRegion(region);
+        }
+
+        if (dto.getStreet() != null) {
+            Street street = streetService.findByName(dto.getStreet())
+                    .orElseGet(() -> {
+                        Street newStreet = new Street();
+                        newStreet.setName(dto.getStreet());
+                        return streetService.save(newStreet);
+                    });
+            address.setStreet(street);
+        }
+
+        if (dto.getHouse() != null) {
+            address.setHouse(dto.getHouse());
+        }
+        if (dto.getApartment() != null) {
+            address.setApartment(dto.getApartment());
+        }
+        if (dto.getAddressExtra() != null) {
+            address.setAddressExtra(dto.getAddressExtra());
+        }
+
+        user.setAddress(address);
 
         // Обновление пароля при наличии нового пароля
         if (dto.getNewPassword() != null && !dto.getNewPassword().isBlank()) {
@@ -103,9 +197,9 @@ public class UserServiceImpl implements IUserService {
      * Получить профиль пользователя по username.
      */
     @Override
-    public UserDTO getUserProfile(String username) {
-        User user = userDAO.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + username));
+    public UserDTO getUserProfile(String email) {
+        User user = userDAO.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + email));
         return userMapper.toDTO(user);
     }
 
@@ -113,8 +207,8 @@ public class UserServiceImpl implements IUserService {
     // Удалить пользователя по username.
     // Предварительно проверить на зависимости (активные заказы)
     @Override
-    public void deleteUser(String username) {
-        User user = userDAO.findByUsername(username)
+    public void deleteUser(String email) {
+        User user = userDAO.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
         boolean hasActiveOrders = orderRepository.existsByUserAndStatusIn(
@@ -141,8 +235,8 @@ public class UserServiceImpl implements IUserService {
 
     // Обновить роль пользователя (для назначения модератора или администратора).
     @Override
-    public void updateUserRole(String username, String role) {
-        User user = userDAO.findByUsername(username)
+    public void updateUserRole(String email, String role) {
+        User user = userDAO.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
         RoleUser roleUser = roleUserDAO.findByRole(role)
                 .orElseThrow(() -> new RuntimeException("Роль " + role + " не найдена"));
@@ -153,17 +247,17 @@ public class UserServiceImpl implements IUserService {
 
     // Получить страницу пользователей с фильтрацией по username/email.
     @Override
-    public Page<UserDTO> getUsersWithFilters(String username, String email, Pageable pageable) {
+    public Page<UserDTO> getUsersWithFilters(String name, String email, Pageable pageable) {
         // можно реализовать фильтрацию с помощью Specification
-        return userDAO.findWithFilters(username, email, pageable)
+        return userDAO.findWithFilters(name, email, pageable)
                 .map(userMapper::toDTO);
     }
 
     // Найти пользователя по username для Spring Security.
     @Override
-    public User findByUsername(String username) {
-        return userDAO.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + username));
+    public User findByEmail(String email) {
+        return userDAO.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + email));
     }
 
     // Обновить статус заказа по id.

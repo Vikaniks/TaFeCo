@@ -1,5 +1,7 @@
 // order.js
-import { saveFormToStorage, restoreFormFromStorage, saveUserData } from './storage.js';
+import { saveFormToStorage,
+         restoreFormFromStorage,
+         saveUserData } from './storage.js';
 
 
 export function setupOrderForm() {
@@ -345,148 +347,6 @@ export function setupConfirmButton() {
 
 let pdfListenerInitialized = false;
 
-/*export function downloadPDF() {
-    const downloadBtn = document.getElementById("download-pdf");
-    if (!downloadBtn || pdfListenerInitialized) return;
-
-    pdfListenerInitialized = true;
-
-    // Чтение корзины
-    function getCartFromStorage() {
-        const storedCart = localStorage.getItem('orderData'); // или 'cartItems' — см. как ты назвал
-        return storedCart ? JSON.parse(storedCart) : [];
-    }
-
-    // Чтение пользовательских данных
-    function getUserDataFromStorage() {
-        const storedUserData = localStorage.getItem('userData');
-        return storedUserData ? JSON.parse(storedUserData) : {};
-    }
-
-    // Рендер корзины
-    function renderCartToPDFTable(cart) {
-        const cartItemsContainer = document.getElementById('cart-items');
-        const totalItemsDisplay = document.getElementById('total-items');
-        if (!cartItemsContainer || !totalItemsDisplay) return;
-
-        cartItemsContainer.innerHTML = '';
-        let totalSum = 0;
-
-        cart.forEach((item) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td><img src="${item.image}" width="50" height="50"></td>
-                <td>${item.productName}</td>
-                <td>${item.quantity} ${item.unit || ''}</td>
-                <td>${item.price.toFixed(2)} руб.</td>
-                <td>${(item.price * item.quantity).toFixed(2)} руб.</td>
-                <td></td>
-            `;
-            cartItemsContainer.appendChild(row);
-            totalSum += item.quantity * item.price;
-        });
-
-        totalItemsDisplay.textContent = `Сумма: ${totalSum.toFixed(2)} руб.`;
-    }
-
-    // Рендер пользовательских данных
-    function renderUserData(userData) {
-        const nameField = document.getElementById('recipient');
-        const phoneField = document.getElementById('phone');
-        const addressField = document.getElementById('address');
-        const deliveryField = document.getElementById('delivery-datetime');
-        const paymentField = document.getElementById('payment-option-text');
-        const commentField = document.getElementById('comment-display');
-
-        if (nameField) nameField.textContent = userData.username || '';
-        if (phoneField) phoneField.textContent = userData.phone || '';
-        if (addressField) addressField.textContent = userData.address || '';
-        if (deliveryField) deliveryField.textContent = userData.deliveryDateTime || '';
-        if (paymentField) paymentField.textContent = userData.paymentOption || '';
-        if (commentField) commentField.textContent = userData.comment || '';
-    }
-
-    // Ожидание загрузки изображений
-    function waitForImagesToLoad(element) {
-        const images = element.querySelectorAll("img");
-        const promises = Array.from(images).map(img => {
-            if (img.complete) return Promise.resolve();
-            return new Promise(resolve => {
-                img.onload = img.onerror = resolve;
-            });
-        });
-        return Promise.all(promises);
-    }
-
-    // Нажатие на кнопку
-    downloadBtn.addEventListener("click", (event) => {
-        event.preventDefault();
-        const cart = getCartFromStorage();
-        const userData = getUserDataFromStorage();
-
-        renderCartToPDFTable(cart);
-        renderUserData(userData);
-
-        const original = document.getElementById("tablas");
-        if (!original) return;
-
-        const clone = original.cloneNode(true);
-        clone.id = "tablas-clone";
-        clone.style.position = 'relative';
-        clone.style.visibility = 'visible';
-        clone.style.top = '0';
-        clone.style.left = '0';
-        clone.style.width = '185mm';
-        clone.style.display = 'block';
-        clone.style.background = 'transparent';
-
-        const table = clone.querySelector('.custom-table');
-        if (table) {
-            table.style.width = '100%';
-            table.style.backgroundColor = 'white';
-            table.style.borderCollapse = 'collapse';
-            const cells = table.querySelectorAll('th, tr, td, tfoot');
-            cells.forEach(cell => {
-                cell.style.backgroundColor = 'white';
-            });
-        }
-
-        const downloadLinkInClone = clone.querySelector('#download-pdf');
-        if (downloadLinkInClone) downloadLinkInClone.remove();
-        const goHomeLinkInClone = clone.querySelector('#go-home-link');
-        if (goHomeLinkInClone) goHomeLinkInClone.remove();
-
-        const header = clone.querySelector('.pdf-header');
-        const footer = clone.querySelector('.pdf-footer');
-        if (header) {
-            header.style.display = 'block';
-            header.classList.add('pdf-visible');
-        }
-        if (footer) {
-            footer.style.display = 'block';
-            footer.classList.add('pdf-visible');
-        }
-
-        document.body.appendChild(clone);
-
-        waitForImagesToLoad(clone).then(() => {
-            const opt = {
-                margin: 10,
-                filename: 'TaFeCo.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 1.5, useCORS: true, scrollX: 0, scrollY: 0 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-            };
-
-            html2pdf().set(opt).from(clone).save().then(() => {
-                document.body.removeChild(clone);
-            });
-        });
-    });
-} */
-
-
 export function updateDeliveryCost() {
          const totalSum = parseFloat(localStorage.getItem('totalSum')) || 0;
 
@@ -762,5 +622,136 @@ function waitForImagesToLoad(element) {
     });
     return Promise.all(promises);
 }
+
+// личный кабинет
+
+// Показывает сообщение о незавершённом заказе с кнопками "Да" / "Нет"
+export function renderOrderMessage(container, orderData, userData) {
+  const userName = userData?.name || 'Пользователь';
+  const messageHTML = `
+    <div class="order-message">
+      <p class="text-orders">${userName}, ваш заказ не завершён. Хотите продолжить?</p>
+      <div class="button-group">
+        <button class="button-yes" id="continue-order">Да</button>
+        <button class="button-no" id="cancel-order">Нет</button>
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = messageHTML;
+
+  // Обработка кнопки "Да" — перейти на финальный заказ или в магазин
+  const continueBtn = container.querySelector('#continue-order');
+  continueBtn.addEventListener('click', () => {
+    if (orderData && Object.keys(orderData).length > 0) {
+      window.location.href = '/finalOrder';
+    } else {
+      window.location.href = '/shop';
+    }
+  });
+
+  // Обработка кнопки "Нет" — очистить заказ и показать пустое сообщение
+  const cancelBtn = container.querySelector('#cancel-order');
+  cancelBtn.addEventListener('click', () => {
+    localStorage.removeItem('orderData');
+    localStorage.removeItem('cart-items');
+    renderEmptyOrdersMessage(container);
+  });
+}
+
+// Выводит пустое сообщение, если нет заказов
+export function renderEmptyOrdersMessage(container) {
+  container.innerHTML = `
+    <div class="container-row">
+      <p>Упс! Здесь пока ничего нет...
+        <img src="./img/boy.svg" alt="Упс!" style="max-width: 100px; height: auto; opacity: 0.8; margin: 0 auto;">
+      </p>
+    </div>
+  `;
+}
+
+// Рендерит список заказов внутри контейнера, добавляя к существующему содержимому
+export function renderOrdersList(container, orders) {
+  const ordersListHTML = `
+    <div class="orders-history">
+      <h3>История заказов</h3>
+      ${orders.map(order => `
+        <div class="order">
+          <p><strong>Заказ №${order.id}</strong></p>
+          <p>Дата: ${new Date(order.date).toLocaleDateString()}</p>
+          <p>Сумма: ${order.totalPrice.toLocaleString('ru-RU')} ₽</p>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  container.insertAdjacentHTML('beforeend', ordersListHTML);
+}
+
+// Загружает заказы пользователя и решает, что показывать
+export async function fetchAndRenderUserOrders(container, userId) {
+  try {
+    const token = localStorage.getItem('jwt');
+
+    const response = await fetch(`/api/orders/user/${userId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Ошибка при загрузке заказов: ${response.status}`);
+    }
+
+    const orders = await response.json();
+
+    const orderDataRaw = localStorage.getItem('orderData');
+    const orderData = orderDataRaw ? JSON.parse(orderDataRaw) : null;
+
+    const userDataRaw = localStorage.getItem('userData');
+    const userData = userDataRaw ? JSON.parse(userDataRaw) : { name: 'Гость' };
+
+    container.innerHTML = ''; // очищаем контейнер перед рендером
+
+    if (orderData && Object.keys(orderData).length > 0) {
+      renderOrderMessage(container, orderData, userData);
+    }
+
+    if (orders.length > 0) {
+      renderOrdersList(container, orders);
+    } else if ((!orderData || Object.keys(orderData).length === 0)) {
+      // Если нет ни заказов, ни незавершённого заказа — показать пустое сообщение
+      renderEmptyOrdersMessage(container);
+    }
+
+  } catch (error) {
+    console.error('Ошибка загрузки заказов:', error);
+    renderEmptyOrdersMessage(container);
+  }
+}
+
+// Быстрая проверка и рендер из localStorage (если нужно отдельно)
+export function checkAndRenderOrders() {
+  const ordersContainer = document.getElementById('orders-container');
+  if (!ordersContainer) return;
+
+  const orderDataRaw = localStorage.getItem('orderData');
+  let orderData = null;
+
+  try {
+    orderData = orderDataRaw ? JSON.parse(orderDataRaw) : null;
+  } catch (error) {
+    console.error('Ошибка парсинга orderData из localStorage:', error);
+    localStorage.removeItem('orderData');
+  }
+
+  if (orderData) {
+    renderOrderMessage(ordersContainer, orderData);
+  } else {
+    renderEmptyOrdersMessage(ordersContainer);
+  }
+}
+
 
 

@@ -3,6 +3,7 @@ package com.tafeco.Security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,35 +38,31 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/",
                                 "/index",
-                                "/register",
                                 "/login",
                                 "/css/**",
                                 "/products",
                                 "/products/category/**",
                                 "/category",
                                 "/categories/**",
+                                "/uploads/**",
                                 "/js/**",
                                 "/img/**",
                                 "/fonts/**",
                                 "/shop",
-                                "/egg",
-                                "/milk",
-                                "/chiken",
-                                "/chiken_joven",
-                                "/vegetables",
-                                "/green",
-                                "/conserva",
+                                "/api/auth/register",
+                                "/api/auth/login",
+                                "/api/auth/**",
+                                "/register",
                                 "/sale",
                                 "/condition",
                                 "/cart",
                                 "/confirmar_order",
                                 "/finalOrder",
                                 "/order",
-                                "/test",
                                 "/api/orders",
                                 "/error"
                         ).permitAll()
-                        .requestMatchers("/api/user").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/user/**").hasRole("USER")
                         .requestMatchers("/api/moderator").hasAnyRole("MODERATOR", "ADMIN")
                         .requestMatchers("/api/orders").hasAnyRole("MODERATOR", "ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")

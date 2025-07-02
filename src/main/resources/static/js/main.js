@@ -15,13 +15,30 @@ import {
     setupConfirmButton,
     updateDeliveryCost,
     createAndRenderOrder,
-    generatePDF
+    generatePDF,
+    checkAndRenderOrders,
+    renderOrderMessage,
+    fetchAndRenderUserOrders
 } from './modules/order.js';
 
-import { setupAuthForm } from './modules/auth.js';
-import { setupUserMenu, updateUserNameDisplay } from './modules/user.js';
-import { renderProductList, renderProductListByCategory } from './modules/shop.js';
-import { saveFormToStorage, restoreFormFromStorage, saveOrderData, saveUserData } from './modules/storage.js';
+import { setupAuthForm,
+         isUserLoggedIn,
+         redirectIfLoggedIn,
+         redirectIfNotLoggedIn,
+         logoutUser,
+         authFetch } from './modules/auth.js';
+import {handleRegistration,
+        setupFormAutoSave,
+        updateUserNameDisplay,
+        handleLogin,
+        handleProfileFormSubmit } from './modules/user.js';
+import { renderProductList,
+         renderProductListByCategory } from './modules/shop.js';
+import { saveFormToStorage,
+         restoreFormFromStorage,
+         saveOrderData,
+         saveUserData,
+         mappings } from './modules/storage.js';
 
 
 
@@ -35,6 +52,8 @@ window.addToCart = addToCart;
 window.updateCartCount = updateCartCount;
 window.renderCartPage = renderCartPage;
 window.saveOrderData = saveOrderData;
+window.saveOrderData = saveUserData;
+window.updateUserNameDisplay = updateUserNameDisplay;
 
 
 
@@ -44,13 +63,13 @@ console.log("main.js загружен");
 
     updateCartCount();
     renderCartPage();
-    setupUserMenu();
     setupAuthForm();
-    updateUserNameDisplay();
     restoreFormFromStorage();
     updateDeliveryCost();
     saveOrderData();
     saveUserData();
+    setupFormAutoSave();
+    updateUserNameDisplay();
 
 
 
@@ -68,13 +87,13 @@ console.log("main.js загружен");
         }
     }
 
-    // Кнопка назад в корзину
+     // Кнопка назад в корзину
     const backButton = document.getElementById("back-to-cart");
     if (backButton) {
         backButton.addEventListener("click", () => history.back());
     }
 
-    // Кнопка входа/регистрации
+    // Кнопка входа/регистрации в ордер или заказ без регистр
     const loginButton = document.getElementById("go-to-login");
     if (loginButton) {
         loginButton.addEventListener("click", (event) => {
@@ -82,28 +101,68 @@ console.log("main.js загружен");
             window.location.href = "/register";
         });
     }
+    // Проверка наличие пользователя в localStorage
+    const userProfile = localStorage.getItem('userData');
+
+    if (userProfile && userProfile !== 'undefined') {
+      try {
+        const userData = JSON.parse(userProfile);
+        saveUserData(userData);
+      } catch (e) {
+        console.error('Ошибка при разборе userData из localStorage:', e);
+        localStorage.removeItem('userData'); // очистим некорректные данные
+      }
+    }
+
+    // Вход
+    const loginForm = document.getElementById('login-form');
+      if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+      }
 
     // Выход
     const logout = document.getElementById("logout");
     if (logout) {
-        logout.addEventListener("click", () => {
-            console.log('Выход выполнен');
-        });
+      logout.addEventListener("click", () => {
+        console.log('Выход выполнен');
+        logoutUser();
+        updateUserNameDisplay();
+      });
     }
+
+    // Изменить данные пользователя
+    const userDataRaw = localStorage.getItem('userData');
+
+    if (userDataRaw && userDataRaw !== 'undefined') {
+      try {
+        const userData = JSON.parse(userDataRaw);
+        saveUserData(userData);
+      } catch (error) {
+        console.error('Ошибка при разборе userData:', error);
+        localStorage.removeItem('userData'); // очищаем повреждённые данные
+      }
+    }
+
+
+    const form = document.getElementById('change-password-form');
+      if (form) {
+        form.addEventListener('submit', handleProfileFormSubmit);
+      }
 
     // Кнопка "Сделать заказ"
     const checkoutButton = document.getElementById("checkout-button");
     if (checkoutButton) {
         checkoutButton.addEventListener("click", () => {
-            const loggedIn = localStorage.getItem("loggedIn");
-
-            if (loggedIn === "true") {
-                window.location.href = "/finalOrder"; // уже авторизован
+            if (localStorage.getItem('loggedIn') === 'true') {
+                // Пользователь авторизован — идём на финальную страницу заказа
+                window.location.href = "/finalOrder";
             } else {
-                window.location.href = "/order"; // гость
+                // Гость — на страницу оформления заказа
+                window.location.href = "/order";
             }
         });
     }
+
 
 
     // Страница оформления заказа
@@ -118,18 +177,13 @@ console.log("main.js загружен");
         setupConfirmButton();
     }
 
-    if (document.getElementById("auth-form")) {
-        setupAuthForm();
-    }
+    // Регистрация нового пользователя
+    const registerForm = document.getElementById('register-form');
+      if (registerForm) {
+        registerForm.addEventListener('submit', handleRegistration);
+      }
 
-    if (document.getElementById("user-menu")) {
-        setupUserMenu();
-        updateUserNameDisplay();
-    }
 
-    if (document.getElementById("user-name")) {
-        updateUserNameDisplay();
-    }
 
     if (document.getElementById("cart-items")) {
         renderCartPage();
@@ -211,19 +265,102 @@ document.querySelectorAll('.category-link').forEach(link => {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log("DOMContentLoaded fired");
 
     const params = new URLSearchParams(window.location.search);
     const categoryId = params.get("id");
     console.log("categoryId из URL:", categoryId, typeof categoryId);
 
     if (categoryId && categoryId !== 'null' && categoryId !== 'undefined') {
-      console.log("Выполняем renderProductListByCategory");
       renderProductListByCategory(categoryId);
     } else {
-      console.log("Выполняем renderProductList");
       renderProductList();
     }
 
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Пример: показать админские кнопки только админам
+  const adminElements = document.querySelectorAll('.admin-only');
+  const isAdmin = userHasRole('ROLE_ADMIN');
+
+  adminElements.forEach(el => {
+    el.style.display = isAdmin ? '' : 'none';
+  });
+
+  // Показать кнопки для авторизованных пользователей
+  const authElements = document.querySelectorAll('.auth-only');
+  const loggedIn = !!localStorage.getItem('loggedIn');
+
+  authElements.forEach(el => {
+    el.style.display = loggedIn ? '' : 'none';
+  });
+});
+
+// ЛК
+document.addEventListener('DOMContentLoaded', () => {
+  const ordersContainer = document.getElementById('orders-container');
+  if (!ordersContainer) {
+    console.error('Элемент orders-container не найден!');
+    return;
+  }
+
+  let orderData = null;
+  const orderDataRaw = localStorage.getItem('orderData');
+  if (orderDataRaw) {
+    try {
+      orderData = JSON.parse(orderDataRaw);
+    } catch (e) {
+      console.error('Ошибка парсинга orderData:', e);
+      //localStorage.removeItem('orderData'); // на всякий случай
+    }
+  }
+
+  let userData = null;
+  const userDataRaw = localStorage.getItem('userData');
+  if (userDataRaw) {
+    try {
+      userData = JSON.parse(userDataRaw);
+    } catch (e) {
+      console.error('Ошибка парсинга userData:', e);
+      //localStorage.removeItem('userData');
+    }
+  }
+
+  renderOrderMessage(ordersContainer, orderData, userData);
+});
+
+// Заказы юзера
+document.addEventListener('DOMContentLoaded', () => {
+  const ordersContainer = document.getElementById('orders-container');
+  if (!ordersContainer) {
+    console.error('Элемент orders-container не найден!');
+    return;
+  }
+
+  const userDataRaw = localStorage.getItem('userData');
+  if (!userDataRaw) {
+    console.error('Данные пользователя не найдены в localStorage');
+    renderEmptyOrdersMessage(ordersContainer);
+    return;
+  }
+
+  let userData;
+  try {
+    userData = JSON.parse(userDataRaw);
+  } catch (e) {
+    console.error('Ошибка парсинга userData:', e);
+    renderEmptyOrdersMessage(ordersContainer);
+    return;
+  }
+
+  if (!userData.id) {
+    console.error('ID пользователя отсутствует');
+    renderEmptyOrdersMessage(ordersContainer);
+    return;
+  }
+
+  // Вызов асинхронной функции для загрузки и отображения заказов
+  fetchAndRenderUserOrders(ordersContainer, userData.id);
+});
+
 

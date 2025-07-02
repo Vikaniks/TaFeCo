@@ -41,7 +41,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     @Transactional
-    public OrderDTO create(OrderDTO dto, String username) {
+    public OrderDTO create(OrderDTO dto, String email) {
 
         Order order = new Order();
 
@@ -50,8 +50,8 @@ public class OrderServiceImpl implements IOrderService {
         if (dto.getUser() != null) {
             user = userRepository.findById(dto.getUser())
                     .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
-        } else if (username != null && !username.isBlank()) {
-            user = userRepository.findByUsername(username)
+        } else if (email != null && !email.isBlank()) {
+            user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
         }
         order.setUser(user); // может быть null для гостя
@@ -93,7 +93,7 @@ public class OrderServiceImpl implements IOrderService {
         Order savedOrder = orderRepository.save(order);
 
         OrderDTO result = orderMapper.toDTO(savedOrder);
-
+        order.setUser(user);
 
         // 7. Отправка уведомления менеджеру
         notificationService.notifyManager(savedOrder);

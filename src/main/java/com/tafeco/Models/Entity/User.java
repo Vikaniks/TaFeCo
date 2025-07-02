@@ -20,8 +20,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String username;
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String surname;
+
+    @Column(nullable = false)
+    private String phone;
 
     @Column(nullable = false)
     private String password;
@@ -29,10 +35,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    private String fullName;
-
-    @Column(name = "delivery_address", length = 1000)
-    private String deliveryAddress;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

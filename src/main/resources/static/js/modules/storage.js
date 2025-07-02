@@ -95,30 +95,33 @@ export function saveOrderData() {
 export function saveUserData(userData) {
   if (!userData || typeof userData !== 'object') return;
 
-  const mappings = {
-    name: 'name',
-    surname: 'surname',
-    phone: 'phone',
-    email: 'email',
-    locality: 'locality',
-    district: 'district',
-    region: 'region',
-    street: 'street',
-    house: 'house',
-    apartment: 'apartment',
-    addressExtra: 'address-extra',
-    date: 'date',
-    time: 'time',
-    paymentOption: 'payment-option'
-  };
-
   for (const key in mappings) {
     const el = document.getElementById(mappings[key]);
     if (el && userData[key]) {
-      el.textContent = userData[key];
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') {
+              el.value = userData[key];
+            } else {
+              el.textContent = userData[key];
+            }
     }
   }
 }
 
+export const mappings = {
+           name: 'name',
+           surname: 'surname',
+           phone: 'phone',
+           email: 'email',
+           locality: 'locality',
+           district: 'district',
+           region: 'region',
+           street: 'street',
+           house: 'house',
+           apartment: 'apartment',
+           addressExtra: 'address-extra',
+           date: 'date',
+           time: 'time',
+           paymentOption: 'payment-option'
+         };
 
 
