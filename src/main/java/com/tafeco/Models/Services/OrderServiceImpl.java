@@ -93,7 +93,7 @@ public class OrderServiceImpl implements IOrderService {
         Order savedOrder = orderRepository.save(order);
 
         OrderDTO result = orderMapper.toDTO(savedOrder);
-        order.setUser(user);
+
 
         // 7. Отправка уведомления менеджеру
         notificationService.notifyManager(savedOrder);
