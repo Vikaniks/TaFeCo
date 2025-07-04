@@ -14,12 +14,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,6 +38,7 @@ public class AuthController {
     private final JwtService jwtService;
     private final IUserDAO userRepository;
     private final IUserService userService;
+    private final UserDetailsService userDetailsService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
@@ -42,21 +48,26 @@ public class AuthController {
                             loginRequest.getUsername(), loginRequest.getPassword())
             );
 
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String token = jwtService.generateToken(userDetails);
+            // Установка контекста безопасности
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            Optional<User> userOptional = userRepository.findByEmail(loginRequest.getUsername());
-            if (userOptional.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-            }
+            // Получаем email из аутентификации (username)
+            String email = authentication.getName();
 
-            User user = userOptional.get();
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+            String token = jwtService.generateToken(user);
 
             // Получаем первую роль
             String role = user.getRoles().stream()
                     .map(RoleUser::getRole)
                     .findFirst()
                     .orElse("USER");
+
+            // Проверка временного пароля
+            boolean temporaryPassword = user.getTempPasswordExpiration() != null &&
+                    user.getTempPasswordExpiration().isAfter(LocalDateTime.now());
 
             // Маппинг в UserDTO
             UserDTO userDTO = new UserDTO();
@@ -83,8 +94,7 @@ public class AuthController {
                     .map(RoleUser::getRole)
                     .collect(Collectors.toSet()));
 
-
-            return ResponseEntity.ok(new LoginResponseDTO(token, role, userDTO));
+            return ResponseEntity.ok(new LoginResponseDTO(token, role, userDTO, temporaryPassword));
 
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
@@ -100,9 +110,21 @@ public class AuthController {
     }
 
     // Endpoint "Забыл пароль"
-    @PostMapping("/auth/forgot-password")
+    @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequestDTO request) {
-        userService.resetPassword(request.getEmail());
-        return ResponseEntity.ok("Временный пароль отправлен на вашу почту.");
+        boolean temporaryPassword;
+        try {
+            userService.resetPassword(request.getEmail());
+            temporaryPassword = true;
+        } catch (UsernameNotFoundException e) {
+            temporaryPassword = false;
+        }
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Если такой пользователь существует, временный пароль отправлен на вашу почту.",
+                "temporaryPasswordSet", temporaryPassword
+        ));
     }
+
+
 }

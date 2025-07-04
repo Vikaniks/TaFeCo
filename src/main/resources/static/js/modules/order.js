@@ -138,30 +138,36 @@ export function setupOrderForm() {
             paymentOption: document.getElementById("payment-option")?.value || "cash",
         };
     }
-
-
-    // Заполняем поля, если данные есть в localStorage
     function populateForm() {
-        const userData = localStorage.getItem("userData");
-        if (!userData) return;
+        const userDataRaw = localStorage.getItem("userData");
+        if (!userDataRaw) return;
 
-        const tempData = JSON.parse(userData);
+        let tempData;
+        try {
+          tempData = JSON.parse(userDataRaw);
+        } catch {
+          return; // если JSON невалидный, просто выходим
+        }
 
-        if (tempData.name) document.getElementById("name").value = tempData.name;
-        if (tempData.surname) document.getElementById("surname").value = tempData.surname;
-        if (tempData.phone) document.getElementById("phone").value = tempData.phone;
-        if (tempData.email) document.getElementById("email").value = tempData.email;
-        if (tempData.locality) document.getElementById("locality").value = tempData.locality;
-        if (tempData.district) document.getElementById("district").value = tempData.district;
-        if (tempData.region) document.getElementById("region").value = tempData.region;
-        if (tempData.street) document.getElementById("street").value = tempData.street;
-        if (tempData.house) document.getElementById("house").value = tempData.house;
-        if (tempData.apartment) document.getElementById("apartment").value = tempData.apartment;
-        if (tempData.addressExtra) document.getElementById("address-extra").value = tempData.addressExtra;
-        if (tempData.date) document.getElementById("date").value = tempData.date;
-        if (tempData.time) document.getElementById("time").value = tempData.time;
-        if (tempData.paymentOption && document.getElementById("payment-option")) {
-            document.getElementById("payment-option").value = tempData.paymentOption;
+        const user = tempData.user; // здесь именно вложенный объект user
+
+        if (!user) return; // если вложенного объекта нет — выходим
+
+        if (user.name) document.getElementById("name").value = user.name;
+        if (user.surname) document.getElementById("surname").value = user.surname;
+        if (user.phone) document.getElementById("phone").value = user.phone;
+        if (user.email) document.getElementById("email").value = user.email;
+        if (user.locality) document.getElementById("locality").value = user.locality;
+        if (user.district) document.getElementById("district").value = user.district;
+        if (user.region) document.getElementById("region").value = user.region;
+        if (user.street) document.getElementById("street").value = user.street;
+        if (user.house) document.getElementById("house").value = user.house;
+        if (user.apartment) document.getElementById("apartment").value = user.apartment;
+        if (user.addressExtra) document.getElementById("address-extra").value = user.addressExtra;
+        if (user.date) document.getElementById("date").value = user.date;
+        if (user.time) document.getElementById("time").value = user.time;
+        if (user.paymentOption && document.getElementById("payment-option")) {
+            document.getElementById("payment-option").value = user.paymentOption;
         }
     }
 
@@ -202,6 +208,7 @@ export function setupOrderForm() {
 // final order.js
 
 export function populateFinalOrder() {
+
     const dateInput = document.getElementById("date");
     const timeSelect = document.getElementById("time");
     const deliveryDateTime = document.getElementById("delivery-datetime");
@@ -209,30 +216,38 @@ export function populateFinalOrder() {
     const paymentSelect = document.getElementById("payment-option");
     const paymentDisplay = document.getElementById("payment-option-text");
 
-
-    const userData = JSON.parse(localStorage.getItem("userData")) || {};
-
     if (!recipientEl) return; // если нет получателя, выходим (не на нужной странице)
+
+    // Получаем userData из localStorage и берём вложенный объект user
+    const rawData = localStorage.getItem("userData");
+    const parsedData = rawData ? JSON.parse(rawData) : {};
+    const userData = parsedData.user || parsedData || {};
 
     // Отображаем основные данные
     recipientEl.textContent = `${userData.name || "Не указано"} ${userData.surname || "Не указано"}`;
-    document.getElementById("phone").textContent = userData.phone || "Не указано";
-    // Адрес
-        const addressEl = document.getElementById("address");
-        if (addressEl) {
-            const parts = [
-                userData.region,
-                userData.locality,
-                userData.district,
-                userData.street,
-                userData.house,
-                userData.apartment,
-                userData.addressExtra
-            ].filter(Boolean); // убираем пустые значения
 
-            addressEl.textContent = parts.join(", ") || "Не указано";
-        }
+    const phoneEl = document.getElementById("phone");
+    if (phoneEl) {
+        phoneEl.textContent = userData.phone || "Не указано";
+    }
 
+    // Формируем адрес
+    const addressEl = document.getElementById("address");
+    if (addressEl) {
+        const parts = [
+            userData.region,
+            userData.locality,
+            userData.district,
+            userData.street,
+            userData.house,
+            userData.apartment,
+            userData.addressExtra
+        ].filter(Boolean); // убираем пустые или undefined значения
+
+        addressEl.textContent = parts.join(", ") || "Не указано";
+    }
+
+    // Заполняем дату и время, если есть
     if (dateInput && userData.date) {
         dateInput.value = userData.date;
     }
@@ -240,12 +255,14 @@ export function populateFinalOrder() {
         timeSelect.value = userData.time;
     }
 
+    // Функция форматирования даты из "yyyy-mm-dd" в "dd-mm-yyyy"
     function formatDate(dateString) {
         if (!dateString) return "Не указано";
         const [year, month, day] = dateString.split("-");
         return `${day}-${month}-${year}`;
     }
 
+    // Обновление отображения даты и времени доставки
     function updateDeliveryDateTime() {
         if (!dateInput || !timeSelect || !deliveryDateTime) return;
 
@@ -259,26 +276,28 @@ export function populateFinalOrder() {
             // Обновляем localStorage
             userData.date = date;
             userData.time = time;
-            localStorage.setItem("userData", JSON.stringify(userData));
+            const updatedRawData = JSON.parse(rawData);
+            updatedRawData.user = userData;
+            localStorage.setItem("userData", JSON.stringify(updatedRawData));
         } else {
             deliveryDateTime.textContent = "Выберите дату и время";
         }
     }
 
-    // Отображаем дату и время из userData, если есть
+    // Изначальное отображение даты и времени доставки
     if (userData.date && userData.time && deliveryDateTime) {
         deliveryDateTime.innerHTML = `${formatDate(userData.date)} &nbsp;|&nbsp; ${userData.time}`;
     } else if (deliveryDateTime) {
         deliveryDateTime.textContent = "Не указано";
     }
 
-    // Добавляем обработчики, если элементы есть
+    // Добавляем слушатели на изменение даты и времени
     if (dateInput && timeSelect) {
         dateInput.addEventListener("change", updateDeliveryDateTime);
         timeSelect.addEventListener("change", updateDeliveryDateTime);
     }
 
-    // Отображаем метод оплаты
+    // Отображение способа оплаты
     if (paymentDisplay) {
         const paymentText = {
             "cash": "Оплата наличными при доставке",
@@ -287,16 +306,16 @@ export function populateFinalOrder() {
 
         paymentDisplay.textContent = paymentText;
     }
+
     // Отображаем комментарий к заказу из sessionStorage
-       const comment = sessionStorage.getItem("orderComment");
-       const commentDisplay = document.getElementById("comment");
+    const comment = sessionStorage.getItem("orderComment");
+    const commentDisplay = document.getElementById("comment");
+    if (comment && commentDisplay) {
+        commentDisplay.textContent = comment;
+    }
 
-           if (comment && commentDisplay) {
-           commentDisplay.textContent = comment;
-       }
-
-       sessionStorage.removeItem("orderComment");
-
+    // Удаляем комментарий из sessionStorage после отображения
+    sessionStorage.removeItem("orderComment");
 }
 
 
@@ -442,7 +461,6 @@ function renderCartToPDFTable(items) {
 }
 
 export async function createAndRenderOrder() {
-
   const existing = localStorage.getItem('createdOrder');
     if (existing) {
       console.log('Заказ уже создан, повторное создание не требуется.');
@@ -471,6 +489,24 @@ export async function createAndRenderOrder() {
   if (!Array.isArray(orderData.items)) {
     orderData.items = Object.values(orderData.items);
   }
+  // Извлекаем userData из localStorage
+  const userDataRaw = localStorage.getItem('userData');
+  let userData = null;
+
+  try {
+    userData = JSON.parse(userDataRaw);
+  } catch (e) {
+    console.warn("Ошибка при разборе userData из localStorage:", e);
+  }
+
+  if (userData && userData.user && userData.user.id) {
+    orderData.user = userData.user.id;  // <-- обращение к вложенному user.id
+    console.log(`Добавлен ID пользователя к заказу: ${userData.user.id}`);
+  } else {
+    console.warn("Не удалось определить ID пользователя, заказ будет без привязки к юзеру.");
+  }
+
+  console.log("OrderDTO to send:", JSON.stringify(orderData, null, 2));
 
   try {
     const response = await fetch('/api/orders', {
@@ -627,7 +663,11 @@ function waitForImagesToLoad(element) {
 
 // Показывает сообщение о незавершённом заказе с кнопками "Да" / "Нет"
 export function renderOrderMessage(container, orderData, userData) {
-  const userName = userData?.name || 'Пользователь';
+  // Если userData — объект с вложенным user, берем userData.user, иначе сам userData
+  const user = userData?.user || userData || {};
+
+  const userName = user.name || 'Пользователь';
+  const userId = user.id;
   const messageHTML = `
     <div class="order-message">
       <p class="text-orders">${userName}, ваш заказ не завершён. Хотите продолжить?</p>
@@ -636,26 +676,41 @@ export function renderOrderMessage(container, orderData, userData) {
         <button class="button-no" id="cancel-order">Нет</button>
       </div>
     </div>
+    <div id="orders-wrapper"></div>
   `;
-
   container.innerHTML = messageHTML;
 
   // Обработка кнопки "Да" — перейти на финальный заказ или в магазин
   const continueBtn = container.querySelector('#continue-order');
   continueBtn.addEventListener('click', () => {
-    if (orderData && Object.keys(orderData).length > 0) {
+    const cartRaw = localStorage.getItem('cart-items');
+    let cartItems = [];
+
+    try {
+      cartItems = JSON.parse(cartRaw) || [];
+    } catch (e) {
+      console.warn("Ошибка разбора cart-items:", e);
+    }
+
+    if (Array.isArray(cartItems) && cartItems.length > 0) {
       window.location.href = '/finalOrder';
     } else {
       window.location.href = '/shop';
     }
+
   });
 
-  // Обработка кнопки "Нет" — очистить заказ и показать пустое сообщение
+  // Обработка кнопки "Нет"
   const cancelBtn = container.querySelector('#cancel-order');
   cancelBtn.addEventListener('click', () => {
     localStorage.removeItem('orderData');
     localStorage.removeItem('cart-items');
-    renderEmptyOrdersMessage(container);
+
+    // Очистка контейнера, чтобы убрать сообщение
+    container.innerHTML = '';
+
+    // Перерисовать список прошлых заказов
+    fetchAndRenderUserOrders(container, userId);
   });
 }
 
@@ -664,7 +719,7 @@ export function renderEmptyOrdersMessage(container) {
   container.innerHTML = `
     <div class="container-row">
       <p>Упс! Здесь пока ничего нет...
-        <img src="./img/boy.svg" alt="Упс!" style="max-width: 100px; height: auto; opacity: 0.8; margin: 0 auto;">
+        <img src="./img/boy.svg" alt="Упс!" style="max-width: 100px; height: auto; opacity: 0.8; margin: 20px 50px;">
       </p>
     </div>
   `;
@@ -674,14 +729,25 @@ export function renderEmptyOrdersMessage(container) {
 export function renderOrdersList(container, orders) {
   const ordersListHTML = `
     <div class="orders-history">
-      <h3>История заказов</h3>
-      ${orders.map(order => `
-        <div class="order">
-          <p><strong>Заказ №${order.id}</strong></p>
-          <p>Дата: ${new Date(order.date).toLocaleDateString()}</p>
-          <p>Сумма: ${order.totalPrice.toLocaleString('ru-RU')} ₽</p>
-        </div>
-      `).join('')}
+      <h3 style="padding: 20px;">История заказов</h3>
+      <table class="orders-table" style="width: 80%; border-collapse: collapse;padding: 10px; margin: 0 auto;">
+        <thead>
+          <tr style="background-color: #f0f0f0;">
+            <th style="padding: 10px; border: 1px solid #ccc; text-align: center; max-width: 50px;">№ заказа</th>
+            <th style="padding: 10px; border: 1px solid #ccc; text-align: center;">Дата заказа</th>
+            <th style="padding: 10px; border: 1px solid #ccc; text-align: center;">Сумма, руб.</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${orders.map(order => `
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ccc; max-width: 50px;">${order.id}</td>
+              <td style="padding: 10px; border: 1px solid #ccc;">${new Date(order.orderDate).toLocaleDateString('ru-RU')}</td>
+              <td style="padding: 10px; border: 1px solid #ccc; text-align: right;">${order.totalPrice.toLocaleString('ru-RU')}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
     </div>
   `;
 
@@ -705,6 +771,7 @@ export async function fetchAndRenderUserOrders(container, userId) {
     }
 
     const orders = await response.json();
+    console.log(orders);
 
     const orderDataRaw = localStorage.getItem('orderData');
     const orderData = orderDataRaw ? JSON.parse(orderDataRaw) : null;
@@ -753,5 +820,8 @@ export function checkAndRenderOrders() {
   }
 }
 
-
-
+function formatDate(dateValue) {
+  const d = new Date(dateValue);
+  if (isNaN(d)) return '—'; // или 'Некорректная дата'
+  return d.toLocaleDateString('ru-RU');
+}

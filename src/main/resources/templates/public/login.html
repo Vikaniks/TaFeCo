@@ -80,21 +80,27 @@
 
             <!-- Правая основная часть -->
             <div class="container-row1">
-                <h3>История заказов</h3>
+
+                <div id="change-password-container" style="display:none; border: 1px solid #f00; padding: 10px; margin-top: 20px;">
+                    <h3>Требуется смена пароля</h3>
+                    <form id="force-change-password-form">
+
+                        <div class="form-group-row">
+                            <label for="new-password">Новый пароль:</label><br>
+                            <input type="password" id="new-password" required minlength="8" />
+                        </div>
+                        <div class="form-group-row">
+                            <label for="confirm-password">Подтвердите пароль:</label><br>
+                            <input type="password" id="confirm-password" required minlength="8" />
+                        </div>
+                        <button type="submit">Сменить пароль</button>
+                    </form>
+
+                </div>
+
+
                 <div class="orders-container" id="orders-container">
-                    <!-- Если заказы есть -->
-                    <!-- <div class="order">
-                        <p><strong>Заказ №12345</strong></p>
-                        <p>Дата: 12.03.2023</p>
-                        <p>Сумма: 4 500 ₽</p>
-                    </div> -->
-        
-                    <!-- Если заказы недоступны 
-                    <div class="container-row">
-                        <p>Упс! Здесь пока ничего нет...
-                        <img src="images/empty.png" alt="Упс!" style="max-width: 250px; height: auto; opacity: 1; margin: 0 auto;">
-                        </p>
-                    </div>-->
+
                 </div>
             </div>
         </div>
@@ -103,58 +109,6 @@
 
     </main>
 
- <!--   <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const ordersContainer = document.getElementById("orders-container");
-
-            // Проверяем наличие данных о незавершённом заказе в localStorage
-            const orderData = JSON.parse(localStorage.getItem("orderData"));
-
-            if (orderData) {
-                // Если незавершённый заказ есть, выводим сообщение с кнопками
-                const orderMessage = document.createElement("div");
-                orderMessage.classList.add("order-message");
-                orderMessage.innerHTML = `
-                    <p class="text-orders"> ${orderData.name}, ваш заказ не завершён. Хотите продолжить?</p>
-                    <div class="button-group">
-                        <button class="button-yes" id="continue-order">Да</button>
-                        <button class="button-no" id="cancel-order">Нет</button>
-                    </div>
-                `;
-
-                ordersContainer.appendChild(orderMessage);
-
-                // Обработка кнопки "Да"
-                document.getElementById("continue-order").addEventListener("click", function () {
-                    window.location.href = "finalOrder.html"; // Перенаправляем на страницу финального заказа
-                });
-
-                // Обработка кнопки "Нет"
-                document.getElementById("cancel-order").addEventListener("click", function () {
-                    // Удаляем данные незавершённого заказа из localStorage
-                    localStorage.removeItem("orderData");
-
-                    // Обнуляем корзину (пример: удаляем данные корзины)
-                    localStorage.removeItem("cart-items");
-
-                    // Убираем сообщение о незавершённом заказе
-                    ordersContainer.innerHTML = `
-                        <p>Упс! Здесь пока ничего нет...
-                        <img src="images/empty.png" alt="Упс!" style="max-width: 250px; height: auto; opacity: 1; margin: 0 auto;">
-                        </p>
-                    `;
-                });
-            } else {
-                // Если незавершённый заказ отсутствует, выводим сообщение о пустой истории
-                ordersContainer.innerHTML = `
-                    <p>Упс! Здесь пока ничего нет...
-                    <img src="images/empty.png" alt="Упс!" style="max-width: 250px; height: auto; opacity: 1; margin: 0 auto;">
-                    </p>
-                `;
-            }
-        });
-    </script>
--->
 <div th:replace="include/footer :: footer"></div>
 
 <script type="module" th:src="@{/js/main.js}"></script>

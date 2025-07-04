@@ -57,5 +57,10 @@ public class User {
     @Column(name = "temp_password_expiration")
     private LocalDateTime tempPasswordExpiration;
 
+    @Column(name = "temporary_password")
+    private Boolean temporaryPassword;
+
+
+
 }
 

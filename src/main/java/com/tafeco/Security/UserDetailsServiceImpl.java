@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,16 +29,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userDAO.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + email));
 
-        return new org.springframework.security.core.userdetails.User(
+        boolean temporaryPassword = user.getTempPasswordExpiration() != null &&
+                user.getTempPasswordExpiration().isAfter(LocalDateTime.now());
+
+        return new CustomUserDetails(
                 user.getEmail(),
                 user.getPassword(),
-                user.isActive(),         // enabled
-                true,                    // accountNonExpired
-                true,                    // credentialsNonExpired
-                true,                    // accountNonLocked
-                mapRolesToAuthorities(user.getRoles())
+                user.isActive(),
+                mapRolesToAuthorities(user.getRoles()),
+                temporaryPassword
         );
     }
+
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Set<RoleUser> roles) {
         return roles.stream()

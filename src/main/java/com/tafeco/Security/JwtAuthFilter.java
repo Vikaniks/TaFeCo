@@ -29,32 +29,47 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
-            throws ServletException, IOException  {
+            throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String username;
 
+        System.out.println("🔍 Заголовок Authorization: " + authHeader);
+
         // Проверка на наличие и начало с Bearer
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("⛔ Authorization отсутствует или не начинается с Bearer");
             filterChain.doFilter(request, response);
             return;
         }
 
         jwt = authHeader.substring(7);
+        System.out.println("🪙 JWT: " + jwt);
+
         username = jwtService.extractUsername(jwt);
+        System.out.println("📧 Извлечён username/email из токена: " + username);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            System.out.println("✅ Загрузили userDetails: " + userDetails.getUsername());
 
             if (jwtService.isTokenValid(jwt, userDetails)) {
+                System.out.println("🔐 Токен валиден, создаём аутентификацию...");
+
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                System.out.println("✅ Пользователь аутентифицирован: " + userDetails.getUsername());
+            } else {
+                System.out.println("⛔ Токен НЕвалиден");
             }
+        } else {
+            System.out.println("⚠ Либо username null, либо пользователь уже аутентифицирован");
         }
 
         filterChain.doFilter(request, response);

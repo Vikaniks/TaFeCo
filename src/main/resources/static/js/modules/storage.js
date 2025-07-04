@@ -95,17 +95,21 @@ export function saveOrderData() {
 export function saveUserData(userData) {
   if (!userData || typeof userData !== 'object') return;
 
+  // Если есть вложенный объект user — работать с ним
+  const data = userData.user || userData;
+
   for (const key in mappings) {
     const el = document.getElementById(mappings[key]);
-    if (el && userData[key]) {
+    if (el && data[key]) {
       if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') {
-              el.value = userData[key];
-            } else {
-              el.textContent = userData[key];
-            }
+        el.value = data[key];
+      } else {
+        el.textContent = data[key];
+      }
     }
   }
 }
+
 
 export const mappings = {
            name: 'name',
@@ -123,5 +127,6 @@ export const mappings = {
            time: 'time',
            paymentOption: 'payment-option'
          };
+
 
 

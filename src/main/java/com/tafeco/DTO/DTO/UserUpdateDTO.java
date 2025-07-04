@@ -1,10 +1,14 @@
 package com.tafeco.DTO.DTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserUpdateDTO {
     private Long id;
 
@@ -30,5 +34,7 @@ public class UserUpdateDTO {
 
     // Текущий пароль — для подтверждения смены
     private String currentPassword;
+
+    private Boolean temporaryPassword;
 }
 

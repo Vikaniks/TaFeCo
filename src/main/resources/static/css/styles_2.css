@@ -108,6 +108,7 @@ header {
     z-index: 10000; /* Поверх других элементов */
     width: 120px; /* Определяем ширину меню */
     pointer-events: visible; /* Разрешаем взаимодействие с меню */
+    font-size: 16px;
 }
 
 .dropdown-menu ul {
@@ -120,6 +121,7 @@ header {
     padding: 10px; /* Отступы внутри пунктов меню */
     text-align: center; /* Выравниваем текст по центру */
     cursor: pointer; /* Курсор при наведении */
+
 }
 
 .dropdown-menu li:hover {
@@ -135,6 +137,7 @@ header {
 .user-container:hover .dropdown-menu,
 .dropdown-menu:hover {
     display: block;
+    font-size: 16px;
 }
 
 .user-container {
@@ -170,6 +173,9 @@ header {
     pointer-events: none;
     text-align: center;
     white-space: pre-line;
+}
+.user-menu li a {
+  font-size: 16px;
 }
 
 
@@ -365,6 +371,10 @@ li:hover > .submenu, li:hover > .submenu2 {
 .submenu li a:hover {
     background-color: var(--colorContraste);
     color: var(--colorPrincipal);
+}
+
+.submenu-user {
+font-size:16px
 }
 
 
@@ -960,11 +970,9 @@ tfoot th button:hover {
 
 }
 
-
-
 .container-row1 {
     width: 58%; /* Ширина первого контейнера */
-    margin: 5px 2px 5px 10px; /* Отступы: сверху, справа, снизу, слева */
+    margin: 5px 2px 5px 5px; /* Отступы: сверху, справа, снизу, слева */
     padding: 10px 5px 60px 5px;
     background-color: var(--colorContrasteClaro);
     border-radius: 10px;
@@ -974,7 +982,7 @@ tfoot th button:hover {
 
 .container-row2 {
     width:35%; /* Ширина второго контейнера */
-    margin: 5px 10px 5px 2px; /* Отступы: сверху, справа, снизу, слева */
+    margin: 5px 5px 5px 2px; /* Отступы: сверху, справа, снизу, слева */
     padding: 10px 15px 60px 10px;
     background-color: var(--colorContrasteClaro);
     border-radius: 10px;

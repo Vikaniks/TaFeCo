@@ -42,6 +42,11 @@ function collectUserDataFromForm() {
 export function handleRegistration(event) {
   event.preventDefault();
 
+  const nameInput = document.getElementById('name');
+  const surnameInput = document.getElementById('surname');
+  const phoneInput = document.getElementById('phone');
+  const emailInput = document.getElementById('email');
+
   const formData = collectUserDataFromForm();
 
   function showErrorMessage(field, message) {
@@ -157,7 +162,7 @@ export function setupFormAutoSave() {
   form.addEventListener("input", () => {
     const userData = saveUserData();
     if (userData) {
-      localStorage.setItem("userData", JSON.stringify(userData));
+      localStorage.setItem("userData", JSON.stringify({ user: userData }));
     }
   });
 }
@@ -168,89 +173,110 @@ function getNameFromEmail(email) {
     return namePart.charAt(0).toUpperCase() + namePart.slice(1);
 }
 
-export async function handleLogin(event) {
-    event.preventDefault();
 
-    const form = event.target.closest('form');
-
-    const emailInput = form.querySelector('#login-email');
-    const passwordInput = form.querySelector('#login-password');
-
-    if (!emailInput || !passwordInput) {
-        console.error('Не найдены поля email или password');
-        return;
-    }
-
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    try {
-        const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: email,
-                password: password
-            })
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            console.log('result:', result);
-
-            const user = result.user;
-
-            if (user.email && user.email !== email) {
-                console.error('Несовпадение email с сервером');
-                return;
-            }
-
-            const name = (user.name && user.name.trim() !== '') ? user.name : getNameFromEmail(user.email);
-
-            const profile = {
-                id: user.id,
-                name: name,
-                surname: user.surname || '',
-                phone: user.phone || '',
-                email: user.email || email,
-                locality: user.locality || '',
-                district: user.district || '',
-                region: user.region || '',
-                street: user.street || '',
-                house: user.house || '',
-                apartment: user.apartment || '',
-                addressExtra: user.addressExtra || '',
-                active: user.active || false,
-                roles: result.user.roles || ['USER'], // или result.roles
-            };
-
-
-             // Сохраняем JWT
-             localStorage.setItem('jwt', result.token);
-
-             // Сохраняем полный профиль в localStorage
-             localStorage.setItem('userData', JSON.stringify(profile));
-             localStorage.setItem('loggedIn', 'true');
-
-             // Обновляем отображение имени пользователя
-             updateUserNameDisplay();
-            alert('Вы успешно вошли в личный кабинет!');
-            window.location.href = '/login';
-
-        } else if (response.status === 401) {
-            alert('Неверный логин или пароль.');
-        } else {
-            const errorText = await response.text();
-            alert('Ошибка сервера: ' + errorText);
-        }
-
-    } catch (error) {
-        console.error('Ошибка при входе:', error);
-        alert('Ошибка сети. Попробуйте позже.');
-    }
+function parseJwt(token) {
+  try {
+    const base64Payload = token.split('.')[1];
+    const payload = atob(base64Payload);
+    return JSON.parse(payload);
+  } catch (e) {
+    console.error('Ошибка парсинга JWT:', e);
+    return null;
+  }
 }
+
+export async function handleLogin(event) {
+  event.preventDefault();
+
+  const form = event.target.closest('form');
+
+  const emailInput = form.querySelector('#login-email');
+  const passwordInput = form.querySelector('#login-password');
+
+  if (!emailInput || !passwordInput) {
+    console.error('Не найдены поля email или password');
+    return;
+  }
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+
+  try {
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: email,
+        password: password
+      })
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log('result:', result);
+
+      const user = result.user;
+      if (!user) {
+        alert('Ошибка сервера: данные пользователя не получены');
+        return;
+      }
+      if (user.email && user.email !== email) {
+        console.error('Несовпадение email с сервером');
+        return;
+      }
+
+      // Парсим JWT и сохраняем флаг временного пароля
+      const payload = parseJwt(result.token);
+      localStorage.setItem('temporaryPassword', payload?.temporaryPassword ? 'true' : 'false');
+
+      const name = (user.name && user.name.trim() !== '') ? user.name : getNameFromEmail(user.email);
+
+      const profile = {
+        id: user.id,
+        name: name,
+        surname: user.surname || '',
+        phone: user.phone || '',
+        email: user.email || email,
+        locality: user.locality || '',
+        district: user.district || '',
+        region: user.region || '',
+        street: user.street || '',
+        house: user.house || '',
+        apartment: user.apartment || '',
+        addressExtra: user.addressExtra || '',
+        active: user.active || false,
+        roles: user.roles || ['USER'],
+      };
+
+      // Сохраняем JWT
+      localStorage.setItem('jwt', result.token);
+
+      // Сохраняем профиль
+      localStorage.setItem('userData', JSON.stringify({ user: profile }));
+
+      localStorage.setItem('loggedIn', 'true');
+
+      // Обновляем отображение имени пользователя
+      updateUserNameDisplay();
+
+      // Переходим в личный кабинет
+      window.location.href = '/login';
+
+    } else if (response.status === 401) {
+      alert('Неверный логин или пароль.');
+    } else {
+      const errorText = await response.text();
+      alert('Ошибка сервера: ' + errorText);
+    }
+
+  } catch (error) {
+    console.error('Ошибка при входе:', error);
+    alert('Ошибка сети. Попробуйте позже.');
+  }
+}
+
 
 function updateUserProfileDisplay(user) {
   document.getElementById('name').textContent = user.name || '';
@@ -277,7 +303,9 @@ export async function handleProfileFormSubmit(event) {
     return;
   }
 
-  const currentUserData = JSON.parse(localStorage.getItem('userData')) || {};
+  // Получаем данные пользователя из localStorage с учётом вложенности userData.user
+  const rawUserData = JSON.parse(localStorage.getItem('userData')) || {};
+  const currentUserData = rawUserData.user || {};
 
   function getFieldValue(id, currentValue) {
     const val = document.getElementById(id).value.trim();
@@ -312,7 +340,8 @@ export async function handleProfileFormSubmit(event) {
     const response = await authFetch('/api/user/profile', {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(updatedData)
     });
@@ -323,18 +352,22 @@ export async function handleProfileFormSubmit(event) {
 
       console.log('Ответ сервера:', result);
 
-     if (!result || !result.id) {
-     alert('Сервер не вернул данные пользователя');
-     return;
-     }
+      if (!result || !result.id) {
+        alert('Сервер не вернул данные пользователя');
+        return;
+      }
 
-      localStorage.setItem('userData', JSON.stringify(result));
-      saveUserData(result);
+      // Сохраняем в localStorage с вложенностью user
+      localStorage.setItem('userData', JSON.stringify({ user: result }));
+
+      // Обновляем данные в приложении
+      saveUserData({ user: result });
+
+      // Обновляем отображение профиля, передаем непосредственно объект пользователя
       updateUserProfileDisplay(result);
 
-
+      // Очищаем поле пароля
       document.getElementById('password').value = '';
-
 
     } else if (response.status === 401) {
       alert('Неверный текущий пароль');
@@ -347,45 +380,6 @@ export async function handleProfileFormSubmit(event) {
   }
 }
 
-
-/*export function setupUserMenu() {
-    const userIcon = document.querySelector('.user-container img');
-    const dropdownMenu = document.getElementById('dropdown-menu');
-    const orderRegistrButton = document.getElementById('go-to-login');
-    const logout = document.getElementById('logout');
-
-    if (!userIcon || !dropdownMenu || !orderRegistrButton) return;
-
-    userIcon.addEventListener('mouseover', () => {
-        dropdownMenu.style.display = 'block';
-    });
-
-    dropdownMenu.addEventListener('mouseleave', () => {
-        dropdownMenu.style.display = 'none';
-    });
-
-
-    if (logout) {
-        logout.addEventListener('click', (e) => {
-            e.preventDefault();
-            try {
-                localStorage.clear();
-                sessionStorage.clear(); // Очистка sessionStorage для безопасности
-                localStorage.setItem('loggedIn', 'false'); // Устанавливаем статус выхода
-            } catch (error) {
-                console.error("Ошибка при очистке localStorage:", error);
-            }
-
-            updateUserNameDisplay();
-            updateCartCount();
-            dropdownMenu.style.display = 'none';
-            alert('Вы вышли из аккаунта.');
-            window.location.href = 'index.html';
-        });
-    }
-}*/
-
-
 export function updateUserNameDisplay() {
     const loggedIn = localStorage.getItem('loggedIn');
     const userNameElem = document.getElementById('username-flower');
@@ -394,7 +388,6 @@ export function updateUserNameDisplay() {
     if (loggedIn === 'true') {
         const userDataRaw = localStorage.getItem('userData');
 
-        // 🛡️ проверка перед JSON.parse
         if (!userDataRaw || userDataRaw === 'undefined') {
             console.warn('userData в localStorage отсутствует или поврежден');
             userNameElem.textContent = 'Гость';
@@ -410,12 +403,15 @@ export function updateUserNameDisplay() {
             return;
         }
 
+        // Здесь берем вложенный объект user
+        const user = userProfile.user || {};
+
         let displayName = 'Гость'; // по умолчанию
 
-        if (userProfile.name && userProfile.name.trim() !== '') {
-            displayName = `Привет, ${userProfile.name.trim()}!`;
-        } else if (userProfile.email) {
-            displayName = getNameFromEmail(userProfile.email);
+        if (user.name && user.name.trim() !== '') {
+            displayName = `Привет, ${user.name.trim()}!`;
+        } else if (user.email) {
+            displayName = getNameFromEmail(user.email);
         }
 
         userNameElem.textContent = displayName;
@@ -424,5 +420,4 @@ export function updateUserNameDisplay() {
 
     userNameElem.textContent = 'Гость';
 }
-
 

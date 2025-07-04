@@ -32,6 +32,14 @@ public interface IUserDAO extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
+    // метод для поиска пользователей с временным паролем, который ещё действителен
+    @Query("""
+        select u from User u
+        where u.tempPasswordExpiration is not null
+          and u.tempPasswordExpiration > current_timestamp
+    """)
+    List<User> findUsersWithActiveTempPassword();
+
 
 }
 

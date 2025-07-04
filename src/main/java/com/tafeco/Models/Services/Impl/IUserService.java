@@ -28,7 +28,7 @@ public interface IUserService {
 
     void resetPassword(String email);
 
-
+    void changePassword(String email, ChangePasswordRequest dto);
 
 
 }

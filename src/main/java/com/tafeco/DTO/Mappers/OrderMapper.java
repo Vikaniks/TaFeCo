@@ -21,7 +21,7 @@ public interface OrderMapper {
     @Mapping(target = "items", qualifiedByName = "orderItemsToDTO")
     OrderDTO toDTO(Order order);
 
-    @Mapping(source = "user", target = "user")
+    @Mapping(source = "user", target = "user", qualifiedByName = "mapUserIdToUser")
     @Mapping(target = "items", ignore = true)
     Order toEntity(OrderDTO dto);
 
@@ -35,6 +35,7 @@ public interface OrderMapper {
     OrderItemDTO mapItem(OrderItem item);
 
     // Добавим map(Long → User)
+    @Named("mapUserIdToUser")
     default User map(Long userId) {
         if (userId == null) return null;
         User user = new User();

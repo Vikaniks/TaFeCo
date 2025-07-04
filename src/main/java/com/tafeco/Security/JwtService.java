@@ -1,5 +1,7 @@
 package com.tafeco.Security;
 
+import com.tafeco.Models.Entity.RoleUser;
+import com.tafeco.Models.Entity.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -44,12 +47,17 @@ public class JwtService {
         System.out.println("SECRET_KEY initialized: " + Base64.getEncoder().encodeToString(secret.getBytes()));
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
+        claims.put("roles", user.getRoles().stream()
+                .map(RoleUser::getRole)
                 .collect(Collectors.toList()));
-        return createToken(claims, userDetails.getUsername());
+
+        boolean isTemporaryPassword = user.getTempPasswordExpiration() != null &&
+                user.getTempPasswordExpiration().isAfter(LocalDateTime.now());
+        claims.put("temporaryPassword", isTemporaryPassword);
+
+        return createToken(claims, user.getEmail());
     }
 
     private String createToken(Map<String, Object> claims, String username) {

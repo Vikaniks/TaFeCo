@@ -18,22 +18,26 @@ import {
     generatePDF,
     checkAndRenderOrders,
     renderOrderMessage,
-    fetchAndRenderUserOrders
-} from './modules/order.js';
+    fetchAndRenderUserOrders } from './modules/order.js';
 
 import { setupAuthForm,
          isUserLoggedIn,
          redirectIfLoggedIn,
          redirectIfNotLoggedIn,
          logoutUser,
-         authFetch } from './modules/auth.js';
+         authFetch,
+         initForgotPassword,
+         showChangePasswordBlock } from './modules/auth.js';
+
 import {handleRegistration,
         setupFormAutoSave,
         updateUserNameDisplay,
         handleLogin,
         handleProfileFormSubmit } from './modules/user.js';
+
 import { renderProductList,
          renderProductListByCategory } from './modules/shop.js';
+
 import { saveFormToStorage,
          restoreFormFromStorage,
          saveOrderData,
@@ -57,6 +61,7 @@ window.updateUserNameDisplay = updateUserNameDisplay;
 
 
 
+
 document.addEventListener('DOMContentLoaded', async () => {
 
 console.log("main.js загружен");
@@ -70,6 +75,7 @@ console.log("main.js загружен");
     saveUserData();
     setupFormAutoSave();
     updateUserNameDisplay();
+    initForgotPassword('.container-row2');
 
 
 
@@ -107,17 +113,30 @@ console.log("main.js загружен");
     if (userProfile && userProfile !== 'undefined') {
       try {
         const userData = JSON.parse(userProfile);
-        saveUserData(userData);
+        saveUserData(userData.user);
+        updateUserNameDisplay();
       } catch (e) {
         console.error('Ошибка при разборе userData из localStorage:', e);
         localStorage.removeItem('userData'); // очистим некорректные данные
       }
     }
 
-    // Вход
-    const loginForm = document.getElementById('login-form');
+    // 1. Обработка входа
+      const loginForm = document.getElementById('login-form');
       if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
+      }
+
+      // 2. Обработка смены данных (с текущим паролем)
+      const changeDataForm = document.getElementById('change-password-form');
+      if (changeDataForm) {
+        changeDataForm.addEventListener('submit', handleProfileFormSubmit); // твоя функция смены данных
+      }
+
+      // 3. Обработка обязательной смены пароля
+      const forceChangePasswordForm = document.getElementById('force-change-password-form');
+      if (forceChangePasswordForm) {
+        forceChangePasswordForm.addEventListener('submit', showChangePasswordBlock);
       }
 
     // Выход
@@ -128,19 +147,6 @@ console.log("main.js загружен");
         logoutUser();
         updateUserNameDisplay();
       });
-    }
-
-    // Изменить данные пользователя
-    const userDataRaw = localStorage.getItem('userData');
-
-    if (userDataRaw && userDataRaw !== 'undefined') {
-      try {
-        const userData = JSON.parse(userDataRaw);
-        saveUserData(userData);
-      } catch (error) {
-        console.error('Ошибка при разборе userData:', error);
-        localStorage.removeItem('userData'); // очищаем повреждённые данные
-      }
     }
 
 
@@ -172,10 +178,10 @@ console.log("main.js загружен");
     }
 
     // Страница finalOrder.html
-    if (document.getElementById("recipient")) {
+   /*if (document.getElementById("recipient")) {
         populateFinalOrder();
         setupConfirmButton();
-    }
+    }*/
 
     // Регистрация нового пользователя
     const registerForm = document.getElementById('register-form');
@@ -329,7 +335,40 @@ document.addEventListener('DOMContentLoaded', () => {
   renderOrderMessage(ordersContainer, orderData, userData);
 });
 
-// Заказы юзера
+document.addEventListener('DOMContentLoaded', () => {
+  const accountLink = document.getElementById('account-link');
+
+  if (accountLink) {
+    accountLink.addEventListener('click', (event) => {
+      event.preventDefault();
+
+      const jwt = localStorage.getItem('jwt');
+      let userDataRaw = localStorage.getItem('userData');
+      let userData = null;
+
+      try {
+        userData = userDataRaw ? JSON.parse(userDataRaw) : null;
+      } catch {
+        userData = null;
+      }
+
+      // Проверяем вложенный user
+      const isLoggedIn = jwt && userData && userData.user && userData.user.id;
+
+      if (isLoggedIn) {
+        // Пользователь залогинен — переход в личный кабинет (/login)
+        window.location.href = '/login';
+      } else {
+        // Пользователь не залогинен — переход на регистрацию (/register)
+        window.location.href = '/register';
+      }
+    });
+  }
+});
+
+
+
+// Заказы юзера в ЛК
 document.addEventListener('DOMContentLoaded', () => {
   const ordersContainer = document.getElementById('orders-container');
   if (!ordersContainer) {
@@ -353,14 +392,48 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  if (!userData.id) {
+  // Получаем вложенный объект user
+  const user = userData.user || userData;
+
+  if (!user.id) {
     console.error('ID пользователя отсутствует');
     renderEmptyOrdersMessage(ordersContainer);
     return;
   }
-
-  // Вызов асинхронной функции для загрузки и отображения заказов
-  fetchAndRenderUserOrders(ordersContainer, userData.id);
+  fetchAndRenderUserOrders(ordersContainer, user.id);
 });
 
+
+// Смена даннных пользователя или пароля
+document.addEventListener('DOMContentLoaded', () => {
+  const userDataRaw = localStorage.getItem('userData');
+  if (!userDataRaw || userDataRaw === 'undefined') return;
+
+  let userData;
+  try {
+    userData = JSON.parse(userDataRaw);
+  } catch {
+    console.error('Ошибка при разборе userData');
+    localStorage.removeItem('userData');
+    return;
+  }
+
+  // 1. Проверяем временный пароль
+  const isTemporaryPassword = localStorage.getItem('temporaryPassword') === 'true';
+  if (isTemporaryPassword || userData?.user?.temporaryPassword) {
+    // Принудительная смена пароля
+    showChangePasswordBlock();
+    return; // остановим выполнение, чтобы не пошёл дальше update
+  }
+
+  // 2. Если не временный пароль — продолжаем обычную логику
+  saveUserData(userData);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (document.getElementById("recipient")) {
+        populateFinalOrder();
+        setupConfirmButton();
+    }
+});
 

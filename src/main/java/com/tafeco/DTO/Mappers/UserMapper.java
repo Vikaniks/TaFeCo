@@ -5,30 +5,34 @@ import com.tafeco.DTO.DTO.UserRegisterDTO;
 import com.tafeco.Models.Entity.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.mapstruct.*;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "roles", expression = "java(new java.util.HashSet<>())")
     @Mapping(target = "orders", ignore = true)
     @Mapping(target = "active", constant = "true")
     @Mapping(target = "tempPasswordExpiration", ignore = true)
     @Mapping(target = "address", expression = "java(mapToAddress(dto))")
     User fromRegisterDTO(UserRegisterDTO dto);
 
+    @Mapping(target = "locality", expression = "java(user.getAddress() != null && user.getAddress().getLocality() != null ? user.getAddress().getLocality().getName() : null)")
+    @Mapping(target = "district", expression = "java(user.getAddress() != null && user.getAddress().getDistrict() != null ? user.getAddress().getDistrict().getName() : null)")
+    @Mapping(target = "region", expression = "java(user.getAddress() != null && user.getAddress().getRegion() != null ? user.getAddress().getRegion().getName() : null)")
+    @Mapping(target = "street", expression = "java(user.getAddress() != null && user.getAddress().getStreet() != null ? user.getAddress().getStreet().getName() : null)")
+    @Mapping(target = "house", expression = "java(user.getAddress() != null ? user.getAddress().getHouse() : null)")
+    @Mapping(target = "apartment", expression = "java(user.getAddress() != null ? user.getAddress().getApartment() : null)")
+    @Mapping(target = "addressExtra", expression = "java(user.getAddress() != null ? user.getAddress().getAddressExtra() : null)")
+    @Mapping(target = "roles", expression = "java(user.getRoles().stream().map(r -> r.getRole()).collect(java.util.stream.Collectors.toSet()))")
+    @Mapping(target = "temporaryPassword", expression = "java(isTempPasswordValid(user))")
+    UserDTO toDTO(User user);
+
     default Address mapToAddress(UserRegisterDTO dto) {
-        if (dto == null) {
-            return null;
-        }
+        if (dto == null) return null;
         Address address = new Address();
         address.setLocality(mapLocality(dto.getLocality()));
         address.setDistrict(mapDistrict(dto.getDistrict()));
@@ -39,7 +43,6 @@ public interface UserMapper {
         address.setAddressExtra(dto.getAddressExtra());
         return address;
     }
-
 
     default Locality mapLocality(String name) {
         if (name == null) return null;
@@ -69,39 +72,9 @@ public interface UserMapper {
         return street;
     }
 
-
-    default UserDTO toDTO(User user) {
-        if (user == null) {
-            return null;
-        }
-
-        UserDTO dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setName(user.getName());
-        dto.setSurname(user.getSurname());
-        dto.setPhone(user.getPhone());
-        dto.setEmail(user.getEmail());
-
-        Address addr = user.getAddress();
-        if (addr != null) {
-            dto.setLocality(addr.getLocality() != null ? addr.getLocality().getName() : null);
-            dto.setDistrict(addr.getDistrict() != null ? addr.getDistrict().getName() : null);
-            dto.setRegion(addr.getRegion() != null ? addr.getRegion().getName() : null);
-            dto.setStreet(addr.getStreet() != null ? addr.getStreet().getName() : null);
-            dto.setHouse(addr.getHouse());
-            dto.setApartment(addr.getApartment());
-            dto.setAddressExtra(addr.getAddressExtra());
-        }
-
-        dto.setActive(user.isActive());
-
-        Set<String> roleNames = user.getRoles().stream()
-                .map(RoleUser::getRole)
-                .collect(Collectors.toSet());
-        dto.setRoles(roleNames);
-
-        return dto;
+    default boolean isTempPasswordValid(User user) {
+        return user.getTempPasswordExpiration() != null &&
+                user.getTempPasswordExpiration().isAfter(java.time.LocalDateTime.now());
     }
-
 }
 

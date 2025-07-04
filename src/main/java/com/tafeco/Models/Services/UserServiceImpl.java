@@ -18,13 +18,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 
@@ -44,8 +46,11 @@ public class UserServiceImpl implements IUserService {
     private final IRegionService regionService;
     private final IStreetService streetService;
     private final IAddressDAO addressDAO;
-    private AuthenticationManager authenticationManager;
-    private JwtService jwtProvider;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtProvider;
+
+
+
 
     /**
      * Регистрация нового пользователя:
@@ -56,12 +61,15 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public LoginResponseDTO register(UserRegisterDTO dto) {
+        // Проверка, существует ли пользователь с таким email
         if (userDAO.existsByEmail(dto.getEmail())) {
             throw new RuntimeException("Пользователь с таким email уже существует");
         }
 
+        // Маппим DTO в сущность User
         User user = userMapper.fromRegisterDTO(dto);
 
+        // Обработка адреса
         Address address = user.getAddress();
         if (address != null) {
             address.setRegion(regionService.findOrCreateByName(address.getRegion().getName()));
@@ -73,34 +81,44 @@ public class UserServiceImpl implements IUserService {
             user.setAddress(savedAddress);
         }
 
+        // Хешируем пароль и ставим активность
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setActive(true);
 
+        // Назначаем роль ROLE_USER по умолчанию
         RoleUser defaultRole = roleUserDAO.findByRole("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Роль ROLE_USER не найдена"));
-
         user.getRoles().add(defaultRole);
 
-        User saved = userDAO.save(user);
+        // Сохраняем пользователя в базу
+        User savedUser = userDAO.save(user);
 
-        // Аутентификация
+        // Аутентификация через AuthenticationManager
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Генерация JWT
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String jwt = jwtProvider.generateToken(userDetails);
+        // Получаем email из аутентификации
+        String email = authentication.getName();
 
-        // Получаем роль (предполагаю, что у пользователя одна роль)
-        String role = saved.getRoles().stream()
+        // Загружаем сущность User из базы (можно использовать savedUser, но если хотите быть уверены - обновить из БД)
+        User authenticatedUser = userDAO.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + email));
+
+        // Генерируем JWT из сущности User
+        String jwt = jwtProvider.generateToken(authenticatedUser);
+
+        // Получаем роль (предполагается, что у пользователя одна роль)
+        String role = authenticatedUser.getRoles().stream()
                 .findFirst()
                 .map(RoleUser::getRole)
                 .orElse("ROLE_USER");
+        boolean temporaryPassword = user.getTempPasswordExpiration() != null &&
+                user.getTempPasswordExpiration().isAfter(LocalDateTime.now());
 
-        // Возвращаем DTO с токеном, ролью и данными пользователя
-        return new LoginResponseDTO(jwt, role, userMapper.toDTO(saved));
+        // Возвращаем DTO с JWT, ролью и данными пользователя
+        return new LoginResponseDTO(jwt, role, userMapper.toDTO(authenticatedUser), temporaryPassword);
     }
 
     /**
@@ -109,7 +127,10 @@ public class UserServiceImpl implements IUserService {
      * При передаче пароля — проверяет текущий пароль и меняет его.
      */
     @Override
+    @Transactional
     public UserDTO updateUser(String email, UserUpdateDTO dto) {
+        System.out.println("===> passwordEncoder is null? " + (passwordEncoder == null));
+
         User user = userDAO.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
@@ -179,7 +200,13 @@ public class UserServiceImpl implements IUserService {
         user.setAddress(address);
 
         // Обновление пароля при наличии нового пароля
-        if (dto.getNewPassword() != null && !dto.getNewPassword().isBlank()) {
+        if (Boolean.TRUE.equals(user.getTemporaryPassword())) {
+            // временный пароль — не проверяем текущий пароль
+            user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+            user.setTemporaryPassword(false);
+            user.setTempPasswordExpiration(null);
+        } else {
+            // обычная смена пароля с проверкой текущего
             if (dto.getCurrentPassword() == null || dto.getCurrentPassword().isBlank()) {
                 throw new IllegalArgumentException("Для смены пароля укажите текущий пароль");
             }
@@ -187,10 +214,35 @@ public class UserServiceImpl implements IUserService {
                 throw new IllegalArgumentException("Текущий пароль введён неверно");
             }
             user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+            user.setTemporaryPassword(false);
+            user.setTempPasswordExpiration(null);
+        }
+        userDAO.save(user);
+
+        User updatedUser = userDAO.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден после обновления"));
+
+        return userMapper.toDTO(updatedUser);       // Вернем обновленный DTO
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(String email, ChangePasswordRequest dto) {
+        if (dto.getNewPassword() == null || dto.getNewPassword().isBlank()) {
+            throw new IllegalArgumentException("Новый пароль не может быть пустым");
         }
 
-        User updated = userDAO.save(user);
-        return userMapper.toDTO(updated);       // Вернем обновленный DTO
+        User user = userDAO.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+        // Просто меняем пароль, не проверяя текущий
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+
+        // Снимаем флаг временного пароля и обнуляем срок действия
+        user.setTemporaryPassword(false);
+        user.setTempPasswordExpiration(null);
+
+        userDAO.save(user);
     }
 
     /**
@@ -291,14 +343,19 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional
     public void resetPassword(String email) {
         User user = userDAO.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь с email не найден"));
 
-        String temporaryPassword = generateTemporaryPassword(); // можно использовать UUID
+        String temporaryPassword = generateTemporaryPassword();
         String encodedPassword = passwordEncoder.encode(temporaryPassword);
 
         user.setPassword(encodedPassword);
+        user.setTemporaryPassword(true);  // <--- добавьте эту строку
+        user.setTempPasswordExpiration(LocalDateTime.now().plusHours(24)); // временный пароль действует 24 часа
+
+        System.out.println("Saving user with temporary password expiration: " + user.getTempPasswordExpiration());
         userDAO.save(user);
 
         emailService.sendTemporaryPassword(email,
@@ -306,7 +363,14 @@ public class UserServiceImpl implements IUserService {
                 "Ваш временный пароль: " + temporaryPassword + "\nПожалуйста, измените его после входа.");
     }
     private String generateTemporaryPassword() {
-        return UUID.randomUUID().toString().substring(0, 8); // 8 символов
+        int length = 8; // длина временного пароля
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            sb.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        return sb.toString();
     }
 
 

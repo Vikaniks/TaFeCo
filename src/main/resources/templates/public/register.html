@@ -95,6 +95,17 @@
                     </div>
                     <button type="submit" class="submit" id="login">Войти</button>
                 </form>
+            <div class="forgot-password">
+                <a href="#" id="forgot-password-link">Забыли пароль?</a>
+            </div>
+            <!-- Форма восстановления пароля, изначально скрыта -->
+            <div id="forgot-password-form" style="display:none; margin-top: 10px; flex: 1 1 auto; min-width: 100px; padding: 5px 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; box-sizing: border-box;">
+                <input type="email" id="forgot-email" placeholder="Введите ваш email" required style="flex: 1 1 auto; min-width: 150px; padding: 5px 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; box-sizing: border-box;">
+                <button id="send-forgot-password" class="submit">Отправить</button>
+            </div>
+            <!-- Вынесем сообщение сюда, вне формы -->
+            <p id="forgot-password-message" style="color: green; margin-top: 5px;"></p>
+
         </div>
         
         </div>

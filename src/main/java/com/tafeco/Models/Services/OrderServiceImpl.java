@@ -47,6 +47,10 @@ public class OrderServiceImpl implements IOrderService {
 
         // 1. Пользователь: авторизованный или null (гость)
         User user = null;
+
+        System.out.println("DTO.getUser() = " + dto.getUser());
+        System.out.println("email = " + email);
+
         if (dto.getUser() != null) {
             user = userRepository.findById(dto.getUser())
                     .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
@@ -54,6 +58,7 @@ public class OrderServiceImpl implements IOrderService {
             user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
         }
+        System.out.println("User for order: " + (user != null ? user.getId() : "null"));
         order.setUser(user); // может быть null для гостя
 
         // 2. Дата заказа — используем из DTO, если есть, иначе — текущая

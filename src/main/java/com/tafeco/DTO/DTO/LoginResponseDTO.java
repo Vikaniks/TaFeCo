@@ -10,6 +10,7 @@ public class LoginResponseDTO {
     private String role;
     private UserDTO user;
 
+    private boolean temporaryPassword;
 
 }
 

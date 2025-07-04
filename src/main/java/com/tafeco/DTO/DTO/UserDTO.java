@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -28,5 +29,10 @@ public class UserDTO {
 
     private boolean active;
     private Set<String> roles;
+
+    private LocalDateTime tempPasswordExpiration;
+
+    private boolean temporaryPassword;
+
 }
 
