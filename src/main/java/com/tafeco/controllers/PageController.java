@@ -86,9 +86,21 @@ public class PageController {
     public String vegetables() {
         return "public/vegetables";
     }
-    @GetMapping("/test")
-    public String test() {
-        return "public/test";
+    @GetMapping("/admin")
+    public String admin() {
+        return "admin/admin";
+    }
+    @GetMapping("/admin/user")
+    public String user() {
+        return "admin/user";
+    }
+    @GetMapping("/admin/orders")
+    public String orders() {
+        return "admin/orders";
+    }
+    @GetMapping("/admin/product")
+    public String product() {
+        return "admin/product";
     }
 }
 

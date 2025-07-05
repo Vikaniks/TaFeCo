@@ -2,22 +2,31 @@ package com.tafeco.Models.Services.Impl;
 
 import com.tafeco.DTO.DTO.OrderDTO;
 import com.tafeco.DTO.DTO.OrderDetailDTO;
+import com.tafeco.DTO.DTO.OrderSummaryDTO;
+import com.tafeco.Models.Entity.Order;
 import com.tafeco.Models.Entity.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-
+import java.io.IOException;
+import java.io.Writer;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface IOrderService {
     OrderDTO create(OrderDTO dto, String username);
+
     OrderDTO getById(int id);
+
     List<OrderDTO> getAll();
+
     void deleteOrder(int id);
 
     List<OrderDTO> getByStatus(OrderStatus status);
+
     List<OrderDTO> getByUserId(Long user);
+
     List<OrderDTO> getByUserIdAndStatuses(Long user, List<OrderStatus> statuses);
 
     OrderDetailDTO getOrderDetailById(int order);
@@ -28,5 +37,38 @@ public interface IOrderService {
 
     OrderDTO changeOrderStatus(Integer orderId, OrderStatus newStatus);
 
+    OrderSummaryDTO getSummary(
+            OrderStatus status,
+            LocalDate startDate,
+            LocalDate endDate,
+            String email,
+            Long productId,
+            Long warehouseId,
+            Long storeId
+    );
+
+
+    Page<OrderDTO> findOrders(
+            OrderStatus status,
+            LocalDate startDate,
+            LocalDate endDate,
+            String email,
+            Long productId,
+            Long warehouseId,
+            Long storeId,
+            Pageable pageable
+    );
+
+    List<OrderDTO> findOrdersWithoutPagination(OrderStatus status, LocalDate startDate, LocalDate endDate, String email, Long productId, Long warehouseId, Long storeId);
+
+    void exportToCSV(List<OrderDTO> orders, Writer writer) throws IOException;
+
+    List<Order> findOrdersForExport(OrderStatus status, LocalDate startDate, LocalDate endDate, String email, Long productId, Long warehouseId, Long storeId);
+
+    BigDecimal calculateRevenue(LocalDate startDate, LocalDate endDate);
+
+    Map<OrderStatus, Long> countGroupedByStatus(LocalDate startDate, LocalDate endDate);
+
 }
+
 

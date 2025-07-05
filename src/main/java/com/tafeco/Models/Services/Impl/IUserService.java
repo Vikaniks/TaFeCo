@@ -15,11 +15,12 @@ public interface IUserService {
 
     UserDTO updateUser(String email, UserUpdateDTO updateDTO);
     UserDTO getUserProfile(String email);
+    UserDTO getUserPhone(String phone);
     void deleteUser(String email);
 
     List<UserDTO> getAllUsers();
     void updateUserRole(String email, String role);
-    Page<UserDTO> getUsersWithFilters(String name, String email, Pageable pageable);
+    Page<UserDTO> getUsersWithFilters(String fullName, String phone, String address, Pageable pageable);
 
     User findByEmail(String email);
 

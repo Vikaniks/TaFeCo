@@ -1,0 +1,39 @@
+<nav id="menu" th:fragment="admin-nav">
+    <ul>
+        <li><a th:href="@{/admin/user}" class="enlace_menu">Пользователи</a>
+        </li>
+
+        <li><a th:href="@{/admin/orders}" class="enlace_menu">Заказы</a>
+            <ul class="submenu">
+                <li><a th:href="@{/status}" class="enlace_submenu">Статус заказа</a></li>
+            </ul>
+
+        </li>
+        <li><a th:href="@{/admin/product}" class="enlace_menu">Товары</a>
+            <ul class="submenu">
+                <li><a th:href="@{/category}" class="enlace_submenu">Категория</a></li>
+            </ul>
+            <ul class="submenu">
+                <li><a th:href="@{/dimension}" class="enlace_submenu">Единицы измерения</a></li>
+            </ul>
+        </li>
+
+        <li><a th:href="@{/admin/store}" class="enlace_menu">Магазины</a>
+        </li>
+
+        <li><a th:href="@{/admin/warehouse}" class="enlace_menu">Склады</a>
+        </li>
+
+        <li><a th:href="@{/logout}" class="enlace_menu">Выйти</a></li>
+        <!--<li>
+            <a th:href="@{/shop}" class="enlace_menu">Магазин</a>
+            <ul class="submenu">
+                <li th:each="categoria : ${categorias}">
+                    <a th:href="@{/shop(id=${categoria.id != null ? categoria.id : ''})}"
+                           th:text="${categoria.type}" class="enlace_submenu"></a>
+                </li>
+                   -->
+    </ul>
+    </li>
+    </ul>
+</nav>

@@ -258,14 +258,3 @@ export function showChangePasswordBlock() {
 }
 
 
-/*function userHasRole(role) {
-  const userData = localStorage.getItem('userData');
-  if (!userData) return false;
-
-  try {
-    const profile = JSON.parse(userData);
-    return profile.roles && profile.roles.includes(role);
-  } catch {
-    return false;
-  }
-}*/

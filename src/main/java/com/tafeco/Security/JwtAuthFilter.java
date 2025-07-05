@@ -54,6 +54,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             System.out.println("✅ Загрузили userDetails: " + userDetails.getUsername());
 
+            System.out.println("Authorities from UserDetails: " + userDetails.getAuthorities());
+
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 System.out.println("🔐 Токен валиден, создаём аутентификацию...");
 
@@ -63,6 +65,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+                System.out.println("🔓 Authority: " + authToken.getAuthorities());
 
                 System.out.println("✅ Пользователь аутентифицирован: " + userDetails.getUsername());
             } else {

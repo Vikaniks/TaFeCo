@@ -60,12 +60,15 @@ public class SecurityConfig {
                                 "/finalOrder",
                                 "/order",
                                 "/api/orders",
-                                "/error"
+                                "/error",
+                                "/favicon.ico",
+                                "/admin",
+                                "/admin/**"
                         ).permitAll()
                         .requestMatchers("/api/user/**").hasRole("USER")
                         .requestMatchers("/api/moderator").hasAnyRole("MODERATOR", "ADMIN")
                         .requestMatchers("/api/orders").hasAnyRole("MODERATOR", "ADMIN")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)

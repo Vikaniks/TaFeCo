@@ -27,24 +27,42 @@ public class AdminController {
     private final IOrderService orderService;
 
 
+    @GetMapping
+    public ResponseEntity<String> checkAdminAccess() {
+        return ResponseEntity.ok("Admin access confirmed");
+    }
+
+
     // Получить профиль конкретного пользователя
     @GetMapping("/users/{username}")
     public ResponseEntity<UserDTO> getUser(@PathVariable String username) {
         return ResponseEntity.ok(userService.getUserProfile(username));
     }
 
-    // Удалить пользователя по username
-    @DeleteMapping("/users/{username}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String username) {
-        userService.deleteUser(username);
+    @GetMapping("/users/email")
+    public ResponseEntity<UserDTO> getUserProfile(@RequestParam String value) {
+        UserDTO user = userService.getUserProfile(value);
+        return ResponseEntity.ok(user);
+    }
+    // Поиск по телефону
+    @GetMapping("/users/phone")
+    public ResponseEntity<UserDTO> getUserPhone(@RequestParam String value) {
+        UserDTO user = userService.getUserPhone(value);
+        return ResponseEntity.ok(user);
+    }
+
+    // Удалить пользователя по email
+    @DeleteMapping("/users/{email}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String email) {
+        userService.deleteUser(email);
         return ResponseEntity.ok().build();
     }
 
     // назначение роли
-    @PostMapping("/users/{username}/role")
-    public ResponseEntity<Void> updateUserRole(@PathVariable String username,
+    @PostMapping("/users/{email}/role")
+    public ResponseEntity<Void> updateUserRole(@PathVariable String email,
                                                @RequestParam String role) {
-        userService.updateUserRole(username, role); // метод нужно реализовать в сервисе
+        userService.updateUserRole(email, role); // метод нужно реализовать в сервисе
         return ResponseEntity.ok().build();
     }
 
@@ -57,14 +75,16 @@ public class AdminController {
 
     @GetMapping("/users")
     public ResponseEntity<Page<UserDTO>> getUsers(
-            @RequestParam(required = false) String username,
-            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String fullName,
+            @RequestParam(required = false) String phone,
+            @RequestParam(required = false) String address,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
-        Page<UserDTO> users = userService.getUsersWithFilters(username, email, PageRequest.of(page, size));
+        Page<UserDTO> users = userService.getUsersWithFilters(fullName, phone, address, PageRequest.of(page, size));
         return ResponseEntity.ok(users);
     }
+
 
     @PutMapping("/orders/{orderId}/status")
     public ResponseEntity<?> updateOrderStatus(
@@ -74,6 +94,7 @@ public class AdminController {
         orderService.updateOrderStatus(orderId, newStatus);
         return ResponseEntity.ok().build();
     }
+
 
     @GetMapping("/orders")
     public ResponseEntity<Page<OrderDTO>> getAllOrders(

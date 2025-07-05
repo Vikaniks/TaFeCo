@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/admin-layout">
 
 <head>
     <title>Админ-панель</title>
@@ -13,8 +13,12 @@
 
 <body>
 <header th:replace="include/admin-header :: header"></header>
-<header th:replace="include/admin-nav :: nav"></header>
+<div th:replace="include/admin-nav :: nav"></div>
+
 <main layout:fragment="content"></main>
 <footer th:replace="include/admin-footer :: footer"></footer>
+
+<script type="module" th:src="@{/js/admin/main.js}"></script>
+
 </body>
 </html>

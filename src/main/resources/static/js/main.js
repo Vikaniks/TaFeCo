@@ -33,7 +33,8 @@ import {handleRegistration,
         setupFormAutoSave,
         updateUserNameDisplay,
         handleLogin,
-        handleProfileFormSubmit } from './modules/user.js';
+        handleProfileFormSubmit,
+        userHasRole } from './modules/user.js';
 
 import { renderProductList,
          renderProductListByCategory } from './modules/shop.js';
@@ -43,7 +44,6 @@ import { saveFormToStorage,
          saveOrderData,
          saveUserData,
          mappings } from './modules/storage.js';
-
 
 
 // Глобальные функции
@@ -63,8 +63,6 @@ window.updateUserNameDisplay = updateUserNameDisplay;
 
 
 document.addEventListener('DOMContentLoaded', async () => {
-
-console.log("main.js загружен");
 
     updateCartCount();
     renderCartPage();
@@ -284,7 +282,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
   // Пример: показать админские кнопки только админам
   const adminElements = document.querySelectorAll('.admin-only');
   const isAdmin = userHasRole('ROLE_ADMIN');
@@ -300,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
   authElements.forEach(el => {
     el.style.display = loggedIn ? '' : 'none';
   });
-});
+});*/
 
 // ЛК
 document.addEventListener('DOMContentLoaded', () => {
@@ -339,28 +337,36 @@ document.addEventListener('DOMContentLoaded', () => {
   const accountLink = document.getElementById('account-link');
 
   if (accountLink) {
-    accountLink.addEventListener('click', (event) => {
+    accountLink.addEventListener('click', async (event) => {
       event.preventDefault();
 
       const jwt = localStorage.getItem('jwt');
-      let userDataRaw = localStorage.getItem('userData');
-      let userData = null;
+      const userDataRaw = localStorage.getItem('userData');
+      let profile = null;
 
       try {
-        userData = userDataRaw ? JSON.parse(userDataRaw) : null;
+        const parsed = userDataRaw ? JSON.parse(userDataRaw) : null;
+        profile = parsed?.user || parsed;
       } catch {
-        userData = null;
+        profile = null;
       }
 
-      // Проверяем вложенный user
-      const isLoggedIn = jwt && userData && userData.user && userData.user.id;
+      const isLoggedIn = jwt && profile && profile.id;
 
-      if (isLoggedIn) {
-        // Пользователь залогинен — переход в личный кабинет (/login)
-        window.location.href = '/login';
-      } else {
-        // Пользователь не залогинен — переход на регистрацию (/register)
+      if (!isLoggedIn) {
         window.location.href = '/register';
+        return;
+      }
+
+      const roles = profile.roles || [];
+
+      if (roles.includes('ROLE_ADMIN')) {
+        await userHasRole('ROLE_ADMIN');
+      } else if (roles.includes('ROLE_MODERATOR')) {
+        await userHasRole('ROLE_MODERATOR');
+      } else {
+        // Роль обычного пользователя — перенаправление в личный кабинет
+        window.location.href = '/login';
       }
     });
   }

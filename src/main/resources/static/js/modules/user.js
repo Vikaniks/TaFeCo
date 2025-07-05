@@ -185,6 +185,57 @@ function parseJwt(token) {
   }
 }
 
+export async function userHasRole(role) {
+  const userData = localStorage.getItem('userData');
+  const jwt = localStorage.getItem('jwt');
+
+  if (!userData || !jwt) return false;
+
+  try {
+    const parsed = JSON.parse(userData);
+    const roles = parsed.user?.roles || [];
+
+    if (!roles.includes(role)) return false;
+
+    console.log(atob(jwt.split('.')[1]));
+    console.log('userHasRole вызван с ролью:', role);
+
+    // Выполняем соответствующий fetch + редирект
+    if (role === 'ROLE_ADMIN') {
+      const res = await fetch('/api/admin', {
+        headers: {
+          'Authorization': `Bearer ${jwt}`,
+        }
+      });
+
+      if (res.ok) {
+        window.location.href = '/admin';
+      } else {
+        alert('Нет доступа к админ-панели');
+      }
+
+    } else if (role === 'ROLE_MODERATOR') {
+      const res = await fetch('/api/moderator', {
+        headers: {
+          'Authorization': `Bearer ${jwt}`,
+        }
+      });
+
+      if (res.ok) {
+        window.location.href = '/moderator';
+      } else {
+        alert('Нет доступа к модераторской панели');
+      }
+    }
+
+    return true;
+  } catch (err) {
+    console.error('Ошибка в userHasRole:', err);
+    return false;
+  }
+}
+
+
 export async function handleLogin(event) {
   event.preventDefault();
 
@@ -261,8 +312,17 @@ export async function handleLogin(event) {
       // Обновляем отображение имени пользователя
       updateUserNameDisplay();
 
-      // Переходим в личный кабинет
-      window.location.href = '/login';
+      // Обрабатываем роли
+            const roles = user.roles || [];
+            console.log('roles:', roles);
+            if (roles.includes('ROLE_ADMIN')) {
+              await userHasRole('ROLE_ADMIN');
+            } else if (roles.includes('ROLE_MODERATOR')) {
+              await userHasRole('ROLE_MODERATOR');
+            } else {
+              window.location.href = '/login';
+            }
+
 
     } else if (response.status === 401) {
       alert('Неверный логин или пароль.');

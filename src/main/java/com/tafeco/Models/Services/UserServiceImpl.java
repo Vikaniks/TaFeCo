@@ -202,6 +202,7 @@ public class UserServiceImpl implements IUserService {
         // Обновление пароля при наличии нового пароля
         if (Boolean.TRUE.equals(user.getTemporaryPassword())) {
             // временный пароль — не проверяем текущий пароль
+            assert passwordEncoder != null;
             user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
             user.setTemporaryPassword(false);
             user.setTempPasswordExpiration(null);
@@ -210,6 +211,7 @@ public class UserServiceImpl implements IUserService {
             if (dto.getCurrentPassword() == null || dto.getCurrentPassword().isBlank()) {
                 throw new IllegalArgumentException("Для смены пароля укажите текущий пароль");
             }
+            assert passwordEncoder != null;
             if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) {
                 throw new IllegalArgumentException("Текущий пароль введён неверно");
             }
@@ -246,12 +248,19 @@ public class UserServiceImpl implements IUserService {
     }
 
     /**
-     * Получить профиль пользователя по username.
+     * Получить профиль пользователя по ...
      */
     @Override
     public UserDTO getUserProfile(String email) {
         User user = userDAO.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + email));
+        return userMapper.toDTO(user);
+    }
+
+    @Override
+    public UserDTO getUserPhone(String phone) {
+        User user = userDAO.findByPhone(phone)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + phone));
         return userMapper.toDTO(user);
     }
 
@@ -281,7 +290,9 @@ public class UserServiceImpl implements IUserService {
     // Получить список всех пользователей.
     @Override
     public List<UserDTO> getAllUsers() {
-        return userDAO.findAll().stream().map(userMapper::toDTO).toList();
+
+        return userDAO.findAll().stream()
+                .map(userMapper::toDTO).toList();
     }
 
 
@@ -299,11 +310,17 @@ public class UserServiceImpl implements IUserService {
 
     // Получить страницу пользователей с фильтрацией по username/email.
     @Override
-    public Page<UserDTO> getUsersWithFilters(String name, String email, Pageable pageable) {
-        // можно реализовать фильтрацию с помощью Specification
-        return userDAO.findWithFilters(name, email, pageable)
-                .map(userMapper::toDTO);
+    public Page<UserDTO> getUsersWithFilters(String fullName, String phone, String address, Pageable pageable) {
+        Page<User> users = userDAO.findUsersWithFilters(
+                fullName == null || fullName.isBlank() ? null : "%" + fullName + "%",
+                phone == null || phone.isBlank() ? null : "%" + phone + "%",
+                address == null || address.isBlank() ? null : "%" + address + "%",
+                pageable
+        );
+
+        return users.map(userMapper::toDTO);
     }
+
 
     // Найти пользователя по username для Spring Security.
     @Override

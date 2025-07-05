@@ -19,18 +19,30 @@ public interface IUserDAO extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
-    @Query("""
-        select u from User u
-        where (:name is null or lower(u.name) like lower(concat('%', :name, '%')))
-          and (:email is null or lower(u.email) like lower(concat('%', :email, '%')))
-    """)
-    Page<User> findWithFilters(
-            @Param("name") String name,
-            @Param("email") String email,
-            Pageable pageable
-    );
+    @Query("SELECT u FROM User u\n" +
+            "WHERE (:fullName IS NULL OR CONCAT(u.name, ' ', u.surname) LIKE :fullName)\n" +
+            "AND (:phone IS NULL OR u.phone LIKE :phone)\n" +
+            "AND (\n" +
+            "    :address IS NULL OR CONCAT(\n" +
+            "        COALESCE(u.address.region.name, ''), ' ',\n" +
+            "        COALESCE(u.address.district.name, ''), ' ',\n" +
+            "        COALESCE(u.address.locality.name, ''), ' ',\n" +
+            "        COALESCE(u.address.street.name, ''), ' ',\n" +
+            "        COALESCE(u.address.house, ''), ' ',\n" +
+            "        COALESCE(u.address.apartment, ''), ' ',\n" +
+            "        COALESCE(u.address.addressExtra, '')\n" +
+            "    ) LIKE :address\n" +
+            ")")
+    Page<User> findUsersWithFilters(@Param("fullName") String fullName,
+                                    @Param("phone") String phone,
+                                    @Param("address") String address,
+                                    Pageable pageable);
+
+
+
 
     Optional<User> findByEmail(String email);
+    Optional<User> findByPhone(String phone);
 
     // метод для поиска пользователей с временным паролем, который ещё действителен
     @Query("""

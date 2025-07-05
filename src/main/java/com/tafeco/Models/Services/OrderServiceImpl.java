@@ -2,6 +2,7 @@ package com.tafeco.Models.Services;
 
 import com.tafeco.DTO.DTO.OrderDTO;
 import com.tafeco.DTO.DTO.OrderDetailDTO;
+import com.tafeco.DTO.DTO.OrderSummaryDTO;
 import com.tafeco.DTO.Mappers.OrderDetailMapper;
 import com.tafeco.DTO.Mappers.OrderMapper;
 import com.tafeco.Models.DAO.IOrderDAO;
@@ -15,13 +16,19 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -270,6 +277,116 @@ public class OrderServiceImpl implements IOrderService {
             );
         }
     }
+
+    @Override
+    public OrderSummaryDTO getSummary(
+            OrderStatus status,
+            LocalDate startDate,
+            LocalDate endDate,
+            String email,
+            Long productId,
+            Long warehouseId,
+            Long storeId
+    ) {
+        // Получаем все заказы, удовлетворяющие фильтру, без пагинации
+        List<Order> filteredOrders = orderRepository.findFilteredForExport(
+                status, startDate, endDate, email, productId, warehouseId, storeId
+        );
+
+        // Суммарная выручка
+        BigDecimal totalRevenue = filteredOrders.stream()
+                .map(Order::getTotalPrice)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Подсчёт количества заказов по статусам
+        Map<OrderStatus, Long> ordersByStatus = filteredOrders.stream()
+                .collect(Collectors.groupingBy(Order::getStatus, Collectors.counting()));
+
+        // Формируем результат
+        OrderSummaryDTO summary = new OrderSummaryDTO();
+        summary.setTotalOrders(filteredOrders.size());
+        summary.setTotalRevenue(totalRevenue);
+        summary.setOrdersByStatus(ordersByStatus);
+
+        return summary;
+    }
+
+    @Override
+    public Page<OrderDTO> findOrders(
+            OrderStatus status,
+            LocalDate startDate,
+            LocalDate endDate,
+            String email,
+            Long productId,
+            Long warehouseId,
+            Long storeId,
+            Pageable pageable
+    ) {
+        Page<Order> orders = orderRepository.findFilteredFull(
+                status,
+                startDate,
+                endDate,
+                email,
+                productId,
+                warehouseId,
+                storeId,
+                pageable
+        );
+
+        return orders.map(orderMapper::toDTO);
+    }
+
+
+
+    @Override
+    public void exportToCSV(List<OrderDTO> orders, Writer writer) {
+        try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                .withHeader("ID", "Дата", "Статус", "Email", "Общая сумма"))) {
+
+            for (OrderDTO order : orders) {
+                csvPrinter.printRecord(
+                        order.getId(),
+                        order.getOrderDate(),
+                        order.getStatus(),
+                        order.getUser(),
+                        order.getTotalPrice()
+                );
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка при экспорте заказов в CSV", e);
+        }
+    }
+
+
+    @Override
+    public List<Order> findOrdersForExport(OrderStatus status, LocalDate startDate, LocalDate endDate, String email, Long productId, Long warehouseId, Long storeId) {
+        return List.of();
+    }
+
+
+    @Override
+    public List<OrderDTO> findOrdersWithoutPagination(OrderStatus status, LocalDate startDate, LocalDate endDate, String email, Long productId, Long warehouseId, Long storeId) {
+        return List.of();
+    }
+
+    @Override
+    public BigDecimal calculateRevenue(LocalDate startDate, LocalDate endDate) {
+        BigDecimal revenue = orderRepository.sumTotalPriceByDateBetween(startDate, endDate);
+        return revenue != null ? revenue : BigDecimal.ZERO;
+    }
+
+    @Override
+    public Map<OrderStatus, Long> countGroupedByStatus(LocalDate startDate, LocalDate endDate) {
+        List<Object[]> results = orderRepository.countGroupedByStatusRaw(startDate, endDate);
+        return results.stream()
+                .collect(Collectors.toMap(
+                        r -> (OrderStatus) r[0],
+                        r -> (Long) r[1]
+                ));
+    }
+
 
 }
 
