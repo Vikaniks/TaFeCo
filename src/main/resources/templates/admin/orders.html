@@ -3,13 +3,11 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/admin-layout"
       layout:decorate="~{fragments/admin-layout}">
 
-
 <head>
-    <title>Админ-панель</title>
+    <title>Админ-панель — Заказы</title>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-
     <link rel="stylesheet" th:href="@{/css/admin.css}" />
     <link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" />
     <link rel="stylesheet"
@@ -27,24 +25,32 @@
 <main layout:fragment="content">
 
     <section id="orders-section">
-      <h3>Отчёт по заказам</h3>
-        <div id="orders-container"><div id="order-filters">
-            <select id="filter-status">
-                <option value="">Все статусы</option>
-                <option value="NEW">NEW</option>
-                <option value="IN_PROGRESS">PAID</option>
-                <option value="DONE">SHIPPED</option>
-                <option value="DONE">DELIVERED</option>
-                <option value="CANCELLED">CANCELLED</option>
-            </select>
-            <input type="date" id="filter-startDate" />
-            <input type="date" id="filter-endDate" />
-            <input type="text" id="filter-email" placeholder="Email пользователя" />
-            <button id="btn-filter">Фильтровать</button>
-            <button id="btn-export">Экспорт в Excel</button>
-        </div>
+        <h3 id="orders-page">Отчёт по заказам</h3>
 
-            <table id="orders-table" border="1">
+        <div id="orders-container">
+            <div id="order-filters">
+                <select id="filter-status">
+                    <option value="">Все статусы</option>
+                    <option value="NEW">NEW</option>
+                    <option value="PAID">PAID</option>
+                    <option value="SHIPPED">SHIPPED</option>
+                    <option value="DELIVERED">DELIVERED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                </select>
+                <input type="date" id="filter-startDate" />
+                <input type="date" id="filter-endDate" />
+                <input type="text" id="filter-email" placeholder="Email пользователя" />
+                <input type="text" id="filter-product" placeholder="ID продукта" />
+                <input type="text" id="filter-warehouse" placeholder="ID склада" />
+                <input type="text" id="filter-store" placeholder="ID точки продаж" />
+                <button id="btn-filter" type="button">Фильтровать</button>
+
+                <button id="btn-export-csv" type="button">Экспорт в CSV</button>
+                <button id="btn-export-excel" type="button">Экспорт в Excel</button>
+                <button id="btn-to-report" type="button">Перейти к отчётам</button>
+            </div>
+
+            <table id="orders-table" border="1" style="width: 100%; border-collapse: collapse;">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -58,22 +64,56 @@
                 <tbody></tbody>
             </table>
 
-            <div id="order-summary">
-
+            <div id="report-summary">
                 <div id="summary-content"></div>
             </div>
 
+            <!-- Модальное окно деталей заказа -->
+            <div id="order-modal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <span id="modal-close" class="close">&times;</span>
+                    <h2>Детали заказа</h2>
+                    <div id="order-details"></div>
+                </div>
+            </div>
+
+            <!-- Модальное окно изменения статуса -->
+            <div id="status-modal" style="display:none;" class="modal">
+                <div class="modal-content">
+                    <span id="close-status-modal" class="close-btn">&times;</span>
+                    <h2>Изменить статус заказа</h2>
+                    <p id="status-order-info"><!-- сюда подставим ID/email --></p>
+                    <form id="status-form">
+                        <label for="status-select">Выберите новый статус:</label>
+                        <select id="status-select" name="status" required>
+                            <option value="">--Выберите--</option>
+                            <option value="NEW">Новый</option>
+                            <option value="PAID">Оплачено</option>
+                            <option value="SHIPPED">Отгружен</option>
+                            <option value="DELIVERED">Доставлен</option>
+                            <option value="CANCELLED">Отменён</option>
+                        </select>
+                        <button type="submit" id="status-btn">Изменить статус</button>
+                    </form>
+                </div>
+            </div>
+
+
+
             <div id="pagination">
-                <button id="prev-page">Назад</button>
+                <button id="prev-page" type="button">Назад</button>
                 <span id="page-info"></span>
-                <button id="next-page">Вперед</button>
+                <button id="next-page" type="button">Вперед</button>
             </div>
         </div>
     </section>
 
 </main>
 
+
 <div th:replace="include/admin-footer :: footer"></div>
+
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 
 <script type="module" src="/static/js/admin/main.js"></script>
 

@@ -98,6 +98,10 @@ public class PageController {
     public String orders() {
         return "admin/orders";
     }
+    @GetMapping("/admin/reportOrder")
+    public String reportOrder() {
+        return "admin/reportOrder";
+    }
     @GetMapping("/admin/product")
     public String product() {
         return "admin/product";

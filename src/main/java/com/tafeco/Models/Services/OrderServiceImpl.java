@@ -116,7 +116,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public OrderDTO getById(int id) {
+    public OrderDTO findById(int id) {
         return orderMapper.toDTO(orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Заказ не найден")));
     }

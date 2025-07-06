@@ -25,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/moderator")
@@ -111,6 +113,21 @@ public class ModeratorController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/orders/all")
+    public ResponseEntity<List<OrderDTO>> getAllOrdersUnfiltered() {
+        List<OrderDTO> orders = orderService.getAll();
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Integer id) {
+        OrderDTO order = orderService.findById(id);
+        if (order == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(order);
+    }
+
     @PatchMapping("/{orderId}/status")
     public ResponseEntity<OrderDTO> changeOrderStatus(
             @PathVariable Integer orderId,
@@ -119,6 +136,17 @@ public class ModeratorController {
         OrderDTO updatedOrder = orderService.changeOrderStatus(orderId, newStatus);
         return ResponseEntity.ok(updatedOrder);
     }
+
+    @PutMapping("/orders/{orderId}/status")
+    public ResponseEntity<?> updateOrderStatus(
+            @PathVariable Integer orderId,
+            @RequestBody Map<String, String> body
+    ) {
+        String newStatus = body.get("status");
+        orderService.updateOrderStatus(orderId, newStatus);
+        return ResponseEntity.ok().build();
+    }
+
 
     @GetMapping("/orders")
     public ResponseEntity<Page<OrderDTO>> getAllOrders(

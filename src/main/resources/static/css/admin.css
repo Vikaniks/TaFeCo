@@ -258,13 +258,13 @@ font-size:16px
 main{
     background-color: var(--fondoOscuro);
     padding: 8px 12px;
-    min-height: calc(100vh - (var(--alturaCabecera) + var(--alturaPie) + 80px));
+    min-height: calc(100vh - (var(--alturaCabecera) + var(--alturaPie) + 70px));
 }
 
 section{
     background-color: var(--fondoClaro);
-    padding:20px 5px;
-    margin: 10px 0;
+    padding:10px 5px;
+    margin: 5px 0;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(40, 36, 36, 0.3);
 	color: var(--colorPrincipalOscuro);
@@ -328,7 +328,7 @@ background-color: var(--colorPrincipalClaro);
 
 #prev-page, #page-number, #next-page, #page-input, #go-to-page,
 #filter-status, #filter-startDate, #filter-endDate, #filter-email,
-#btn-filter, #btn-export {
+#btn-filter, #btn-export, #status-btn, .status-btn {
 margin: 10px;
 background-color: #F1F8E9;
 border: 1px solid var(--colorPrincipalOscuro);
@@ -343,10 +343,52 @@ padding: 3px;
 #filter-email {
   width: 200px;
 }
-#btn-export:hover {
+#btn-export:hover, #status-btn:hover, .status-btn:hover {
   background-color: var(--colorPrincipalClaro);
 }
 
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-content {
+    background: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+  }
+  .close {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .close-btn {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .status-select {
+  margin: 20px;
+  weight: 60px;
+  }
+
+.fa-eye {
+  color: var(--colorPrincipalClaro);
+}
 
 /* Общие стили для таблицы */
 #tablas {

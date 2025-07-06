@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public interface OrderMapper {
 
     @Mapping(source = "user.id", target = "user")
+    @Mapping(source = "user.email", target = "userEmail")
     @Mapping(target = "items", qualifiedByName = "orderItemsToDTO")
     OrderDTO toDTO(Order order);
 
@@ -32,6 +33,8 @@ public interface OrderMapper {
     }
 
     @Mapping(source = "product.id", target = "product")
+    @Mapping(source = "product.product", target = "productName")
+    @Mapping(source = "product.dimension.dimension", target = "dimensionName")
     OrderItemDTO mapItem(OrderItem item);
 
     // Добавим map(Long → User)

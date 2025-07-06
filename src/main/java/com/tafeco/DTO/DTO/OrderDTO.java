@@ -14,6 +14,7 @@ public class OrderDTO {
     private int id;
     private LocalDate orderDate;
     private Long user;
+    private String userEmail;
     private Set<OrderItemDTO> items;
     private BigDecimal totalPrice;
     private OrderStatus status;

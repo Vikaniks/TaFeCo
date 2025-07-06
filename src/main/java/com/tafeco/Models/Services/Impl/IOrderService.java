@@ -17,7 +17,7 @@ import java.util.Map;
 public interface IOrderService {
     OrderDTO create(OrderDTO dto, String username);
 
-    OrderDTO getById(int id);
+    OrderDTO findById(int id);
 
     List<OrderDTO> getAll();
 

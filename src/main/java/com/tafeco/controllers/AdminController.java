@@ -86,16 +86,6 @@ public class AdminController {
     }
 
 
-    @PutMapping("/orders/{orderId}/status")
-    public ResponseEntity<?> updateOrderStatus(
-            @PathVariable Integer orderId,
-            @RequestParam String newStatus
-    ) {
-        orderService.updateOrderStatus(orderId, newStatus);
-        return ResponseEntity.ok().build();
-    }
-
-
     @GetMapping("/orders")
     public ResponseEntity<Page<OrderDTO>> getAllOrders(
             @RequestParam(defaultValue = "0") int page,

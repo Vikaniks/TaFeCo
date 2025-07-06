@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/admin-layout"
+      layout:decorate="~{fragments/admin-layout}">
+
+<head>
+    <title>Админ-панель — Отчёты по заказам</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+    <link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+<div th:replace="include/admin-header :: header"></div>
+
+<main layout:fragment="content">
+
+    <section id="report-section">
+        <h3 id="report-page">Отчёты по заказам</h3>
+
+        <div id="report-buttons" style="margin-bottom: 15px;">
+            <button id="btn-report-status" type="button">Отчёт по статусам</button>
+            <button id="btn-report-period" type="button">Отчёт по периоду</button>
+            <button id="btn-report-sum" type="button">Отчёт по суммам</button>
+            <button id="btn-back-to-orders" type="button">Вернуться к заказам</button>
+        </div>
+    </section>
+    <section>
+        <div id="report-result">
+            <!-- Таблица отчёта появится сюда -->
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="include/admin-footer :: footer"></div>
+
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
+<script type="module" src="/static/js/admin/main.js"></script>
+
+</body>
+
+</html>
