@@ -1,8 +1,6 @@
 package com.tafeco.Models.Services.Impl;
 
-import com.tafeco.DTO.DTO.OrderDTO;
-import com.tafeco.DTO.DTO.OrderDetailDTO;
-import com.tafeco.DTO.DTO.OrderSummaryDTO;
+import com.tafeco.DTO.DTO.*;
 import com.tafeco.Models.Entity.Order;
 import com.tafeco.Models.Entity.OrderStatus;
 import org.springframework.data.domain.Page;
@@ -68,6 +66,16 @@ public interface IOrderService {
     BigDecimal calculateRevenue(LocalDate startDate, LocalDate endDate);
 
     Map<OrderStatus, Long> countGroupedByStatus(LocalDate startDate, LocalDate endDate);
+
+    OrderSumReportDTO getSumReport(LocalDate startDate, LocalDate endDate);
+
+    List<OrderStatusReportDTO> groupByStatus();
+
+    List<OrderPeriodReportDTO> groupByPeriod(LocalDate startDate, LocalDate endDate);
+
+    List<OrderSumRangeReportDTO> groupBySumRange();
+
+
 
 }
 

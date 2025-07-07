@@ -18,8 +18,8 @@ public interface IProductDAO extends JpaRepository<Product, Long> {
     // Поиск по названию продукта (точное совпадение)
     Product findByProduct(String product);
 
-    // Поиск по части названия (нечёткий поиск) с пагинацией
-    Page<Product> findByProductContainingIgnoreCase(String keyword, Pageable pageable);
+    // Поиск по части названия (нечёткий поиск)
+    List<Product> findByProductContainingIgnoreCase(String keyword);
 
     // Поиск по категории
     List<Product> findByCategorise(Categorise categorise);

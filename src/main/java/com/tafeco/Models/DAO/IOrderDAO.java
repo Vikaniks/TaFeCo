@@ -28,6 +28,8 @@ public interface IOrderDAO extends JpaRepository<Order, Integer> {
 
     Page<Order> findByOrderDateBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
 
+    List<Order> findByOrderDateBetween(LocalDate startDate, LocalDate endDate);
+
     boolean existsByUserAndStatusIn(User user, List<OrderStatus> statuses);
 
     @Query("SELECT COUNT(o) FROM Order o WHERE o.orderDate BETWEEN :start AND :end")
@@ -132,5 +134,21 @@ WHERE (:status IS NULL OR o.status = :status)
                                  @Param("storeId") Long storeId,
                                  Pageable pageable);
 
+
+    @Query(value = """
+    SELECT order_data, COUNT(*), SUM(total_price)
+    FROM orders
+    WHERE (:startDate IS NULL OR order_data >= :startDate)
+      AND (:endDate IS NULL OR order_data <= :endDate)
+    GROUP BY order_data
+    ORDER BY order_data
+""", nativeQuery = true)
+    List<Object[]> groupByDateWithSumAndCount(@Param("startDate") LocalDate startDate,
+                                              @Param("endDate") LocalDate endDate);
+
+
+    long countByTotalPriceBetween(BigDecimal start, BigDecimal end);
+
+    long countByTotalPriceGreaterThanEqual(BigDecimal start);
 
 }

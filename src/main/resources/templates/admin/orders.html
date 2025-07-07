@@ -25,10 +25,10 @@
 <main layout:fragment="content">
 
     <section id="orders-section">
-        <h3 id="orders-page">Отчёт по заказам</h3>
+        <h3 id="orders-page">Информация по заказам</h3>
 
-        <div id="orders-container">
-            <div id="order-filters">
+        <section id="orders-container">
+            <div class="filters-left">
                 <select id="filter-status">
                     <option value="">Все статусы</option>
                     <option value="NEW">NEW</option>
@@ -39,17 +39,21 @@
                 </select>
                 <input type="date" id="filter-startDate" />
                 <input type="date" id="filter-endDate" />
-                <input type="text" id="filter-email" placeholder="Email пользователя" />
-                <input type="text" id="filter-product" placeholder="ID продукта" />
                 <input type="text" id="filter-warehouse" placeholder="ID склада" />
-                <input type="text" id="filter-store" placeholder="ID точки продаж" />
-                <button id="btn-filter" type="button">Фильтровать</button>
+                <input type="text" id="filter-store" placeholder="ID магазина" />
+                <input type="text" id="filter-email" placeholder="Email пользователя" />
+                <input type="text" id="filter-product" placeholder="Название продукта" />
 
-                <button id="btn-export-csv" type="button">Экспорт в CSV</button>
-                <button id="btn-export-excel" type="button">Экспорт в Excel</button>
-                <button id="btn-to-report" type="button">Перейти к отчётам</button>
             </div>
 
+            <div class="filters-right">
+                <button id="btn-filter" type="button">Фильтровать</button>
+                <button id="clear-filters-btn" type="button">Все заказы</button>
+
+                <button id="btn-export-excel" type="button">Экспорт в Excel</button>
+
+            </div>
+        </section>
             <table id="orders-table" border="1" style="width: 100%; border-collapse: collapse;">
                 <thead>
                 <tr>

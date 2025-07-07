@@ -73,7 +73,7 @@ function getFiltersFromForm() {
       email: filterEmail.value.trim(),
       startDate: filterStartDate.value,
       endDate: filterEndDate.value,
-      productId: filterProduct.value.trim(),
+      productKeyword: filterProduct.value.trim(),
       warehouseId: filterWarehouse.value.trim(),
       storeId: filterStore.value.trim()
     };
@@ -81,7 +81,7 @@ function getFiltersFromForm() {
 
   // Применение фильтров к списку заказов
 function applyFilters() {
-    const { status, email, startDate, endDate, productId, warehouseId, storeId } = getFiltersFromForm();
+    const { status, email, startDate, endDate, productKeyword, warehouseId, storeId } = getFiltersFromForm();
 
     filteredOrders = allOrders.filter(order => {
       const orderDate = order.orderDate ? new Date(order.orderDate) : null;
@@ -90,7 +90,12 @@ function applyFilters() {
       const matchesEmail = !email || (order.userEmail && order.userEmail.includes(email));
       const matchesStartDate = !startDate || (orderDate && orderDate >= new Date(startDate));
       const matchesEndDate = !endDate || (orderDate && orderDate <= new Date(endDate));
-      const matchesProduct = !productId || (order.items && order.items.some(item => item.productId == productId));
+      const matchesProduct = !productKeyword || (
+          order.items && order.items.some(item =>
+              item.productName && item.productName.toLowerCase().includes(productKeyword.toLowerCase())
+          )
+      );
+
       const matchesWarehouse = !warehouseId || order.warehouseId == warehouseId;
       const matchesStore = !storeId || order.storeId == storeId;
 
@@ -101,7 +106,24 @@ function applyFilters() {
     renderPage();
     setupViewButtons();
     setupStatusButtons();
+    clearFiltersForm();
   }
+
+function clearFiltersForm() {
+      filterStatus.value = '';
+      filterEmail.value = '';
+      filterStartDate.value = '';
+      filterEndDate.value = '';
+      filterProduct.value = '';
+      filterWarehouse.value = '';
+      filterStore.value = '';
+    }
+
+document.getElementById('clear-filters-btn').addEventListener('click', () => {
+  clearFiltersForm();
+  applyFilters();
+});
+
 
   // Отрисовка текущей страницы
 function renderPage() {
@@ -300,7 +322,7 @@ function setupStatusButtons() {
     }
   };
 
-  // Экспорт CSV
+/*  // Экспорт CSV
   exportCsvBtn.onclick = () => {
     if (filteredOrders.length === 0) {
       alert('Нет данных для экспорта');
@@ -326,7 +348,7 @@ function setupStatusButtons() {
     a.click();
     URL.revokeObjectURL(url);
   };
-
+*/
   // Экспорт Excel (через библиотеку SheetJS)
   exportExcelBtn.onclick = async () => {
     if (filteredOrders.length === 0) {

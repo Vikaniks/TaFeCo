@@ -30,6 +30,6 @@ public interface IProductService {
     List<ProductDTO> findByDimension(Dimension dimension);
 
 
-    Page<ProductDTO> searchByKeyword(String keyword, int page, int size);
+    List<ProductDTO> searchByKeyword(String keyword);
     List<StoreDTO> getActiveProductsStore();
 }

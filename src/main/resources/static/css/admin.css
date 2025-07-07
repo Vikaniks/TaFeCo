@@ -328,23 +328,153 @@ background-color: var(--colorPrincipalClaro);
 
 #prev-page, #page-number, #next-page, #page-input, #go-to-page,
 #filter-status, #filter-startDate, #filter-endDate, #filter-email,
-#btn-filter, #btn-export, #status-btn, .status-btn {
+#btn-filter, #btn-export, #status-btn, .status-btn, #filter-product,
+#filter-warehouse, #filter-store, #btn-export-excel, #clear-filters-btn {
 margin: 10px;
 background-color: #F1F8E9;
 border: 1px solid var(--colorPrincipalOscuro);
 border-radius: 5px;
 flex: 1;
-padding: 3px;
+padding: 5px;
 }
 
 #page-input {
   width: 60px;
 }
-#filter-email {
+#filter-email, #filter-product {
   width: 200px;
+  height: 20px;
 }
-#btn-export:hover, #status-btn:hover, .status-btn:hover {
+#btn-export:hover, #status-btn:hover, .status-btn:hover,
+#btn-filter:hover, #clear-filters-btn:hover, #btn-export-excel:hover {
   background-color: var(--colorPrincipalClaro);
+}
+
+#filter-status, #filter-startDate, #filter-endDate {
+width: 120px;
+}
+
+#filter-warehouse, #filter-store {
+width: 80px;
+}
+
+#orders-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+.filters-left select,
+.filters-left input {
+  justify-self: center;
+}
+
+.filters-left {
+  width: 70%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 колонок */
+  grid-template-rows: auto auto auto; /* 3 строки */
+  gap: 0.5rem;
+}
+/* Вторая строка — email */
+#filter-email {
+  grid-column: 2 / span 3; /* занимает центр 3 колонок */
+  width: 100%;
+  height: 20px;
+  justify-self: center;
+}
+
+/* Третья строка — product */
+#filter-product {
+  grid-column: 2 / span 3;
+  width: 100%;
+  height: 20px;
+  justify-self: center;
+}
+
+.filters-right {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filters-right button {
+  width: 100%;
+}
+
+#report-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+    margin: 10px 20px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+#report-buttons {
+    width: 35%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 колонок */
+    grid-template-rows: auto; /* 1 строки */
+    gap: 1rem;
+    justify-items: center;
+    align-items: center;
+}
+
+.button-row {
+    display: flex;
+    gap: 1rem;
+
+}
+
+.button-row button {
+    flex: 1;
+}
+
+.button-center {
+    text-align: center;
+}
+
+#report-filters {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+}
+
+#period-filters,
+#summary-period-filters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+#btn-report-status, #btn-report-sum, #btn-back-to-orders,
+#btn-report-period, #btnReportSummary {
+  margin: 10px;
+  background-color: #F1F8E9;
+  border: 1px solid var(--colorPrincipalOscuro);
+  border-radius: 5px;
+  flex: 1;
+  padding: 5px;
+  }
+#btn-report-status:hover, #btn-report-sum:hover,
+#btn-back-to-orders:hover,
+#btn-report-period:hover, #btnReportSummary:hover {
+background-color: var(--colorPrincipalClaro);
+}
+#btn-report-status, #btn-report-sum, #btn-back-to-orders {
+width: 90px;
 }
 
 .modal {

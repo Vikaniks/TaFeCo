@@ -226,11 +226,11 @@ public class ProductServiceImpl implements IProductService {
     }
 
 
-
-
-    public Page<ProductDTO> searchByKeyword(String keyword, int page, int size) {
-        Page<Product> pageData = productRepository.findByProductContainingIgnoreCase(keyword, PageRequest.of(page, size));
-        return pageData.map(productMapper::toDTO);
+    public List<ProductDTO> searchByKeyword(String keyword) {
+        List<Product> products = productRepository.findByProductContainingIgnoreCase(keyword);
+        return products.stream()
+                .map(productMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

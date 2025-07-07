@@ -24,20 +24,49 @@
     <section id="report-section">
         <h3 id="report-page">Отчёты по заказам</h3>
 
-        <div id="report-buttons" style="margin-bottom: 15px;">
-            <button id="btn-report-status" type="button">Отчёт по статусам</button>
-            <button id="btn-report-period" type="button">Отчёт по периоду</button>
-            <button id="btn-report-sum" type="button">Отчёт по суммам</button>
-            <button id="btn-back-to-orders" type="button">Вернуться к заказам</button>
+        <div id="report-container">
+            <!-- Левая колонка: кнопки -->
+            <div id="report-buttons">
+                <div class="button-row">
+                    <button id="btn-report-status" type="button">Отчёт по статусам</button>
+                    <button id="btn-report-sum" type="button">Отчёт по диапазону сумм</button>
+                </div>
+                <div class="button-center">
+                    <button id="btn-back-to-orders" type="button">Вернуться к заказам</button>
+                </div>
+            </div>
+
+            <!-- Правая колонка: фильтры -->
+            <div id="report-filters">
+                <div id="period-filters">
+                    <label for="start-date">Начало:</label>
+                    <input type="date" id="start-date" name="start-date" />
+                    <label for="end-date">Конец:</label>
+                    <input type="date" id="end-date" name="end-date" />
+                    <button id="btn-report-period" type="button">Отчёт по периоду</button>
+                </div>
+
+                <div id="summary-period-filters">
+                    <label for="summary-period-select">Период:</label>
+                    <select id="summary-period-select" name="summary-period">
+                        <option value="week">Неделя</option>
+                        <option value="month" selected>Месяц</option>
+                        <option value="quarter">Квартал</option>
+                        <option value="year">Год</option>
+                    </select>
+                    <button id="btnReportSummary" type="button">Отчёт по сумме заказов за период</button>
+                </div>
+            </div>
         </div>
-    </section>
-    <section>
+
+        <!-- Результат отчёта -->
         <div id="report-result">
-            <!-- Таблица отчёта появится сюда -->
+            <!-- Таблица отчёта появится здесь -->
         </div>
     </section>
 
 </main>
+
 
 <div th:replace="include/admin-footer :: footer"></div>
 

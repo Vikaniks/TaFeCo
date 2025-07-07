@@ -1,8 +1,6 @@
 package com.tafeco.Models.Services;
 
-import com.tafeco.DTO.DTO.OrderDTO;
-import com.tafeco.DTO.DTO.OrderDetailDTO;
-import com.tafeco.DTO.DTO.OrderSummaryDTO;
+import com.tafeco.DTO.DTO.*;
 import com.tafeco.DTO.Mappers.OrderDetailMapper;
 import com.tafeco.DTO.Mappers.OrderMapper;
 import com.tafeco.Models.DAO.IOrderDAO;
@@ -26,10 +24,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -386,6 +381,83 @@ public class OrderServiceImpl implements IOrderService {
                         r -> (Long) r[1]
                 ));
     }
+
+    @Override
+    public OrderSumReportDTO getSumReport(LocalDate startDate, LocalDate endDate) {
+        List<Order> orders = orderRepository.findByOrderDateBetween(startDate, endDate);
+        BigDecimal totalSum = orders.stream()
+                .map(Order::getTotalPrice)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        List<OrderReportItemDTO> orderDTOs = orders.stream()
+                .map(order -> new OrderReportItemDTO(
+                        (long) order.getId(),
+                        order.getOrderDate(),
+                        order.getUser() != null ? order.getUser().getEmail() : "—",
+                        order.getTotalPrice()
+                ))
+                .toList();
+
+        return new OrderSumReportDTO(startDate, endDate, totalSum, orderDTOs);
+    }
+
+
+    @Override
+    public List<OrderStatusReportDTO> groupByStatus() {
+        List<Object[]> raw = orderRepository.countGroupedByStatusRaw(null, null);
+        return raw.stream()
+                .map(obj -> new OrderStatusReportDTO((OrderStatus) obj[0], (long) ((Long) obj[1]).intValue()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderPeriodReportDTO> groupByPeriod(LocalDate startDate, LocalDate endDate) {
+        List<Object[]> raw = orderRepository.groupByDateWithSumAndCount(startDate, endDate);
+
+        System.out.println("Raw report data:");
+        for (Object[] obj : raw) {
+            System.out.println(Arrays.toString(obj));
+        }
+        return raw.stream()
+                .map(obj -> new OrderPeriodReportDTO(
+                        obj[0] != null ? obj[0].toString() : null,
+                        (Long) obj[1],
+                        (BigDecimal) obj[2]
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderSumRangeReportDTO> groupBySumRange() {
+        List<OrderSumRangeReportDTO> result = new ArrayList<>();
+
+        List<BigDecimal[]> ranges = List.of(
+                new BigDecimal[]{BigDecimal.ZERO, new BigDecimal("1000")},
+                new BigDecimal[]{new BigDecimal("1001"), new BigDecimal("5000")},
+                new BigDecimal[]{new BigDecimal("5001"), new BigDecimal("10000")},
+                new BigDecimal[]{new BigDecimal("10001"), null}  // null значит до бесконечности
+        );
+
+        for (BigDecimal[] range : ranges) {
+            BigDecimal start = range[0];
+            BigDecimal end = range[1];
+            long count = countOrdersBySumRange(start, end);
+            String label = end == null ? start + "+" : start + " - " + end;
+            result.add(new OrderSumRangeReportDTO(label, (long) count));
+        }
+
+        return result;
+    }
+
+    private long countOrdersBySumRange(BigDecimal start, BigDecimal end) {
+        if (end == null) {
+            return orderRepository.countByTotalPriceGreaterThanEqual(start);
+        } else {
+            return orderRepository.countByTotalPriceBetween(start, end);
+        }
+    }
+
 
 
 }

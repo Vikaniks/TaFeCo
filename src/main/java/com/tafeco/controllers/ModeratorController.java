@@ -148,10 +148,18 @@ public class ModeratorController {
     }
 
 
-    @GetMapping("/orders")
-    public ResponseEntity<Page<OrderDTO>> getAllOrders(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
+    @GetMapping("/orders/report/sum")
+    public ResponseEntity<OrderSumReportDTO> getSumReport(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        OrderSumReportDTO report = orderService.getSumReport(startDate, endDate);
+        return ResponseEntity.ok(report);
+    }
+
+    @GetMapping("/orders/report")
+    public ResponseEntity<?> getReport(
+            @RequestParam(required = false) String groupBy,
             @RequestParam(required = false) OrderStatus status,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
@@ -160,42 +168,16 @@ public class ModeratorController {
             @RequestParam(required = false) Long warehouseId,
             @RequestParam(required = false) Long storeId
     ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<OrderDTO> orders = orderService.findOrders(
-                status, startDate, endDate, email, productId, warehouseId, storeId, pageable
-        );
-        return ResponseEntity.ok(orders);
-    }
-
-    @GetMapping("/orders/summary")
-    public ResponseEntity<OrderSummaryDTO> getOrderSummary(
-            @RequestParam(required = false) OrderStatus status,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) Long productId,
-            @RequestParam(required = false) Long warehouseId,
-            @RequestParam(required = false) Long storeId
-    ) {
-        OrderSummaryDTO summary = orderService.getSummary(status, startDate, endDate, email, productId, warehouseId, storeId);
-        return ResponseEntity.ok(summary);
-    }
-
-    @GetMapping("/report")
-    public ResponseEntity<OrderSummaryDTO> getSummary(
-            @RequestParam(required = false) OrderStatus status,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) Long productId,
-            @RequestParam(required = false) Long warehouseId,
-            @RequestParam(required = false) Long storeId
-    ) {
-        return ResponseEntity.ok(
-                orderService.getSummary(status, startDate, endDate, email, productId, warehouseId, storeId)
-        );
+        switch (groupBy) {
+            case "status":
+                return ResponseEntity.ok(orderService.groupByStatus());
+            case "period":
+                return ResponseEntity.ok(orderService.groupByPeriod(startDate, endDate));
+            case "sum":
+                return ResponseEntity.ok(orderService.groupBySumRange());
+            default:
+                return ResponseEntity.ok(orderService.getSummary(status, startDate, endDate, email, productId, warehouseId, storeId));
+        }
     }
 
     @GetMapping("/orders/export")

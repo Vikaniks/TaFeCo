@@ -25,19 +25,15 @@ public class ProductController {
     private  final ICategoriseService categoriseService;
     private final CategoriaMapper categoriaMapper;
 
-    // Поиск продуктов по ключевому слову с пагинацией
+    // Поиск продуктов по ключевому слову
     @GetMapping("/products/search")
-    public ResponseEntity<Page<ProductDTO>> searchByKeyword(
-            @RequestParam String keyword,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
-    ) {
+    public ResponseEntity<List<ProductDTO>> searchByKeyword(@RequestParam String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
-        Page<ProductDTO> result = productService.searchByKeyword(keyword, page, size);
-        return ResponseEntity.ok(result);
+        List<ProductDTO> products = productService.searchByKeyword(keyword.trim());
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/products")
