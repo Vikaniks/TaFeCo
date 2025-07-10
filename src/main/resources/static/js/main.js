@@ -304,7 +304,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 document.addEventListener('DOMContentLoaded', () => {
   const ordersContainer = document.getElementById('orders-container');
   if (!ordersContainer) {
-    console.error('Элемент orders-container не найден!');
     return;
   }
 
@@ -378,7 +377,6 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   const ordersContainer = document.getElementById('orders-container');
   if (!ordersContainer) {
-    console.error('Элемент orders-container не найден!');
     return;
   }
 

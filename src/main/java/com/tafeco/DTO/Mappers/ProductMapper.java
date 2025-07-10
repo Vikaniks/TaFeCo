@@ -33,12 +33,8 @@ public interface ProductMapper {
     Product toEntity(ProductDTO dto);
 
     // Обновление существующей сущности
-    @Mapping(target = "categorise",
-            source = "categorise",
-            qualifiedByName = "idToCategorise")
-    @Mapping(target = "dimension",
-            source = "dimension",
-            qualifiedByName = "idToDimension")
+    @Mapping(target = "categorise", ignore = true)
+    @Mapping(target = "dimension", ignore = true)
     @Mapping(target = "photos", ignore = true)
     @Mapping(target = "archives", ignore = true)
     void updateEntityFromDto(ProductDTO dto, @MappingTarget Product existing);

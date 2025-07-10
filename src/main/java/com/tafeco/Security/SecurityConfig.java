@@ -40,10 +40,10 @@ public class SecurityConfig {
                                 "/index",
                                 "/login",
                                 "/css/**",
-                                "/products",
-                                "/products/category/**",
+                                "/api/products",
+                                "/api/products/category/**",
                                 "/category",
-                                "/categories/**",
+                                "/api/categories/**",
                                 "/uploads/**",
                                 "/js/**",
                                 "/img/**",
@@ -65,10 +65,23 @@ public class SecurityConfig {
                                 "/admin",
                                 "/admin/**"
                         ).permitAll()
-                        .requestMatchers("/api/user/**").hasRole("USER")
-                        .requestMatchers("/api/moderator").hasAnyRole("MODERATOR", "ADMIN")
-                        .requestMatchers("/api/orders").hasAnyRole("MODERATOR", "ADMIN")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(
+                                "/api/user/**"
+                        ).hasRole("USER")
+                        .requestMatchers(
+                                "/api/moderator",
+                                "/api/dimensions/**",
+                                "/api/categories/**",
+                                "/api/orders",
+                                "/api/moderator/products/**",
+                                "/api/moderator/warehouses/**",
+                                "/api/moderator/stores/**",
+                                "/api/warehouses/**",
+                                "/api/stores/**"
+                        ).hasAnyRole("MODERATOR", "ADMIN")
+                        .requestMatchers(
+                                "/api/admin/**"
+                        ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)

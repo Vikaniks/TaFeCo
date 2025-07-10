@@ -9,7 +9,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface OrderItemMapper {
 
-    @Mapping(source = "product.id", target = "product")
+    @Mapping(target = "productActive", source = "product.active")
+    @Mapping(target = "productName", source = "product.product")
+    @Mapping(target = "product", source = "product.id")
     OrderItemDTO toDTO(OrderItem orderItem);
 
     @Mapping(target = "id", ignore = true)

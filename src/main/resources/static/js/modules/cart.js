@@ -60,6 +60,8 @@
      if (currentCart[productId]) {
              currentCart[productId].quantity += quantity;
          } else {
+
+         const isActive = productCard.dataset.active === 'true';
              currentCart[productId] = {
                  id: productId,
                  productName,
@@ -67,7 +69,8 @@
                  price,
                  image,
                  unit,
-                 category
+                 category,
+                 active: isActive
              };
          }
 
@@ -104,7 +107,10 @@
          // Название
          const nameCell = document.createElement('td');
          nameCell.className = 'cart-name';
-         nameCell.textContent = product.productName;
+         nameCell.textContent = product.active === false
+             ? `${product.productName} (снят с продажи)`
+             : product.productName;
+
 
          // Кол-во и кнопки +
          const quantityCell = document.createElement('td');

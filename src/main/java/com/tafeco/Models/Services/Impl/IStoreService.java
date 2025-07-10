@@ -3,6 +3,7 @@ package com.tafeco.Models.Services.Impl;
 import com.tafeco.DTO.DTO.ProductDTO;
 import com.tafeco.DTO.DTO.ProductStoreReportDTO;
 import com.tafeco.DTO.DTO.StoreDTO;
+import com.tafeco.DTO.DTO.WarehouseStockDTO;
 import com.tafeco.Models.Entity.Store;
 
 import java.util.List;
@@ -21,7 +22,9 @@ public interface IStoreService {
         List<ProductStoreReportDTO> getStoreReportByProduct(Long productId);
 
 
+        List<WarehouseStockDTO> getStockByStore(Long storeId);
 
+        List<WarehouseStockDTO> getFullStockForAllStores();
 }
 
 

@@ -3,6 +3,7 @@ package com.tafeco.Models.Services;
 import com.tafeco.DTO.DTO.ProductDTO;
 import com.tafeco.DTO.DTO.ProductStoreReportDTO;
 import com.tafeco.DTO.DTO.StoreDTO;
+import com.tafeco.DTO.DTO.WarehouseStockDTO;
 import com.tafeco.DTO.Mappers.ProductMapper;
 import com.tafeco.DTO.Mappers.StoreMapper;
 import com.tafeco.Exception.ResourceNotFoundException;
@@ -13,11 +14,13 @@ import com.tafeco.Models.Entity.Product;
 import com.tafeco.Models.Entity.Store;
 import com.tafeco.Models.Entity.Warehouse;
 import com.tafeco.Models.Services.Impl.IStoreService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -126,5 +129,45 @@ public class StoreServiceImpl implements IStoreService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<WarehouseStockDTO> getStockByStore(Long storeId) {
+        Optional<Store> optionalStore = storeRepository.findById(storeId);
+        if (optionalStore.isEmpty()) {
+            throw new EntityNotFoundException("Store not found with id: " + storeId);
+        }
 
+        Store store = optionalStore.get();
+        Product product = store.getProduct();
+
+        WarehouseStockDTO dto = new WarehouseStockDTO(
+                product.getId(),
+                product.getProduct(),
+                product.getCategorise().getType(), // или другой способ получить имя категории
+                store.getCurrentQuantity(),
+                product.isActive()
+        );
+
+        return List.of(dto); // список из одного товара
     }
+
+
+    @Override
+    public List<WarehouseStockDTO> getFullStockForAllStores() {
+        List<Store> stores = storeRepository.findAll();
+
+        return stores.stream()
+                .map(store -> {
+                    Product product = store.getProduct();
+                    return new WarehouseStockDTO(
+                            product.getId(),
+                            product.getProduct(),
+                            product.getCategorise().getType(),
+                            store.getCurrentQuantity(),
+                            product.isActive()
+                    );
+                })
+                .collect(Collectors.toList());
+    }
+
+
+}

@@ -25,7 +25,7 @@ public class CategoriseController {
         return categoriseService.getById(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<CategoriaDTO> getAll() {
         return categoriseService.getAll();
     }

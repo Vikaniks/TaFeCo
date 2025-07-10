@@ -24,7 +24,7 @@ public class DimensionController {
         return dimensionService.getById(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<DimensionDTO> getAll() {
         return dimensionService.getAll();
     }

@@ -24,7 +24,7 @@ public class WarehouseController {
         return warehouseService.getById(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<WarehouseDTO> getAll() {
         return warehouseService.getAll();
     }

@@ -25,21 +25,175 @@
 <div th:replace="include/admin-header :: header"></div>
 
 <main layout:fragment="content">
-    <section id="users-section">
-        <h2>Пользователи</h2>
-        <div id="users-container">Загрузка пользователей...</div>
-    </section>
+    <section id="admin-products">
+        <h2>Управление продуктами</h2>
 
-    <section id="orders-section">
-        <h2>Заказы</h2>
-        <div id="orders-container">Загрузка заказов...</div>
+        <div id="product-actions">
+            <select id="sortProducts">
+                <option value="">Без сортировки</option>
+                <option value="name-asc">Название (A–Я)</option>
+                <option value="name-desc">Название (Я–A)</option>
+                <option value="id-asc">ID по возрастанию</option>
+                <option value="id-desc">ID по убыванию</option>
+            </select>
+            <button type="button" id="open-create-category-modal">+ Категория</button>
+            <button type="button" id="open-create-dimension-modal">+ Ед.измерения</button>
+
+            <button id="open-create-product-modal" style="font-weight: bold; font-size: 16px;">Создать продукт</button>
+
+            <label for="filterCategory">Фильтровать по:</label>
+            <select id="filterCategory">
+                <option value="">Все категории</option>
+                <!-- JS динамически подставит список категорий -->
+            </select>
+
+            <select id="filterActive">
+                <option value="">Активность</option>
+                <option value="true">Активные</option>
+                <option value="false">Неактивные</option>
+            </select>
+        </div>
+
+
+
+        <div id="product-table-container">
+            <table id="product-table">
+                <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Категория</th>
+                    <th>Цена</th>
+                    <th>Ед. изм.</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody id="product-table-body">
+                <!-- Здесь будет динамически добавляться список продуктов -->
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- Модальное окно добавить продукт -->
+        <div id="create-product-modal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span id="close-create-product-modal" class="modal-close">&times;</span>
+                <h2>Создать новый продукт</h2>
+                <form id="create-product-form">
+                    <label>
+                        Название:<br />
+                        <input type="text" name="name" required />
+                    </label><br />
+                    <label>Описание:<br />
+                        <textarea name="description" rows="3" cols="50" required></textarea>
+                    </label><br />
+                    <label>
+                        Цена:<br />
+                        <input type="number" name="price" step="0.01" min="0" required />
+                    </label><br />
+
+                    <label>
+                        Категория:<br />
+                        <select name="category" required></select>
+                    </label><br />
+
+                    <label>
+                        Единица измерения:<br />
+                        <select name="dimension" required></select>
+                    </label><br />
+
+                    <label>
+                        Архивы (файлы):<br />
+                        <input type="file" name="archive" multiple />
+                    </label><br />
+
+                    <label>
+                        Фото (файлы):<br />
+                        <input type="file" name="photo" multiple />
+                    </label><br />
+
+                    <label>
+                        Активен:<br />
+                        <input type="checkbox" name="active" />
+                    </label><br />
+
+                    <button type="submit">Создать</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Модальное окно добавления категории -->
+        <div id="create-category-modal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span id="close-create-category-modal" class="close">&times;</span>
+                <h2>Добавить категорию</h2>
+                <form id="create-category-form">
+                    <input type="text" name="type" placeholder="Название категории" required>
+                    <button type="submit">Сохранить</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Модальное окно добавления единицы измерения -->
+        <div id="create-dimension-modal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span id="close-create-dimension-modal" class="close">&times;</span>
+                <h2>Добавить единицу измерения</h2>
+                <form id="create-dimension-form">
+                    <input type="text" name="dimension" placeholder="Название единицы" required>
+                    <button type="submit">Сохранить</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Модальное окно для изменения продукта-->
+        <div id="editModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span id="closeModal" class="close">&times;</span>
+                <h2>Редактировать продукт</h2>
+                <form id="editProductForm">
+                    <input type="hidden" name="id" id="edit-id" />
+
+                    <label for="edit-name">Название:</label>
+                    <input type="text" name="name" id="edit-name" required />
+
+                    <label for="edit-description">Описание:</label>
+                    <textarea name="description" id="edit-description" rows="3" cols="50" required></textarea>
+
+                    <label for="edit-price">Цена:</label>
+                    <input type="number" name="price" id="edit-price" step="0.01" min="0" required />
+
+
+                    <label for="edit-category">Категория:</label>
+                        <select name="category" id="edit-category" required></select>
+
+                    <label for="edit-dimension">Единица измерения:</label>
+                        <select name="dimension" id="edit-dimension" required></select>
+
+                    <label for="edit-archive">Архивы (файлы):</label>
+                        <input type="file" name="archive" id="edit-archive" multiple />
+
+                    <label for="edit-photo">Фото (файлы):</label>
+                        <input type="file" name="photo" id="edit-photo" multiple />
+
+                    <label for="edit-active">Активен:</label>
+                        <input type="checkbox" name="active" id="edit-active" />
+
+
+                    <button type="submit">Сохранить</button>
+                </form>
+            </div>
+        </div>
+
+
+
     </section>
 
 </main>
 
 <div th:replace="include/admin-footer :: footer"></div>
 
-<script type="module" src="/static/js/main.js"></script>
+<script type="module" src="/static/js/admin/main.js"></script>
 
 </body>
 

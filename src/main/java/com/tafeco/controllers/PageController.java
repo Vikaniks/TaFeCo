@@ -106,5 +106,20 @@ public class PageController {
     public String product() {
         return "admin/product";
     }
+
+    @GetMapping("/admin/reportProduct")
+    public String reportProduct() {
+        return "admin/reportProduct";
+    }
+
+    @GetMapping("/admin/store")
+    public String store() {
+        return "admin/store";
+    }
+
+    @GetMapping("/admin/warehouse")
+    public String warehouse() {
+        return "admin/warehouse";
+    }
 }
 

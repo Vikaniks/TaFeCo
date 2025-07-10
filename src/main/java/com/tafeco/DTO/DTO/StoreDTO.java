@@ -12,8 +12,11 @@ public class StoreDTO {
     private Long id;
     private int maxQuantity;
     private int currentQuantity;
-    private Long product;
-    private Long warehouse;
+    private Long product;           // id продукта
+    private Long warehouse;         // id склада
+
+    private String storeName;       // название магазина
+    private String warehouseLocation; // название/адрес склада
 
 }
 

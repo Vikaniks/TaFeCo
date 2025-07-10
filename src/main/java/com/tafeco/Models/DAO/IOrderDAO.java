@@ -151,4 +151,5 @@ WHERE (:status IS NULL OR o.status = :status)
 
     long countByTotalPriceGreaterThanEqual(BigDecimal start);
 
+
 }

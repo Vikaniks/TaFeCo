@@ -38,6 +38,7 @@ public class ModeratorController {
     private final ICategoriseService categoriseService;
     private final IDimensionService dimensionService;
     private final IStoreService storeService;
+    private final IWarehouseService warehouseService;
     private final ICategoriaDAO categoriseRepository;
     private final IDimensionDAO dimensionRepository;
     private final IOrderService orderService;
@@ -85,13 +86,11 @@ public class ModeratorController {
 
     // Удалить продукт по id
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
-        boolean deleted = productService.deleteProduct(id);
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
+
 
     // Удалить категорию по id
     @DeleteMapping("/categories/{id}")
@@ -208,7 +207,11 @@ public class ModeratorController {
         orderService.exportToCSV(orderDTOs, response.getWriter());
     }
 
-
+    @GetMapping("/products/{id}")
+    public ResponseEntity<ProductDTO> getById(@PathVariable Long id) {
+        ProductDTO dto = productService.findById(id);
+        return ResponseEntity.ok(dto);
+    }
 
     // Получить продукт по точному названию
      @GetMapping("/products/by-product")
@@ -254,6 +257,26 @@ public class ModeratorController {
         List<StoreDTO> stockReport = productService.getActiveProductsStore();
         return ResponseEntity.ok(stockReport);
     }
+
+    // Получить отчёт по запасам всех продуктов на складе (с колонкой active)
+    @GetMapping("/warehouses/{warehouseId}/stock-report")
+    public ResponseEntity<List<WarehouseStockDTO>> getStockReportByWarehouse(@PathVariable Long warehouseId) {
+        List<WarehouseStockDTO> report = warehouseService.getWarehouseStock(warehouseId);
+        return ResponseEntity.ok(report);
+    }
+
+    @GetMapping("/stores/{storeId}/stock-report")
+    public ResponseEntity<List<WarehouseStockDTO>> getStockReportByStore(@PathVariable Long storeId) {
+        List<WarehouseStockDTO> report = storeService.getStockByStore(storeId);
+        return ResponseEntity.ok(report);
+    }
+
+    @GetMapping("/stores/stock-report")
+    public ResponseEntity<List<WarehouseStockDTO>> getFullStockReport() {
+        List<WarehouseStockDTO> report = storeService.getFullStockForAllStores();
+        return ResponseEntity.ok(report);
+    }
+
 
     @PostMapping("/transfer")
     public ResponseEntity<Void> transferProducts(

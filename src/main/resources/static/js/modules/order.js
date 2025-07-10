@@ -424,7 +424,10 @@ function renderCartToPDFTable(items) {
         const productId = item.product;
         const cartProduct = cart[productId] || {};
 
-        const productName = cartProduct.productName || 'Название отсутствует';
+        const isActive = cartProduct.active ?? true;
+        const baseName = cartProduct.productName || 'Название отсутствует';
+        const productName = isActive ? baseName : `${baseName} (снят с продажи)`;
+
         const unit = cartProduct.unit || '';
         const price = item.priceAtOrderTime ?? cartProduct.price ?? 0;
 

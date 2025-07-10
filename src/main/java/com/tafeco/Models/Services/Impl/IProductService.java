@@ -16,7 +16,7 @@ public interface IProductService {
 
     ProductDTO update(Long id, ProductDTO productDto, List<MultipartFile> archives, List<MultipartFile> photos) throws IOException;
 
-    boolean deleteProduct(Long id);
+    void deleteProduct(Long id);
     ProductDTO findById(Long id);
     List<ProductDTO> findAll();
 

@@ -11,7 +11,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "order")
+@ToString
 @Entity
 @Table(name="products")
 public class Product  {

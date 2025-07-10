@@ -17,6 +17,16 @@ import {
   initReportModule
 } from './modules/reportOrder.js';
 
+import {
+  initProductModule
+} from './modules/adminProducts.js';
+
+import {
+  initReportProductModule
+} from './modules/reportProducts.js';
+
+
+
 
 let allUsers = [];
 let currentPage = 0;
@@ -182,21 +192,15 @@ if (btnUsers) {
 /////////////////////////////////////////////
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Пример 1: определяем страницу по id контейнера
   if (document.getElementById('orders-page')) {
     initOrdersModule();
   } else if (document.getElementById('report-page')) {
     initReportModule();
+  } else if (document.getElementById('admin-products')) {
+    initProductModule();
+  } else if (document.getElementById('reports-section')) {
+    initReportProductModule();
   }
 
-  // 2: можно определить страницу по URL, если у вас разные URL для страниц
-  /*
-  const path = window.location.pathname;
-  if (path.includes('/admin/orders')) {
-    initOrdersModule();
-  } else if (path.includes('/admin/reports')) {
-    initReportModule();
-  }
-  */
 });
 

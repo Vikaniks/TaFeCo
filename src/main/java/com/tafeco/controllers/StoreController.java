@@ -18,7 +18,7 @@ public class StoreController {
 
     private final IStoreService storeService;
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<StoreDTO>> findAll() {
         return ResponseEntity.ok(storeService.findAll());
     }

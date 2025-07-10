@@ -20,6 +20,9 @@ public class Store  {
     @Column(name="id")
     private Long id;
 
+    @Column(name = "store_name")
+    private String storeName;
+
     @Column(name = "max_quantity", nullable = false)
     private int maxQuantity;
 

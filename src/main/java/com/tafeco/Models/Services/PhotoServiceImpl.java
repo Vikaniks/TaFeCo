@@ -59,7 +59,7 @@ public class PhotoServiceImpl implements IPhotoService {
         String uploadDir = fileStorageProperties.getUploadDir();
         String originalFilename = file.getOriginalFilename();
         String newFilename = UUID.randomUUID() + "_" + originalFilename;
-        Path filePath = Paths.get(uploadDir + newFilename);
+        Path filePath = Paths.get(uploadDir).resolve(newFilename);
 
         // 3. Создание папки (если нет) и сохранение файла
         Files.createDirectories(filePath.getParent());
@@ -73,7 +73,7 @@ public class PhotoServiceImpl implements IPhotoService {
 
         Photo saved = photoRepository.save(photo);
 
-        return photoMapper.toDTO(photoRepository.save(photo));
+        return photoMapper.toDTO(saved);
     }
 
 }

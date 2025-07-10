@@ -329,7 +329,8 @@ background-color: var(--colorPrincipalClaro);
 #prev-page, #page-number, #next-page, #page-input, #go-to-page,
 #filter-status, #filter-startDate, #filter-endDate, #filter-email,
 #btn-filter, #btn-export, #status-btn, .status-btn, #filter-product,
-#filter-warehouse, #filter-store, #btn-export-excel, #clear-filters-btn {
+#filter-warehouse, #filter-store, #btn-export-excel, #clear-filters-btn
+{
 margin: 10px;
 background-color: #F1F8E9;
 border: 1px solid var(--colorPrincipalOscuro);
@@ -460,7 +461,9 @@ width: 80px;
     flex-wrap: wrap;
 }
 #btn-report-status, #btn-report-sum, #btn-back-to-orders,
-#btn-report-period, #btnReportSummary {
+#btn-report-period, #btnReportSummary, #open-create-product-modal,
+#open-create-category-modal, #open-create-dimension-modal,
+#sortProducts, #filterCategory, #filterActive {
   margin: 10px;
   background-color: #F1F8E9;
   border: 1px solid var(--colorPrincipalOscuro);
@@ -470,10 +473,18 @@ width: 80px;
   }
 #btn-report-status:hover, #btn-report-sum:hover,
 #btn-back-to-orders:hover,
-#btn-report-period:hover, #btnReportSummary:hover {
+#btn-report-period:hover, #btnReportSummary:hover,
+#open-create-product-modal:hover, #open-create-category-modal:hover,
+#open-create-dimension-modal:hover,
+#create-product-form button:hover,
+#create-category-form button:hover,
+#create-dimension-form button:hover  {
 background-color: var(--colorPrincipalClaro);
 }
-#btn-report-status, #btn-report-sum, #btn-back-to-orders {
+
+#btn-report-status, #btn-report-sum, #btn-back-to-orders,
+#create-product-form button, #create-category-form button,
+#create-dimension-form button {
 width: 90px;
 }
 
@@ -489,7 +500,7 @@ width: 90px;
     align-items: center;
   }
   .modal-content {
-    background: white;
+    background-color: #FFF8E1;
     margin: 10% auto;
     padding: 20px;
     border-radius: 5px;
@@ -508,7 +519,15 @@ width: 90px;
     position: absolute;
     right: 10px;
     top: 5px;
-    font-size: 20px;
+    font-size: 30px;
+    cursor: pointer;
+  }
+
+  .modal-close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 32px;
     cursor: pointer;
   }
   .status-select {
@@ -516,9 +535,72 @@ width: 90px;
   weight: 60px;
   }
 
-.fa-eye {
+.fa-eye, .custom-icon {
   color: var(--colorPrincipalClaro);
+  margin: 10px;
 }
+
+#create-product-form input,
+#create-product-form select,
+#create-product-form textarea,
+#create-product-form button,
+#create-category-form input,
+#create-category-form button,
+#create-dimension-form input,
+#create-dimension-form button,
+#edit-id input, #edit-description textarea,
+#edit-price input, #edit-category select,
+#edit-dimension select, #edit-archive input,
+#edit-photo input, #edit-active input {
+  min-width: 200px;
+  width: 100%;                /* растягивается на всю доступную ширину родителя */
+  max-width: 500px;           /* при желании можно ограничить максимальную ширину */
+  box-sizing: border-box;
+  flex: 1;
+  border-radius: 5px;
+  padding: 3px;
+  margin: 5px;
+}
+
+#editProductForm, #create-product-form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  #editProductForm label {
+    font-weight: bold;
+  }
+
+  #editProductForm input,
+  #editProductForm textarea,
+  #editProductForm select {
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+  }
+.close:hover {
+    color: red;
+  }
+
+  button[type="submit"] {
+    padding: 10px;
+    font-weight: bold;
+    background-color: var(--fondoOscuro);
+    color: var(--colorPrincipalOscuro);
+    border: none;
+    border-radius: 5px;
+    border: 1px solid var(--colorPrincipalOscuro);
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #45a049;
+  }
+
 
 /* Общие стили для таблицы */
 #tablas {

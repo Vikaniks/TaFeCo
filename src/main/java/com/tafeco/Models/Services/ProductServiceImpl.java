@@ -10,14 +10,18 @@ import com.tafeco.Exception.ResourceNotFoundException;
 import com.tafeco.Models.DAO.*;
 import com.tafeco.Models.Entity.*;
 import com.tafeco.Models.Services.Impl.IProductService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,6 +41,7 @@ public class ProductServiceImpl implements IProductService {
     private final IPhotoDAO photoRepository;
     private final IArchiveDAO archiveRepository;
     private final ProductMapper productMapper;
+    private final IOrderItemDAO orderItemRepository;
 
 
     @Override
@@ -129,7 +134,6 @@ public class ProductServiceImpl implements IProductService {
     }
 
 
-
     private String saveFile(MultipartFile file, String dir) throws IOException {
         String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
         Path path = Paths.get(dir + filename);
@@ -139,17 +143,28 @@ public class ProductServiceImpl implements IProductService {
     }
 
 
-
     @Override
-    public boolean deleteProduct(Long id) {
-        if (!productRepository.existsById(id)) {
-            log.warn("Попытка удалить несуществующий продукт ID {}", id);
-            return false;
+    @Transactional
+    public void deleteProduct(Long id) {
+        boolean isUsed = orderItemRepository.existsByProduct_Id(id);
+        System.out.println("Product used in orders: " + isUsed);
+
+        if (isUsed) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Product is used in orders");
         }
-        productRepository.deleteById(id);
-        log.info("Продукт удалён: ID {}", id);
-        return true;
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Продукт не найден"));
+
+        System.out.println("Before setActive: " + product.isActive());
+        product.setActive(false);
+        System.out.println("After setActive: " + product.isActive());
+
+        productRepository.save(product);
+        productRepository.flush();
     }
+
+
 
     @Override
     public ProductDTO findById(Long id) {
@@ -257,6 +272,6 @@ public class ProductServiceImpl implements IProductService {
         return result;
     }
 
-
-
 }
+
+

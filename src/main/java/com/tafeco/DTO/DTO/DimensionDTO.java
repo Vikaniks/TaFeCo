@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DimensionDTO {
-    private int id;
+    private Long id;
     private String dimension;
 
 }
