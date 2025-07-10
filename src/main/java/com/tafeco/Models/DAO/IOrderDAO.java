@@ -89,7 +89,8 @@ SELECT DISTINCT o FROM Order o
 JOIN o.user u
 JOIN o.items i
 JOIN i.product p
-JOIN p.stores s
+JOIN p.stores sp
+JOIN sp.store s
 JOIN s.warehouse w
 WHERE (:status IS NULL OR o.status = :status)
   AND (:startDate IS NULL OR o.orderDate >= :startDate)
@@ -115,7 +116,8 @@ SELECT DISTINCT o FROM Order o
 JOIN o.user u
 JOIN o.items i
 JOIN i.product p
-JOIN p.stores s
+JOIN p.stores sp
+JOIN sp.store s
 JOIN s.warehouse w
 WHERE (:status IS NULL OR o.status = :status)
   AND (:startDate IS NULL OR o.orderDate >= :startDate)
@@ -125,15 +127,16 @@ WHERE (:status IS NULL OR o.status = :status)
   AND (:warehouseId IS NULL OR w.id = :warehouseId)
   AND (:storeId IS NULL OR s.id = :storeId)
 """)
-    Page<Order> findFilteredFull(@Param("status") OrderStatus status,
-                                 @Param("startDate") LocalDate startDate,
-                                 @Param("endDate") LocalDate endDate,
-                                 @Param("email") String email,
-                                 @Param("productId") Long productId,
-                                 @Param("warehouseId") Long warehouseId,
-                                 @Param("storeId") Long storeId,
-                                 Pageable pageable);
-
+    Page<Order> findFilteredFull(
+            @Param("status") OrderStatus status,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("email") String email,
+            @Param("productId") Long productId,
+            @Param("warehouseId") Long warehouseId,
+            @Param("storeId") Long storeId,
+            Pageable pageable
+    );
 
     @Query(value = """
     SELECT order_data, COUNT(*), SUM(total_price)

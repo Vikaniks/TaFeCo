@@ -52,7 +52,7 @@ public class Product  {
     private Dimension dimension;
 
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Store> stores = new HashSet<>();
+    private Set<StoreProduct> stores = new HashSet<>();
 }

@@ -37,7 +37,7 @@ public class ModeratorController {
     private final IProductService productService;
     private final ICategoriseService categoriseService;
     private final IDimensionService dimensionService;
-    private final IStoreService storeService;
+    private final IStoreProductService storeProductService;
     private final IWarehouseService warehouseService;
     private final ICategoriaDAO categoriseRepository;
     private final IDimensionDAO dimensionRepository;
@@ -127,7 +127,7 @@ public class ModeratorController {
         return ResponseEntity.ok(order);
     }
 
-    @PatchMapping("/{orderId}/status")
+ /*   @PatchMapping("/{orderId}/status")
     public ResponseEntity<OrderDTO> changeOrderStatus(
             @PathVariable Integer orderId,
             @RequestParam OrderStatus newStatus
@@ -135,6 +135,8 @@ public class ModeratorController {
         OrderDTO updatedOrder = orderService.changeOrderStatus(orderId, newStatus);
         return ResponseEntity.ok(updatedOrder);
     }
+
+  */
 
     @PutMapping("/orders/{orderId}/status")
     public ResponseEntity<?> updateOrderStatus(
@@ -247,7 +249,7 @@ public class ModeratorController {
     // Отчёт по остаткам товара на точке продаж
     @GetMapping("/products/{productId}/store-report")
     public ResponseEntity<List<ProductStoreReportDTO>> getStoreReportByProduct(@PathVariable Long productId) {
-        List<ProductStoreReportDTO> report = storeService.getStoreReportByProduct(productId);
+        List<ProductStoreReportDTO> report = storeProductService.getStoreReportByProduct(productId);
         return ResponseEntity.ok(report);
     }
 
@@ -267,13 +269,13 @@ public class ModeratorController {
 
     @GetMapping("/stores/{storeId}/stock-report")
     public ResponseEntity<List<WarehouseStockDTO>> getStockReportByStore(@PathVariable Long storeId) {
-        List<WarehouseStockDTO> report = storeService.getStockByStore(storeId);
+        List<WarehouseStockDTO> report = storeProductService.getStockByStore(storeId);
         return ResponseEntity.ok(report);
     }
 
     @GetMapping("/stores/stock-report")
     public ResponseEntity<List<WarehouseStockDTO>> getFullStockReport() {
-        List<WarehouseStockDTO> report = storeService.getFullStockForAllStores();
+        List<WarehouseStockDTO> report = storeProductService.getFullStock();
         return ResponseEntity.ok(report);
     }
 

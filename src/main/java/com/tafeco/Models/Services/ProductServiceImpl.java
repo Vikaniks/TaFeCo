@@ -256,20 +256,23 @@ public class ProductServiceImpl implements IProductService {
         List<StoreDTO> result = new ArrayList<>();
 
         for (Product product : activeProducts) {
-            // Для каждого продукта берем связанные Store — склады с запасами
-            for (Store store : product.getStores()) {
+            for (StoreProduct sp : product.getStores()) {
                 StoreDTO dto = new StoreDTO();
-                dto.setId(store.getId());
-                dto.setMaxQuantity(store.getMaxQuantity());
-                dto.setCurrentQuantity(store.getCurrentQuantity());
+                dto.setId(sp.getId());
+                dto.setMaxQuantity(sp.getMaxQuantity());
+                dto.setCurrentQuantity(sp.getCurrentQuantity());
                 dto.setProduct(product.getId());
-                dto.setWarehouse(store.getWarehouse().getId());
+
+
+                dto.setStoreName(sp.getStore().getStoreName());
+                dto.setLocation(sp.getStore().getLocation());
 
                 result.add(dto);
             }
         }
 
         return result;
+
     }
 
 }

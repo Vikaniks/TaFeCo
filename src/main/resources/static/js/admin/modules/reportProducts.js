@@ -146,7 +146,7 @@ async function loadStores() {
     storeSelect.innerHTML = '';
     storeSelect.appendChild(createOption('', 'Выберите магазин'));
     stores.forEach(s => {
-      storeSelect.appendChild(createOption(s.id, s.name || `Магазин ${s.id}`));
+      storeSelect.appendChild(createOption(s.id, s.storeName || `Магазин ${s.id}`));
     });
   } catch (e) {
     alert(e.message);

@@ -2,43 +2,41 @@ package com.tafeco.Models.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="stores")
-public class Store  {
+@Table(name = "stores")
+public class Store {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
     private Long id;
 
-    @Column(name = "store_name")
+    @Column(name = "store_name", nullable = false)
     private String storeName;
 
-    @Column(name = "max_quantity", nullable = false)
-    private int maxQuantity;
+    @Column(name = "location")
+    private String location;
 
-    @Column(name = "current_quantity", nullable = false)
-    private int currentQuantity;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    @JsonIgnore
-    private Product product;
-
+    // можно добавить адрес, телефон и т.д.
 
     @ManyToOne
-    @JoinColumn(name = "warehouse_id")
-    @JsonIgnore
+    @JoinColumn(name = "warehouse_id", nullable = false)
     private Warehouse warehouse;
 
 
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<StoreProduct> storeProducts = new ArrayList<>();
 }
+

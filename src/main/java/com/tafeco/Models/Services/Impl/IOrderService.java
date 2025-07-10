@@ -33,7 +33,7 @@ public interface IOrderService {
 
     void updateOrderStatus(Integer order, String newStatus);
 
-    OrderDTO changeOrderStatus(Integer orderId, OrderStatus newStatus);
+    //OrderDTO changeOrderStatus(Integer orderId, OrderStatus newStatus);
 
     OrderSummaryDTO getSummary(
             OrderStatus status,

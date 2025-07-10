@@ -19,7 +19,7 @@ public interface IStoreService {
         List<StoreDTO> findByWarehouseId(Long warehouseId);
         List<StoreDTO> findByWarehouseIdAndCurrentQuantityGreaterThan(Long warehouseId, int quantity);
 
-        List<ProductStoreReportDTO> getStoreReportByProduct(Long productId);
+        List<ProductStoreReportDTO> getProductStoreReport(Long productId);
 
 
         List<WarehouseStockDTO> getStockByStore(Long storeId);

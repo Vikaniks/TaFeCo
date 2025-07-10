@@ -191,7 +191,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
-    @Transactional
+/*    @Transactional
     @Override
     public OrderDTO changeOrderStatus(Integer orderId, OrderStatus newStatus) {
         Order order = orderRepository.findById(orderId)
@@ -252,7 +252,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     // --- Списание со склада
-    private void decreaseProductStock(Order order) {
+/*    private void decreaseProductStock(Order order) {
         for (OrderItem item : order.getItems()) {
             productStockService.decreaseStock(
                     item.getProduct().getId(),
@@ -272,6 +272,8 @@ public class OrderServiceImpl implements IOrderService {
             );
         }
     }
+
+ */
 
     @Override
     public OrderSummaryDTO getSummary(

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class ProductStockServiceImpl implements IProductStockService {
-    private final IStoreDAO storeRepository;
+/*    private final IStoreDAO storeRepository;
     private final IProductStockDAO productStockRepository;
 
     @Override
@@ -83,4 +83,6 @@ public class ProductStockServiceImpl implements IProductStockService {
         stock.setQuantity(newQty);
         productStockRepository.save(stock);
     }
+    
+ */
 }

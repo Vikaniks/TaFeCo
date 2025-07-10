@@ -11,36 +11,14 @@ import org.mapstruct.Mapping;
 import java.util.List;
 import java.util.Set;
 
-@Mapper(componentModel = "spring", uses = {ProductMapper.class, WarehouseMapper.class})
+@Mapper(componentModel = "spring")
 public interface StoreMapper {
 
-    /* Entity → DTO */
-    @Mapping(source = "product.id", target = "product")
-    @Mapping(source = "warehouse.id", target = "warehouse")
+    @Mapping(target = "warehouse", source = "warehouse.id")
     StoreDTO toDTO(Store store);
 
     List<StoreDTO> toDTOList(List<Store> stores);
 
-    /* DTO → Entity */
-    @Mapping(target = "id", source = "dto.id")
-    @Mapping(target = "maxQuantity", source = "dto.maxQuantity")
-    @Mapping(target = "currentQuantity", source = "dto.currentQuantity")
-    @Mapping(target = "product", source = "product")
-    @Mapping(target = "warehouse", source = "warehouse")
-    Store toEntity(StoreDTO dto, Product product, Warehouse warehouse);
-
-    default Product map(Long id) {
-        if (id == null) return null;
-        Product p = new Product();
-        p.setId(id);
-        return p;
-    }
-
-    default Warehouse mapWarehouse(Long id) {
-        if (id == null) return null;
-        Warehouse w = new Warehouse();
-        w.setId(id);
-        return w;
-    }
-
+    @Mapping(target = "warehouse", ignore = true) // если нет автоматической привязки
+    Store toEntity(StoreDTO dto);
 }
