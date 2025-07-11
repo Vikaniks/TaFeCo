@@ -1,13 +1,17 @@
 package com.tafeco.Models.Services;
 
+
+import com.tafeco.DTO.DTO.ProductTransferResponseDTO;
 import com.tafeco.DTO.DTO.WarehouseDTO;
 import com.tafeco.DTO.DTO.WarehouseStockDTO;
 import com.tafeco.DTO.Mappers.WarehouseMapper;
-import com.tafeco.Models.DAO.IStoreDAO;
-import com.tafeco.Models.DAO.IStoreProductDAO;
-import com.tafeco.Models.DAO.IWarehouseDAO;
+import com.tafeco.Models.DAO.*;
+import com.tafeco.Models.Entity.LocationType;
+import com.tafeco.Models.Entity.Product;
+import com.tafeco.Models.Entity.ProductInventoryLocation;
 import com.tafeco.Models.Entity.Warehouse;
 import com.tafeco.Models.Services.Impl.IWarehouseService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +23,9 @@ public class WarehouseServiceImpl implements IWarehouseService {
 
     private final IWarehouseDAO warehouseRepository;
     private final WarehouseMapper warehouseMapper;
-    private final IStoreDAO storeDAO;
     private final IStoreProductDAO storeProductDAO;
+    private final IProductDAO productDAO;
+    private final IProductInventoryLocationDAO inventoryDAO;
 
     @Override
     public WarehouseDTO create(WarehouseDTO dto) {
@@ -37,6 +42,7 @@ public class WarehouseServiceImpl implements IWarehouseService {
 
     @Override
     public List<WarehouseDTO> getAll() {
+
         return warehouseMapper.toDTOList(warehouseRepository.findAll());
     }
 
@@ -63,6 +69,48 @@ public class WarehouseServiceImpl implements IWarehouseService {
     // Общий отчёт по всем складам
     public List<WarehouseStockDTO> getFullWarehouseStock() {
         return storeProductDAO.findFullStock();
+    }
+
+    @Override
+    public void deactivate(Long id) {
+        Warehouse warehouse = warehouseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Склад с id " + id + " не найден"));
+
+        warehouse.setActive(false);
+        warehouseRepository.save(warehouse);
+    }
+
+    @Override
+    public void activate(Long id) {
+        Warehouse warehouse = warehouseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Склад с id " + id + " не найден"));
+
+        warehouse.setActive(true);
+        warehouseRepository.save(warehouse);
+    }
+
+    @Override
+    public void receiveProduct(Long warehouseId, ProductTransferResponseDTO dto) {
+        Warehouse warehouse = warehouseRepository.findById(warehouseId)
+                .orElseThrow(() -> new EntityNotFoundException("Склад с id " + warehouseId + " не найден"));
+
+        Product product = productDAO.findById(dto.getProductId())
+                .orElseThrow(() -> new EntityNotFoundException("Продукт с id " + dto.getProductId() + " не найден"));
+
+        ProductInventoryLocation warehouseInventory = inventoryDAO
+                .findByProductAndLocationTypeAndWarehouseId(product, LocationType.WAREHOUSE, warehouseId)
+                .orElseGet(() -> {
+                    ProductInventoryLocation newInventory = new ProductInventoryLocation();
+                    newInventory.setProduct(product);
+                    newInventory.setWarehouseId(warehouseId);
+                    newInventory.setLocationType(LocationType.WAREHOUSE);
+                    newInventory.setQuantity(0);
+                    return newInventory;
+                });
+
+        warehouseInventory.setQuantity(warehouseInventory.getQuantity() + dto.getQuantity());
+
+        inventoryDAO.save(warehouseInventory);
     }
 
 }

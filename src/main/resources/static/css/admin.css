@@ -635,6 +635,17 @@ width: 90px;
  gap: 30px;
  }
 
+.transfer-product-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.transfer-product-row input,
+.transfer-product-row select {
+  padding: 0.25rem;
+}
+
 
 /* Общие стили для таблицы */
 #tablas {

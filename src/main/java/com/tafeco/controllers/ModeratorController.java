@@ -319,9 +319,24 @@ public class ModeratorController {
 
     // Поступление товара
     @PostMapping("/warehouses/{id}/receive")
-    public ResponseEntity<Void> receiveProduct(@PathVariable Long id, @RequestBody ProductTransferRequestDTO dto) {
+    public ResponseEntity<Void> receiveProduct(@PathVariable Long id, @RequestBody ProductTransferResponseDTO dto) {
         warehouseService.receiveProduct(id, dto);
         return ResponseEntity.ok().build();
+    }
+    @PostMapping("/stores/{id}/receive")
+    public ResponseEntity<Void> receiveProductToStore(@PathVariable Long id, @RequestBody ProductTransferResponseDTO dto) {
+        storeService.receiveProduct(id, dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/warehouses/{id}/stock")
+    public ResponseEntity<List<WarehouseStockDTO>> getStockByWarehouse(@PathVariable Long id) {
+        return ResponseEntity.ok(warehouseService.getWarehouseStock(id));
+    }
+
+    @GetMapping("/all/stock")
+    public List<WarehouseStockDTO> getFullStock() {
+        return warehouseService.getFullWarehouseStock();
     }
 
     @PostMapping("/warehouses/transfer")

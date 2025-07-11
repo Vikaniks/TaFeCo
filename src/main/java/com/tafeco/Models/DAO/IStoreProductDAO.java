@@ -2,6 +2,7 @@ package com.tafeco.Models.DAO;
 
 import com.tafeco.DTO.DTO.ProductStoreReportDTO;
 import com.tafeco.DTO.DTO.WarehouseStockDTO;
+import com.tafeco.Models.Entity.Product;
 import com.tafeco.Models.Entity.Store;
 import com.tafeco.Models.Entity.StoreProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -55,5 +56,6 @@ public interface IStoreProductDAO extends JpaRepository<StoreProduct, Long> {
             "WHERE p.id = :productId")
     List<ProductStoreReportDTO> getProductStoreReport(@Param("productId") Long productId);
 
+    Optional<StoreProduct> findByStoreAndProduct(Store store, Product product);
 }
 

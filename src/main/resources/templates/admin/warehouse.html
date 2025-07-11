@@ -28,19 +28,21 @@
     <section id="warehouses-section">
         <h2>Управление складами</h2>
         <div class="controls">
-            <button id="find-all">Найти все активные склады</button>
+            <button id="find-all">Все активные склады</button>
             <label>
                 <input type="checkbox" id="show-inactive">
-                Показать неактивные склады
+                Неактивные склады
             </label>
-            <button id="new-warehouse-btn">Создать новый склад</button>
+            <button id="create-warehouse-btn">Создать новый склад</button>
+            <button id="openAddProductModal" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                Добавить продукт на склад
+            </button>
         </div>
 
         <table>
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Название</th>
                 <th>Локация</th>
                 <th>Статус</th>
                 <th>Действия</th>
@@ -49,35 +51,83 @@
             <tbody id="warehouse-table-body"></tbody>
         </table>
 
-        <!-- Модалка трансфера товаров -->
-        <div id="transfer-modal" class="modal hidden" data-source-warehouse-id="">
+        <!-- Модалка создания склада -->
+        <div id="create-warehouse-modal" class="modal hidden">
             <div class="modal-content">
-                <h2>Трансфер товаров в магазин</h2>
-
-                <label>Магазин (ID): <input type="number" id="targetStoreId" /></label>
-
-                <div id="transfer-products">
-                    <!-- Продукты будут добавляться динамически -->
-                </div>
-
-                <button id="add-transfer-product-btn">Добавить товар</button>
+                <h2>Создать новый склад</h2>
+                <label>
+                    Локация:
+                    <input type="text" id="warehouse-location" />
+                </label>
 
                 <div class="modal-actions">
-                    <button id="submit-transfer-btn">Выполнить трансфер</button>
-                    <button id="close-transfer-modal" class="close">&times;</button>
+                    <button id="submit-create-warehouse">Создать</button>
+                    <button id="close-create-warehouse" class="close">&times;</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно добавить товар в магазин-->
+        <div id="addProductModal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Добавить товар на склад</h2>
+
+                <form id="addProductToWarehouseForm">
+                    <!-- Поиск продукта -->
+                    <label>
+                        Продукт:
+                        <input type="text" id="productSearch" list="productSuggestions" autocomplete="off" required />
+                        <datalist id="productSuggestions"></datalist>
+                        <input type="hidden" id="productId" name="productId" />
+                    </label>
+
+                    <!-- Выпадающий список складов -->
+                    <label>
+                        Склад:
+                        <select id="warehouseId" required>
+                            <option value="">Загрузка складов...</option>
+                        </select>
+                    </label>
+
+                    <!-- Количество -->
+                    <label>
+                        Количество:
+                        <input type="number" id="quantity" min="1" required />
+                    </label>
+
+                    <div class="modal-actions">
+                        <button type="submit">Добавить</button>
+                        <button type="button" id="cancelAddProduct">Отмена</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Модальное окно редактирования склада -->
+        <div id="editWarehouseModal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Редактировать склад</h2>
+                <form id="editWarehouseForm">
+                    <input type="hidden" id="editWarehouseId" />
+                    <label>
+                        Локация:
+                        <input type="text" id="editWarehouseLocation" name="location" required />
+                    </label>
+                    <div class="modal-actions">
+                        <button type="submit" id="submitEditWarehouse">Сохранить</button>
+                        <button type="button" id="closeEditWarehouse" class="close">&times;</button>
+                    </div>
+                </form>
             </div>
         </div>
 
     </section>
 
-
-
 </main>
 
 <div th:replace="include/admin-footer :: footer"></div>
 
-<script type="module" src="/static/js/main.js"></script>
+<script type="module" src="/static/js/admin/main.js"></script>
 
 </body>
 

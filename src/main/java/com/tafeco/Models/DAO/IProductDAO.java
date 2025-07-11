@@ -28,4 +28,6 @@ public interface IProductDAO extends JpaRepository<Product, Long> {
     List<Product> findByDimension(Dimension dimension);
 
     Optional<Product> findById(Long id);
+
+
 }

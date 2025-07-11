@@ -21,6 +21,10 @@ public class Warehouse {
     @Column(name = "location")
     private String location;
 
+    @Column(name = "active", nullable = false)
+    private Boolean active = true;
+
+
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Store> stores = new HashSet<>();
 }

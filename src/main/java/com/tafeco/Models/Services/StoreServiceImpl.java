@@ -1,13 +1,17 @@
 package com.tafeco.Models.Services;
 
 import com.tafeco.DTO.DTO.ProductStoreReportDTO;
+import com.tafeco.DTO.DTO.ProductTransferResponseDTO;
 import com.tafeco.DTO.DTO.StoreDTO;
 import com.tafeco.DTO.DTO.WarehouseStockDTO;
 import com.tafeco.DTO.Mappers.StoreMapper;
+import com.tafeco.Models.DAO.IProductDAO;
 import com.tafeco.Models.DAO.IStoreDAO;
 import com.tafeco.Models.DAO.IStoreProductDAO;
 import com.tafeco.Models.DAO.IWarehouseDAO;
+import com.tafeco.Models.Entity.Product;
 import com.tafeco.Models.Entity.Store;
+import com.tafeco.Models.Entity.StoreProduct;
 import com.tafeco.Models.Entity.Warehouse;
 import com.tafeco.Models.Services.Impl.IStoreService;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +30,7 @@ public class StoreServiceImpl implements IStoreService {
     private final StoreMapper storeMapper;
     private final IStoreProductDAO storeProductDAO;
     private final IWarehouseDAO warehouseRepository;
+    private final IProductDAO productDAO;
 
     @Override
     public StoreDTO create(StoreDTO storeDTO) {
@@ -133,7 +139,36 @@ public class StoreServiceImpl implements IStoreService {
         storeRepository.save(store);
     }
 
+    @Override
+    public void receiveProduct(Long storeId, ProductTransferResponseDTO dto) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new EntityNotFoundException("Store not found"));
 
+        Product product = productDAO.findById(dto.getProductId())
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+        // Ищем запись StoreProduct для данного магазина и продукта
+        Optional<StoreProduct> spOpt = storeProductDAO.findByStoreAndProduct(store, product);
+
+        StoreProduct storeProduct;
+        if (spOpt.isPresent()) {
+            storeProduct = spOpt.get();
+            // Увеличиваем текущее количество
+            storeProduct.setCurrentQuantity(storeProduct.getCurrentQuantity() + dto.getQuantity());
+            // можно обновить maxQuantity
+            if (storeProduct.getMaxQuantity() < storeProduct.getCurrentQuantity()) {
+                storeProduct.setMaxQuantity(storeProduct.getCurrentQuantity());
+            }
+        } else {
+            storeProduct = new StoreProduct();
+            storeProduct.setStore(store);
+            storeProduct.setProduct(product);
+            storeProduct.setCurrentQuantity(dto.getQuantity());
+            storeProduct.setMaxQuantity(dto.getQuantity()); // или другое логичное значение
+        }
+
+        storeProductDAO.save(storeProduct);
+    }
 
 
 }

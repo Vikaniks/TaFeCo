@@ -13,6 +13,7 @@ import java.util.List;
 public interface WarehouseMapper {
 
     @Mapping(source = "stores", target = "stores")
+    @Mapping(source = "active", target = "active")
     WarehouseDTO toDTO(Warehouse warehouse);
 
 

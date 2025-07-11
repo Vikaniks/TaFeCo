@@ -1,6 +1,7 @@
 package com.tafeco.Models.Services.Impl;
 
-import com.tafeco.DTO.DTO.ProductTransferRequestDTO;
+
+import com.tafeco.DTO.DTO.ProductTransferResponseDTO;
 import com.tafeco.DTO.DTO.WarehouseDTO;
 import com.tafeco.DTO.DTO.WarehouseStockDTO;
 
@@ -20,5 +21,5 @@ public interface IWarehouseService {
 
     void activate(Long id);
 
-    void receiveProduct(Long id, ProductTransferRequestDTO dto);
+    void receiveProduct(Long id, ProductTransferResponseDTO dto);
 }

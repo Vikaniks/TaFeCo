@@ -14,10 +14,6 @@ public class WarehouseController {
 
     private final IWarehouseService warehouseService;
 
-    @PostMapping
-    public WarehouseDTO create(@RequestBody WarehouseDTO dto) {
-        return warehouseService.create(dto);
-    }
 
     @GetMapping("/{id}")
     public WarehouseDTO getById(@PathVariable Long id) {
@@ -29,10 +25,7 @@ public class WarehouseController {
         return warehouseService.getAll();
     }
 
-    @PutMapping("/{id}")
-    public WarehouseDTO update(@PathVariable Long id, @RequestBody WarehouseDTO dto) {
-        return warehouseService.update(id, dto);
-    }
+
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {

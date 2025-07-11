@@ -1,9 +1,6 @@
 package com.tafeco.Models.Services.Impl;
 
-import com.tafeco.DTO.DTO.ProductDTO;
-import com.tafeco.DTO.DTO.ProductStoreReportDTO;
-import com.tafeco.DTO.DTO.StoreDTO;
-import com.tafeco.DTO.DTO.WarehouseStockDTO;
+import com.tafeco.DTO.DTO.*;
 import com.tafeco.Models.Entity.Store;
 
 import java.util.List;
@@ -29,6 +26,8 @@ public interface IStoreService {
         void deactivateStore(Long id);
 
         void activateStore(Long id);
+
+        void receiveProduct(Long id, ProductTransferResponseDTO dto);
 }
 
 
