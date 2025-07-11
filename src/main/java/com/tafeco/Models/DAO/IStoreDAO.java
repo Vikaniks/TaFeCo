@@ -20,4 +20,6 @@ public interface IStoreDAO extends JpaRepository<Store, Long> {
             @Param("warehouseId") Long warehouseId,
             @Param("quantity") int quantity);
 
+    List<Store> findByActiveTrue();
+
 }

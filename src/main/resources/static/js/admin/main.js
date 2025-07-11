@@ -25,6 +25,10 @@ import {
   initReportProductModule
 } from './modules/reportProducts.js';
 
+import {
+  initStoreModule
+} from './modules/stores.js';
+
 
 
 
@@ -200,6 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initProductModule();
   } else if (document.getElementById('reports-section')) {
     initReportProductModule();
+  } else if (document.getElementById('store-section')) {
+    initStoreModule();
   }
 
 });

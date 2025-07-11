@@ -102,7 +102,7 @@ public class StoreProductServiceImpl implements IStoreProductService {
                     sp.getProduct().getProduct(),
                     sp.getProduct().getCategorise().getType(),
                     sp.getCurrentQuantity(),
-                    sp.getProduct().isActive()
+                    sp.getProduct().getActive()
             )).toList();
         }
 

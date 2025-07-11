@@ -156,9 +156,9 @@ public class ProductServiceImpl implements IProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Продукт не найден"));
 
-        System.out.println("Before setActive: " + product.isActive());
+        System.out.println("Before setActive: " + product.getActive());
         product.setActive(false);
-        System.out.println("After setActive: " + product.isActive());
+        System.out.println("After setActive: " + product.getActive());
 
         productRepository.save(product);
         productRepository.flush();

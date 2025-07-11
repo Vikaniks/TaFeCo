@@ -25,6 +25,10 @@ public interface IStoreService {
         List<WarehouseStockDTO> getStockByStore(Long storeId);
 
         List<WarehouseStockDTO> getFullStockForAllStores();
+
+        void deactivateStore(Long id);
+
+        void activateStore(Long id);
 }
 
 

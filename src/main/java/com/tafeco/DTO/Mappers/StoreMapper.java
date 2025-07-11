@@ -15,10 +15,12 @@ import java.util.Set;
 public interface StoreMapper {
 
     @Mapping(target = "warehouse", source = "warehouse.id")
+    @Mapping(target = "active", source = "active")
     StoreDTO toDTO(Store store);
 
     List<StoreDTO> toDTOList(List<Store> stores);
 
-    @Mapping(target = "warehouse", ignore = true) // если нет автоматической привязки
+    @Mapping(target = "warehouse", ignore = true)
+    @Mapping(target = "active", source = "active")
     Store toEntity(StoreDTO dto);
 }

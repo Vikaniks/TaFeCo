@@ -31,7 +31,7 @@ public class Product  {
     private String description;
 
     @Column(nullable = false)
-    private boolean active = true;
+    private Boolean active = true;
 
     @ManyToOne
     @JsonIgnore

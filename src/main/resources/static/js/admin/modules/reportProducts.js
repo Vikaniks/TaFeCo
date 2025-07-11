@@ -90,38 +90,46 @@ async function fetchFullStoreReport() {
 
 function filterByActive(data, activeValue) {
   if (activeValue === '') return data;
-  const boolVal = activeValue === 'true';
-  return data.filter(item => item.active === boolVal);
+  return data.filter(item => {
+    const isActive = activeValue === 'true';
+    return item.active === isActive;
+  });
 }
+
 
 function renderTable(data) {
   reportTable.innerHTML = '';
 
   if (data.length === 0) {
-    reportTable.innerHTML = '<tr><td>Данные не найдены</td></tr>';
+    reportTable.innerHTML = '<tr><td>Выберите какой отчет вы хотите сформировать</td></tr>';
     return;
   }
 
   // Заголовок - динамически по ключам первого объекта
   const header = document.createElement('thead');
   const headerRow = document.createElement('tr');
-  Object.keys(data[0]).forEach(key => {
+
+  const columns = ['ID', 'Наименование', 'Категория', 'Остаток', 'Активность'];
+
+  columns.forEach(text => {
     const th = document.createElement('th');
-    th.textContent = key;
+    th.textContent = text;
     headerRow.appendChild(th);
   });
+
   header.appendChild(headerRow);
   reportTable.appendChild(header);
+
 
   // Тело
   const tbody = document.createElement('tbody');
   data.forEach(item => {
     const tr = document.createElement('tr');
-    Object.values(item).forEach(value => {
+    for (const [key, value] of Object.entries(item)) {
       const td = document.createElement('td');
-      td.textContent = value ?? '';
+      td.textContent = key === 'active' ? (value ? 'Да' : 'Нет') : value ?? '';
       tr.appendChild(td);
-    });
+    }
     tbody.appendChild(tr);
   });
   reportTable.appendChild(tbody);
@@ -176,25 +184,28 @@ async function onReportTypeChange(type) {
 async function onSelectionChange(e) {
   currentId = e.target.value;
   if (!currentId) {
+    currentReport = []; // обнуляем
     renderTable([]);
     return;
   }
   try {
-    let report = await fetchReport();
-    // фильтруем по активности
-    report = filterByActive(report, activeFilter.value);
-    currentReport = report;
-    renderTable(report);
+    const report = await fetchReport();
+    currentReport = report; // сохраняем "сырые" данные
+
+    // фильтруем по текущему значению фильтра активности
+    const filtered = filterByActive(currentReport, activeFilter.value);
+    renderTable(filtered);
   } catch (e) {
     alert(e.message);
   }
 }
 
 function onActiveFilterChange() {
-  if (!currentReport) return;
+  if (!Array.isArray(currentReport)) return;
   const filtered = filterByActive(currentReport, activeFilter.value);
   renderTable(filtered);
 }
+
 
 // Инициализация UI
 
@@ -225,6 +236,7 @@ if (fullStoreReportBtn) {
   fullStoreReportBtn.addEventListener('click', async () => {
     try {
       const data = await fetchFullStoreReport();
+      currentReport = data;
       renderTable(data);
     } catch (err) {
       console.error(err);

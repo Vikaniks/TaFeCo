@@ -68,7 +68,7 @@ public class ProductDTO {
             );
         }
 
-        dto.setActive(product.isActive());
+        dto.setActive(product.getActive());
 
         return dto;
     }

@@ -25,21 +25,75 @@
 <div th:replace="include/admin-header :: header"></div>
 
 <main layout:fragment="content">
-    <section id="users-section">
-        <h2>Пользователи</h2>
-        <div id="users-container">Загрузка пользователей...</div>
-    </section>
+    <section id="store-section">
 
-    <section id="orders-section">
-        <h2>Заказы</h2>
-        <div id="orders-container">Загрузка заказов...</div>
+        <h2>Управление магазинами</h2>
+
+        <div class="controls">
+            <button id="find-all-btn">Найти все активные магазины</button>
+            <label>
+                <input type="checkbox" id="show-inactive">
+                Показать неактивные магазины
+            </label>
+            <button id="new-store-btn">Создать новый магазин</button>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Локация</th>
+                <th>Склад</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody id="store-table-body"></tbody>
+        </table>
+
+        <!-- Модалка создания магазина -->
+        <div id="create-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Создать магазин</h2>
+                <form id="createStore">
+                <label>Название: <input type="text" id="storeName" /></label>
+                <label>Адрес: <input type="text" id="location" /></label>
+                <label>Склад (ID): <input type="number" id="warehouse" /></label>
+                </form>
+                <div class="modal-actions">
+                    <button type="submit" id="create-store-btn">Создать</button>
+                    <button type="submit" id="close-create-modal" class="close">&times;</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Модалка редактирования магазина -->
+        <div id="edit-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Редактировать магазин</h2>
+                <form id="updateStore">
+                <input type="hidden" id="editStoreId" />
+                <label>Название: <input type="text" id="editStoreName" /></label>
+                <label>Адрес: <input type="text" id="editLocation" /></label>
+                <label>Склад (ID): <input type="number" id="editWarehouse" /></label>
+                </form>
+                <div class="modal-actions">
+                    <button type="submit" id="update-store-btn">Сохранить</button>
+                    <button type="submit" id="close-edit-modal" class="close">&times;</button>
+                </div>
+
+            </div>
+        </div>
+
     </section>
 
 </main>
 
 <div th:replace="include/admin-footer :: footer"></div>
 
-<script type="module" src="/static/js/main.js"></script>
+<script type="module" src="/static/js/admin/main.js"></script>
 
 </body>
 

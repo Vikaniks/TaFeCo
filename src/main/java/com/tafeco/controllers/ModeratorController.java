@@ -37,6 +37,7 @@ public class ModeratorController {
     private final IProductService productService;
     private final ICategoriseService categoriseService;
     private final IDimensionService dimensionService;
+    private final IStoreService storeService;
     private final IStoreProductService storeProductService;
     private final IWarehouseService warehouseService;
     private final ICategoriaDAO categoriseRepository;
@@ -127,16 +128,6 @@ public class ModeratorController {
         return ResponseEntity.ok(order);
     }
 
- /*   @PatchMapping("/{orderId}/status")
-    public ResponseEntity<OrderDTO> changeOrderStatus(
-            @PathVariable Integer orderId,
-            @RequestParam OrderStatus newStatus
-    ) {
-        OrderDTO updatedOrder = orderService.changeOrderStatus(orderId, newStatus);
-        return ResponseEntity.ok(updatedOrder);
-    }
-
-  */
 
     @PutMapping("/orders/{orderId}/status")
     public ResponseEntity<?> updateOrderStatus(
@@ -279,8 +270,61 @@ public class ModeratorController {
         return ResponseEntity.ok(report);
     }
 
+    @PostMapping("/stores/create")
+    public ResponseEntity<StoreDTO> create(@RequestBody StoreDTO dto) {
+        StoreDTO created = storeService.create(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
 
-    @PostMapping("/transfer")
+    @PutMapping("/stores/{id}")
+    public ResponseEntity<StoreDTO> update(@PathVariable Long id, @RequestBody StoreDTO dto) {
+        return ResponseEntity.ok(storeService.update(id, dto));
+    }
+
+    @PatchMapping("/stores/{id}/deactivate")
+    public ResponseEntity<Void> deactivateStore(@PathVariable Long id) {
+        storeService.deactivateStore(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/stores/activate/{id}")
+    public ResponseEntity<?> activateStore(@PathVariable Long id) {
+        storeService.activateStore(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/warehouses/create")
+    public ResponseEntity<WarehouseDTO> create(@RequestBody WarehouseDTO dto) {
+        WarehouseDTO created = warehouseService.create(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/warehouses/{id}")
+    public ResponseEntity<WarehouseDTO> update(@PathVariable Long id, @RequestBody WarehouseDTO dto) {
+        WarehouseDTO updated = warehouseService.update(id, dto);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PatchMapping("/warehouses/{id}/deactivate")
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+        warehouseService.deactivate(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/warehouses/{id}/activate")
+    public ResponseEntity<Void> activate(@PathVariable Long id) {
+        warehouseService.activate(id);
+        return ResponseEntity.ok().build();
+    }
+
+    // Поступление товара
+    @PostMapping("/warehouses/{id}/receive")
+    public ResponseEntity<Void> receiveProduct(@PathVariable Long id, @RequestBody ProductTransferRequestDTO dto) {
+        warehouseService.receiveProduct(id, dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/warehouses/transfer")
     public ResponseEntity<Void> transferProducts(
             @RequestBody List<ProductTransferRequestDTO> transferRequests) {
         inventoryService.transferProductsToStore(transferRequests);

@@ -10,6 +10,7 @@ import com.tafeco.Models.DAO.IWarehouseDAO;
 import com.tafeco.Models.Entity.Store;
 import com.tafeco.Models.Entity.Warehouse;
 import com.tafeco.Models.Services.Impl.IStoreService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -109,6 +110,30 @@ public class StoreServiceImpl implements IStoreService {
     public List<WarehouseStockDTO> getFullStockForAllStores() {
         return storeProductDAO.findFullStock();
     }
+
+    @Override
+    public void deactivateStore(Long id) {
+        Store store = storeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Магазин с id " + id + " не найден"));
+
+        if (!store.getActive()) {
+            throw new IllegalStateException("Магазин уже неактивен");
+        }
+
+        store.setActive(false);
+        storeRepository.save(store);
+    }
+
+    @Override
+    public void activateStore(Long id) {
+        Store store = storeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Магазин не найден: id = " + id));
+
+        store.setActive(true);
+        storeRepository.save(store);
+    }
+
+
 
 
 }

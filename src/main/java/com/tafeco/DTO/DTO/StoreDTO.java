@@ -15,6 +15,7 @@ public class StoreDTO {
     private Long product;            // id продукта
     private Long warehouse;          // id склада
     private String storeName;
-    private String location;         // адрес или локация магазина
+    private String location;
+    private boolean active;
 }
 

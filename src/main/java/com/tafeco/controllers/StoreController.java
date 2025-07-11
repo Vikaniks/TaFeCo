@@ -28,18 +28,7 @@ public class StoreController {
         return ResponseEntity.ok(storeService.findById(id));
     }
 
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<StoreDTO> create(@RequestBody StoreDTO dto) {
-        StoreDTO created = storeService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<StoreDTO> update(@PathVariable Long id, @RequestBody StoreDTO dto) {
-        return ResponseEntity.ok(storeService.update(id, dto));
-    }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")

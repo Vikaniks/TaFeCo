@@ -28,7 +28,9 @@ public class Store {
     @Column(name = "location")
     private String location;
 
-    // можно добавить адрес, телефон и т.д.
+    @Column(name = "active", nullable = false)
+    private Boolean active = true;
+
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id", nullable = false)
