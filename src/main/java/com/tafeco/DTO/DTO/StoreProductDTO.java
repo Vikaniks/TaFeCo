@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StoreProductDTO {
     private Long id;
-    private int maxQuantity;
     private int currentQuantity;
 
     private Long product;           // id продукта

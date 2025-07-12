@@ -12,7 +12,7 @@ const activeFilter = document.getElementById('activeFilter');
 const reportButtons = document.querySelectorAll('.btn-report');
 
 let currentType = null; // 'warehouse' или 'store'
-let currentId = null;   // выбранный id склада или магазина
+let currentId = null;   // выбранный id  магазина
 let currentReport = [];
 
 function createOption(value, text) {
@@ -21,21 +21,6 @@ function createOption(value, text) {
   option.textContent = text;
   return option;
 }
-
-async function fetchWarehouses() {
-  const token = localStorage.getItem('jwt');
-  const res = await fetch('/api/warehouses/all', {
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  });
-  if (!res.ok) throw new Error('Ошибка загрузки складов');
-
-  const result = await res.json();
-  console.log(result);
-  return result;
-}
-
 
 async function fetchStores() {
   const token = localStorage.getItem('jwt');
@@ -56,9 +41,7 @@ async function fetchReport() {
 
   let url = '';
 
-  if (currentType === 'warehouse') {
-    url = `/api/moderator/warehouses/${currentId}/stock-report`;
-  } else if (currentType === 'store') {
+  if  (currentType === 'store') {
     url = `/api/moderator/stores/${currentId}/stock-report`;
   } else {
     return [];
@@ -105,7 +88,7 @@ function renderTable(data) {
     return;
   }
 
-  // Заголовок - динамически по ключам первого объекта
+  // Заголовок
   const header = document.createElement('thead');
   const headerRow = document.createElement('tr');
 
@@ -135,18 +118,6 @@ function renderTable(data) {
   reportTable.appendChild(tbody);
 }
 
-async function loadWarehouses() {
-  try {
-    const warehouses = await fetchWarehouses();
-    warehouseSelect.innerHTML = '';
-    warehouseSelect.appendChild(createOption('', 'Выберите склад'));
-    warehouses.forEach(w => {
-      warehouseSelect.appendChild(createOption(w.id, w.location || `Склад ${w.id}`));
-    });
-  } catch (e) {
-    alert(e.message);
-  }
-}
 
 async function loadStores() {
   try {
@@ -167,13 +138,10 @@ async function onReportTypeChange(type) {
   currentReport = [];
 
   // Очистить селекты
-  warehouseSelect.style.display = 'none';
+
   storeSelect.style.display = 'none';
 
-  if (type === 'warehouse') {
-    warehouseSelect.style.display = 'inline-block';
-    await loadWarehouses();
-  } else if (type === 'store') {
+  if  (type === 'store') {
     storeSelect.style.display = 'inline-block';
     await loadStores();
   }
@@ -211,11 +179,11 @@ function onActiveFilterChange() {
 
 // Добавляем селекты после кнопок
 const buttonsContainer = document.querySelector('.report-buttons');
-warehouseSelect.id = 'warehouseSelect';
+
 storeSelect.id = 'storeSelect';
-warehouseSelect.style.display = 'none';
+
 storeSelect.style.display = 'none';
-buttonsContainer.appendChild(warehouseSelect);
+
 buttonsContainer.appendChild(storeSelect);
 
 // Слушатели на кнопки отчётов

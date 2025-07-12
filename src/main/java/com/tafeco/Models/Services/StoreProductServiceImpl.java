@@ -46,7 +46,7 @@ public class StoreProductServiceImpl implements IStoreProductService {
 
         // Обновляем количество
         existing.setCurrentQuantity(dto.getCurrentQuantity());
-        existing.setMaxQuantity(dto.getMaxQuantity());
+
 
         // Проверяем и обновляем продукт, если изменился
         if (!existing.getProduct().getId().equals(dto.getProduct())) {

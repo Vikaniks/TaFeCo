@@ -259,7 +259,6 @@ public class ProductServiceImpl implements IProductService {
             for (StoreProduct sp : product.getStores()) {
                 StoreDTO dto = new StoreDTO();
                 dto.setId(sp.getId());
-                dto.setMaxQuantity(sp.getMaxQuantity());
                 dto.setCurrentQuantity(sp.getCurrentQuantity());
                 dto.setProduct(product.getId());
 

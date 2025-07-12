@@ -331,7 +331,7 @@ background-color: var(--colorPrincipalClaro);
 #btn-filter, #btn-export, #status-btn, .status-btn, #filter-product,
 #filter-warehouse, #filter-store, #btn-export-excel, #clear-filters-btn
 {
-margin: 10px;
+margin: 3px;
 background-color: #F1F8E9;
 border: 1px solid var(--colorPrincipalOscuro);
 border-radius: 5px;
@@ -344,7 +344,6 @@ padding: 5px;
 }
 #filter-email, #filter-product {
   width: 200px;
-  height: 20px;
 }
 #btn-export:hover, #status-btn:hover, .status-btn:hover,
 #btn-filter:hover, #clear-filters-btn:hover, #btn-export-excel:hover {
@@ -385,7 +384,7 @@ width: 80px;
 #filter-email {
   grid-column: 2 / span 3; /* занимает центр 3 колонок */
   width: 100%;
-  height: 20px;
+  height: 15px;
   justify-self: center;
 }
 
@@ -393,7 +392,7 @@ width: 80px;
 #filter-product {
   grid-column: 2 / span 3;
   width: 100%;
-  height: 20px;
+  height: 15px;
   justify-self: center;
 }
 
@@ -422,10 +421,8 @@ width: 80px;
 }
 
 #report-buttons {
-    width: 35%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 колонок */
-    grid-template-rows: auto; /* 1 строки */
+    display: flex;
+    flex-direction: row;
     gap: 1rem;
     justify-items: center;
     align-items: center;
@@ -465,7 +462,8 @@ width: 80px;
 #open-create-category-modal, #open-create-dimension-modal,
 #sortProducts, #filterCategory, #filterActive, .btn-report,
 #warehouseSelect, #storeSelect, #load-full-store-report, #activeFilter,
-#find-all-btn, #show-inactive, #new-store-btn {
+#find-all-btn, #show-inactive, #new-store-btn, #submit-create-warehouse,
+#find-all-wh, #create-warehouse-btn, #openAddProductModal {
   margin: 10px;
   background-color: #F1F8E9;
   border: 1px solid var(--colorPrincipalOscuro);
@@ -482,7 +480,9 @@ width: 80px;
 #create-category-form button:hover,
 #create-dimension-form button:hover, .btn-report:hover,
 #load-full-store-report:hover,
-#find-all-btn:hover, #show-inactive:hover, #new-store-btn:hover {
+#find-all-btn:hover, #show-inactive:hover, #new-store-btn:hover,
+#submit-create-warehouse:hover, #find-all-wh:hover,
+#create-warehouse-btn:hover, #openAddProductModal:hover {
 background-color: var(--colorPrincipalClaro);
 }
 
@@ -560,7 +560,9 @@ width: 90px;
 #edit-id input, #edit-description textarea,
 #edit-price input, #edit-category select,
 #edit-dimension select, #edit-archive input,
-#edit-photo input, #edit-active input {
+#edit-photo input, #edit-active input,
+.create-warehouse input, #addProductToWarehouseForm input,
+#addProductToWarehouseForm select, #editWarehouseForm input {
   min-width: 200px;
   width: 100%;                /* растягивается на всю доступную ширину родителя */
   max-width: 500px;           /* при желании можно ограничить максимальную ширину */
@@ -597,6 +599,7 @@ width: 90px;
     width: 100%;
     box-sizing: border-box;
   }
+
 .close:hover {
     color: red;
   }

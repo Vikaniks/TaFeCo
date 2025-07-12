@@ -10,7 +10,7 @@ export async function initWarehouseModule() {
   const warehouseTbody = document.getElementById("warehouse-table-body");
 
   // Кнопка "Показать все склады"
-  document.getElementById("find-all").addEventListener("click", () => {
+  document.getElementById("find-all-wh").addEventListener("click", () => {
     loadWarehouses(showInactiveCheckbox.checked);
   });
 
@@ -152,7 +152,7 @@ export async function initWarehouseModule() {
 
   // Очистка полей формы создания
   function clearCreateWarehouseForm() {
-    document.getElementById("createWarehouseLocation").value = "";
+    document.getElementById("warehouse-location").value = "";
   }
 
   // Очистка полей формы редактирования
@@ -206,28 +206,45 @@ export async function initWarehouseModule() {
   // --- Модалка добавить товар в магазин ---
   async function loadStoresForSelect() {
     const token = localStorage.getItem("jwt");
-    const storeSelect = document.getElementById("warehouseId"); // Можно переименовать
+    const warehouseSelect = document.getElementById("warehouseId");
+    const storeSelect = document.getElementById("storeId");
 
     try {
-      const stores = await loadStores();
+        // Загружаем магазины
+        const stores = await loadStores();
+        storeSelect.innerHTML = "";
 
-      storeSelect.innerHTML = "";
+        if (stores.length === 0) {
+          storeSelect.innerHTML = "<option value=''>Нет доступных магазинов</option>";
+        } else {
+          stores.forEach((store) => {
+            const option = document.createElement("option");
+            option.value = store.id;
+            option.textContent = store.storeName || store.location || `Магазин #${store.id}`;
+            storeSelect.appendChild(option);
+          });
+        }
 
-      if (stores.length === 0) {
-        storeSelect.innerHTML = "<option value=''>Нет доступных магазинов</option>";
-        return;
+        // Загружаем склады
+        const warehouses = await loadWarehouses(false, true); // activeOnly = true, returnOnly = true
+        warehouseSelect.innerHTML = "";
+
+        if (warehouses.length === 0) {
+          warehouseSelect.innerHTML = "<option value=''>Нет доступных складов</option>";
+        } else {
+          warehouses.forEach((warehouse) => {
+            const option = document.createElement("option");
+            option.value = warehouse.id;
+            option.textContent = warehouse.location || `Склад #${warehouse.id}`;
+            warehouseSelect.appendChild(option);
+          });
+        }
+
+      } catch (error) {
+        console.error("Ошибка при загрузке магазинов и складов:", error);
+        storeSelect.innerHTML = "<option value=''>Ошибка загрузки</option>";
+        warehouseSelect.innerHTML = "<option value=''>Ошибка загрузки</option>";
       }
-
-      stores.forEach((store) => {
-        const option = document.createElement("option");
-        option.value = store.id;
-        option.textContent = store.storeName || store.location || `Магазин #${store.id}`;
-        storeSelect.appendChild(option);
-      });
-    } catch (error) {
-      console.error("Ошибка при загрузке магазинов:", error);
-      storeSelect.innerHTML = "<option value=''>Ошибка загрузки магазинов</option>";
-    }
   }
 
   async function loadStores() {
@@ -256,35 +273,51 @@ export async function initWarehouseModule() {
 
   document.getElementById("addProductToWarehouseForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const storeSelect = document.getElementById("warehouseId");
-    const productId = +productIdInput.value;
-    const storeId = +storeSelect.value;
-    const quantity = +document.getElementById("quantity").value;
-    const token = localStorage.getItem("jwt");
+      const productIdInput = document.getElementById("productId");
+      const warehouseSelect = document.getElementById("warehouseId");
+      const storeSelect = document.getElementById("storeId");
+
+      const productId = +productIdInput.value;
+      const storeId = +storeSelect.value;
+      const warehouseId = +warehouseSelect.value;
+      const quantity = +document.getElementById("quantity").value;
 
     if (!productId) {
-      alert("Выберите продукт из уже существующих, либо создайте новый продукт!");
-      return;
-    }
+        alert("Выберите продукт из уже существующих, либо создайте новый продукт!");
+        return;
+      }
 
-    if (!storeId) {
-      alert("Выберите магазин!");
-      return;
-    }
+      if (!storeId) {
+        alert("Выберите магазин!");
+        return;
+      }
 
-    console.log("Отправляем:", { productId, quantity, storeId });
+      if (!warehouseId) {
+        alert("Выберите склад!");
+        return;
+      }
+
+    console.log("Отправляем:", { productId, quantity });
 
     try {
+      const token = localStorage.getItem("jwt");
       const res = await fetch(`/api/moderator/stores/${storeId}/receive`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ productId, quantity }),
+        body: JSON.stringify({ productId, quantity: quantity }),
       });
 
-      if (!res.ok) throw new Error("Ошибка при добавлении товара");
+      if (!res.ok) {
+          if (res.status === 403 || res.status === 401) {
+            throw new Error("Доступ запрещён. Войдите в систему.");
+          } else {
+            throw new Error("Ошибка при добавлении товара");
+          }
+        }
+
 
       alert("Продукт успешно добавлен в магазин");
       addProductModal.classList.add("hidden");
@@ -315,7 +348,7 @@ export async function initWarehouseModule() {
   });
 
   submitCreateWarehouseBtn.addEventListener("click", async () => {
-    const locationInput = document.getElementById("createWarehouseLocation").value.trim();
+    const locationInput = document.getElementById("warehouse-location").value.trim();
     const token = localStorage.getItem("jwt");
 
     if (!locationInput) {
@@ -324,7 +357,7 @@ export async function initWarehouseModule() {
     }
 
     try {
-      const res = await fetch("/api/moderator/warehouses", {
+      const res = await fetch("/api/moderator/warehouses/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -19,9 +19,6 @@ public class StoreProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "max_quantity", nullable = false)
-    private int maxQuantity;
-
     @Column(name = "current_quantity", nullable = false)
     private int currentQuantity;
 

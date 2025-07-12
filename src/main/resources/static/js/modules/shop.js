@@ -36,6 +36,8 @@ console.log('renderProductList called');
                 card.dataset.image = product.photo;
                 card.dataset.unit = product.dimension || 'ед.';
                 card.dataset.type = product.type || 'Без категории';
+                card.dataset.active = isActive ? 'true' : 'false';
+
 
                 card.innerHTML = `
                     <img src="${imageUrl}" alt="${productName}" class="product-image">
@@ -62,8 +64,10 @@ console.log('renderProductList called');
                 const button = card.querySelector('.add-to-cart-btn');
                 if (isActive) {
                     button.addEventListener('click', () => addToCart(button));
+                } else {
+                    button.disabled = true;
+                    button.title = 'Товар снят с продажи';
                 }
-                button.addEventListener('click', () => addToCart(button));
 
                 container.appendChild(card);
             });
@@ -120,6 +124,8 @@ console.log('renderProductListByCategory вызвана с categoryId:', categor
         card.dataset.image = imageUrl;
         card.dataset.unit = product.dimension || 'ед.';
         card.dataset.type = product.type || 'Без категории';
+        card.dataset.active = isActive ? 'true' : 'false';
+
 
         card.innerHTML = `
           <img src="${imageUrl}" alt="${productName}" class="product-image">
@@ -144,7 +150,11 @@ console.log('renderProductListByCategory вызвана с categoryId:', categor
         const button = card.querySelector('.add-to-cart-btn');
         if (isActive) {
             button.addEventListener('click', () => addToCart(button));
+        } else {
+            button.disabled = true;
+            button.title = 'Товар снят с продажи';
         }
+
 
 
         container.appendChild(card);

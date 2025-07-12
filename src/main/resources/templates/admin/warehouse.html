@@ -28,14 +28,14 @@
     <section id="warehouses-section">
         <h2>Управление складами</h2>
         <div class="controls">
-            <button id="find-all">Все активные склады</button>
+            <button id="find-all-wh">Все активные склады</button>
             <label>
                 <input type="checkbox" id="show-inactive">
                 Неактивные склады
             </label>
             <button id="create-warehouse-btn">Создать новый склад</button>
             <button id="openAddProductModal" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                Добавить продукт на склад
+                Добавить продукт в магазин
             </button>
         </div>
 
@@ -55,13 +55,13 @@
         <div id="create-warehouse-modal" class="modal hidden">
             <div class="modal-content">
                 <h2>Создать новый склад</h2>
-                <label>
+                <label class="create-warehouse">
                     Локация:
                     <input type="text" id="warehouse-location" />
                 </label>
 
                 <div class="modal-actions">
-                    <button id="submit-create-warehouse">Создать</button>
+                    <button id="submit-create-warehouse" type="submit">Создать</button>
                     <button id="close-create-warehouse" class="close">&times;</button>
                 </div>
             </div>
@@ -70,7 +70,7 @@
         <!-- Модальное окно добавить товар в магазин-->
         <div id="addProductModal" class="modal hidden">
             <div class="modal-content">
-                <h2>Добавить товар на склад</h2>
+                <h2>Добавить товар в магазин</h2>
 
                 <form id="addProductToWarehouseForm">
                     <!-- Поиск продукта -->
@@ -79,25 +79,32 @@
                         <input type="text" id="productSearch" list="productSuggestions" autocomplete="off" required />
                         <datalist id="productSuggestions"></datalist>
                         <input type="hidden" id="productId" name="productId" />
-                    </label>
+                    </label><br>
 
                     <!-- Выпадающий список складов -->
                     <label>
-                        Склад:
+                        С какого склада:
                         <select id="warehouseId" required>
                             <option value="">Загрузка складов...</option>
                         </select>
-                    </label>
+                    </label><br>
+
+                    <label>
+                        В какой магазин:
+                        <select id="storeId" required>
+                            <option value="">Загрузка магазинов...</option>
+                        </select>
+                    </label><br>
 
                     <!-- Количество -->
                     <label>
                         Количество:
                         <input type="number" id="quantity" min="1" required />
-                    </label>
+                    </label><br>
 
                     <div class="modal-actions">
                         <button type="submit">Добавить</button>
-                        <button type="button" id="cancelAddProduct">Отмена</button>
+                        <button type="button" id="cancelAddProduct" class="close">&times;</button>
                     </div>
                 </form>
             </div>

@@ -155,16 +155,12 @@ public class StoreServiceImpl implements IStoreService {
             storeProduct = spOpt.get();
             // Увеличиваем текущее количество
             storeProduct.setCurrentQuantity(storeProduct.getCurrentQuantity() + dto.getQuantity());
-            // можно обновить maxQuantity
-            if (storeProduct.getMaxQuantity() < storeProduct.getCurrentQuantity()) {
-                storeProduct.setMaxQuantity(storeProduct.getCurrentQuantity());
-            }
+
         } else {
             storeProduct = new StoreProduct();
             storeProduct.setStore(store);
             storeProduct.setProduct(product);
             storeProduct.setCurrentQuantity(dto.getQuantity());
-            storeProduct.setMaxQuantity(dto.getQuantity()); // или другое логичное значение
         }
 
         storeProductDAO.save(storeProduct);
