@@ -272,6 +272,13 @@ public class UserServiceImpl implements IUserService {
         User user = userDAO.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
+        boolean isSuperAdmin = user.getRoles().stream()
+                .anyMatch(role -> "ROLE_SUPERADMIN".equals(role.getRole()));
+
+        if (isSuperAdmin) {
+            throw new IllegalStateException("Супер-Админа нельзя удалить.");
+        }
+
         boolean hasActiveOrders = orderRepository.existsByUserAndStatusIn(
                 user,
                 List.of(OrderStatus.NEW, OrderStatus.PAID) // список "активных" статусов
@@ -292,7 +299,10 @@ public class UserServiceImpl implements IUserService {
     public List<UserDTO> getAllUsers() {
 
         return userDAO.findAll().stream()
-                .map(userMapper::toDTO).toList();
+                .filter(user -> user.getRoles().stream()
+                        .noneMatch(role -> "ROLE_SUPERADMIN".equals(role.getRole())))
+                .map(userMapper::toDTO)
+                .toList();
     }
 
 
