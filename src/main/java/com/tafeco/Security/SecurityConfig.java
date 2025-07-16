@@ -67,7 +67,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(
                                 "/api/user/**"
-                        ).hasRole("USER")
+                        ).hasAnyRole("USER", "SUPERADMIN")
                         .requestMatchers(
                                 "/api/moderator",
                                 "/api/dimensions/**",
@@ -78,10 +78,10 @@ public class SecurityConfig {
                                 "/api/moderator/stores/**",
                                 "/api/warehouses/**",
                                 "/api/stores/**"
-                        ).hasAnyRole("MODERATOR", "ADMIN")
+                        ).hasAnyRole("MODERATOR", "ADMIN", "SUPERADMIN")
                         .requestMatchers(
                                 "/api/admin/**"
-                        ).hasRole("ADMIN")
+                        ).hasAnyRole("ADMIN", "SUPERADMIN")
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)

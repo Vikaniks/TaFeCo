@@ -39,22 +39,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // Проверка на наличие и начало с Bearer
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("⛔ Authorization отсутствует или не начинается с Bearer");
             filterChain.doFilter(request, response);
             return;
         }
 
         jwt = authHeader.substring(7);
-        System.out.println("🪙 JWT: " + jwt);
 
         username = jwtService.extractUsername(jwt);
-        System.out.println("📧 Извлечён username/email из токена: " + username);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            System.out.println("✅ Загрузили userDetails: " + userDetails.getUsername());
-
-            System.out.println("Authorities from UserDetails: " + userDetails.getAuthorities());
 
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 System.out.println("🔐 Токен валиден, создаём аутентификацию...");
@@ -65,10 +59,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                System.out.println("🔓 Authority: " + authToken.getAuthorities());
-
-                System.out.println("✅ Пользователь аутентифицирован: " + userDetails.getUsername());
-            } else {
+                } else {
                 System.out.println("⛔ Токен НЕвалиден");
             }
         } else {
