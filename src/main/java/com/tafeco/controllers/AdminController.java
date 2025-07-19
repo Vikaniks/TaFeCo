@@ -19,12 +19,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
-@PreAuthorize("hasAnyRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
 @RequiredArgsConstructor
 public class AdminController {
 
     private final IUserService userService;
     private final IOrderService orderService;
+
 
 
     @GetMapping
@@ -98,9 +99,4 @@ public class AdminController {
         Page<OrderDTO> orders = orderService.getAllOrders(status, startDate, endDate, pageable);
         return ResponseEntity.ok(orders);
     }
-
-
-
-
-
 }

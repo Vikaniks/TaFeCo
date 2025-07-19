@@ -6,7 +6,12 @@
     <title>Админ-панель</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="image" href="/img/field-moderator.webp" />
     <link rel="icon" th:href="@{/img/Pollo.svg}" />
+    <script>
+        const img = new Image();
+        img.src = "/img/field-moderator.webp";
+    </script>
     <link rel="stylesheet" th:href="@{/css/admin.css}" />
     <link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" />
 </head>
@@ -15,7 +20,9 @@
 <header th:replace="include/admin-header :: header"></header>
 <div th:replace="include/admin-nav :: nav"></div>
 
-<main layout:fragment="content"></main>
+<main layout:fragment="content">
+
+</main>
 <footer th:replace="include/admin-footer :: footer"></footer>
 
 <script type="module" th:src="@{/js/admin/main.js}"></script>

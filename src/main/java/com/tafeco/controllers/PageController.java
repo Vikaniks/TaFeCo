@@ -44,52 +44,28 @@ public class PageController {
         return "public/condition";
     }
 
-    @GetMapping("/chiken")
-    public String chiken() {
-        return "public/chiken";
-    }
-    @GetMapping("/chiken_joven")
-    public String chiken_joven() {
-        return "public/chiken_joven";
-    }
+
     @GetMapping("/confirmar_order")
     public String confirmar_order() {
         return "public/confirmar_order";
     }
-    @GetMapping("/conserva")
-    public String conserva() {
-        return "public/conserva";
-    }
-    @GetMapping("/egg")
-    public String egg() {
-        return "public/egg";
-    }
+
 
     @GetMapping("/finalOrder")
     public String finalOrder() {
         return "public/finalOrder";
     }
-    @GetMapping("/green")
-    public String green() {
-        return "public/green";
-    }
 
-    @GetMapping("/milk")
-    public String milk() {
-        return "public/milk";
-    }
     @GetMapping("/order")
     public String order() {
         return "public/order";
     }
-    @GetMapping("/vegetables")
-    public String vegetables() {
-        return "public/vegetables";
-    }
+
     @GetMapping("/admin")
     public String admin() {
         return "admin/admin";
     }
+
     @GetMapping("/admin/user")
     public String user() {
         return "admin/user";
@@ -121,5 +97,6 @@ public class PageController {
     public String warehouse() {
         return "admin/warehouse";
     }
+
 }
 

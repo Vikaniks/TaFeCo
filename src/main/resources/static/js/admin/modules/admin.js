@@ -1,28 +1,3 @@
-/*
-export async function fetchOrders(jwt) {
-  const response = await fetch('/api/admin/orders', {
-    headers: {
-      'Authorization': `Bearer ${jwt}`
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error('Ошибка загрузки заказов');
-  }
-
-  return await response.json();
-}
-
-export function renderOrders(orders) {
-  const container = document.getElementById('orders-container');
-  if (!container) return;
-  container.innerHTML = orders.map(order => `
-    <div class="order-card">
-      <p>Заказ #${order.id} — ${order.status}</p>
-    </div>
-  `).join('');
-}
-*/
 
 // Поиск всех юзеров с выводом постранично
 export async function fetchUsers(jwt) {

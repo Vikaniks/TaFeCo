@@ -5,6 +5,7 @@ import com.tafeco.Models.Entity.OrderStatus;
 import com.tafeco.Models.Entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,6 +32,6 @@ public interface IUserService {
 
     void changePassword(String email, ChangePasswordRequest dto);
 
-
+    List<String> getCurrentUserRoles(Authentication authentication);
 }
 

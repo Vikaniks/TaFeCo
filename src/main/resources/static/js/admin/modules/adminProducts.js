@@ -1,5 +1,3 @@
-// /js/adminProducts.js
-
 // adminProducts.js
 let products = [];
 
@@ -592,4 +590,102 @@ try {
 
   // Изначальная загрузка списка продуктов
   await loadProducts();
+}
+
+
+
+
+export function initDeleteProductModal() {
+  const openModalBtn = document.getElementById('delete-product');
+  const modal = document.getElementById('delete-product-modal');
+  const closeModalBtn = document.getElementById('close-delete-product-modal');
+  const form = document.getElementById('delete-product-form');
+  const idInput = form.querySelector('input[name="id"]');
+  const nameInput = form.querySelector('input[name="name"]');
+
+  if (!openModalBtn || !modal || !form || !idInput || !nameInput) {
+    console.warn('Элементы модального окна удаления не найдены');
+    return;
+  }
+
+  // Открытие модального окна
+  openModalBtn.addEventListener('click', () => {
+    modal.style.display = 'block';
+  });
+
+  // Закрытие модального окна
+  closeModalBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+
+  // Автозаполнение названия по ID
+  idInput.addEventListener('blur', async () => {
+    const id = idInput.value.trim();
+    console.log('🔍 Blur сработал, id:', id);
+    if (!id) return;
+
+    try {
+      const jwt = localStorage.getItem('jwt');
+      const response = await fetch(`/api/moderator/products/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${jwt}`
+        }
+      });
+
+      console.log('📦 Статус ответа:', response.status);
+
+      if (!response.ok) {
+        nameInput.value = 'Продукт не найден';
+        return;
+      }
+
+      const product = await response.json();
+      nameInput.value = product.product || 'Нет названия';
+
+    } catch (error) {
+      console.error('Ошибка при получении продукта:', error);
+      nameInput.value = 'Ошибка';
+    }
+  });
+
+  // Удаление продукта
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const id = idInput.value.trim();
+    const name = nameInput.value.trim();
+
+    if (!id) {
+      alert('Введите ID продукта');
+      return;
+    }
+
+    const confirmed = confirm(`Удалить продукт "${name}" (ID: ${id})? Это действие необратимо.`);
+    if (!confirmed) return;
+
+    try {
+      const jwt = localStorage.getItem('jwt');
+      const response = await fetch(`/api/moderator/products/force/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${jwt}`
+        }
+      });
+
+      if (response.status === 204) {
+        alert('Продукт успешно удалён.');
+        modal.style.display = 'none';
+        form.reset();
+        await loadProducts();
+      } else {
+        const errorText = await response.text();
+        alert('Ошибка удаления: ' + errorText);
+      }
+    } catch (error) {
+      console.error('Ошибка при удалении:', error);
+      alert('Ошибка сети при удалении.');
+    }
+
+  });
+
 }

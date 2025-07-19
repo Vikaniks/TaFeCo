@@ -41,7 +41,8 @@
 /* Estilos de la cabecera */
 header {
     height: var(--alturaCabecera);
-	background-image: url('../img/flow_fon.png'); /* путь к изображению */
+    background-color: var(--colorPrincipalClaro);
+	background-image: url('/img/flow_fon.webp');
 	background-size: cover; /* Изображение растягивается по всему контейнеру */
 	background-position: center; /* Центрирование изображения */
 	background-repeat: no-repeat; /* Отключаем повторение изображения */
@@ -335,7 +336,7 @@ ul .submenu, .submenu2 {
     border-radius: 5px;
     box-sizing: border-box;
     list-style: none;  /* Убираем маркеры списка */
-    z-index: 1000;
+    z-index: 10000;
 
 }
 
@@ -403,7 +404,7 @@ section{
     gap: 10px; /* Добавляем отступы между карточками */
 }
 
-.product-card, .promo-item {
+.product-card {
     background-color: var(--fondoClaro);
     border: 1px solid #084303;
     border-radius: 5px;
@@ -415,7 +416,15 @@ section{
     width: calc(100% - 20px); /* Устанавливаем ширину карточки */
     overflow: hidden;
 }
-
+.promo-item p {
+  flex: 1;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  line-height: 1.4;
+  margin: 0;
+  text-align: center;
+}
 .product-image {
     flex: 0 0 30%; /* Занимает не более 30% от ширины карточки */
     max-width: 25%;
@@ -425,7 +434,7 @@ section{
     box-sizing: border-box;
 }
 
-.product-details, .promo-item p {
+.product-details {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -1099,7 +1108,6 @@ tfoot th button:hover {
 footer{
     background-color: var(--colorPrincipal);
     height:var(--alturaPie);
-
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -1177,7 +1185,6 @@ footer p{
     bottom: var(--margen);
     right: 1.5rem;
     background-color: transparent;
-
     text-decoration: none;
 
 }
@@ -1235,8 +1242,8 @@ footer p{
         top: 0;
         z-index: 1000;
         padding: var(--margen);
-        max-height: 50px; /* или height: 80px; */
-        overflow: hidden;
+        height: 50px;
+        overflow: visible;
         padding: 5px;
     }
 
@@ -1253,6 +1260,7 @@ footer p{
         display: flex;
         justify-content: center;
         list-style: none;
+        position: relative;
     }
 
     .enlace_menu {
@@ -1262,6 +1270,8 @@ footer p{
         width: 100%;
         padding: 0 15px;
         text-align: center;
+
+
     }
 
     .enlace_submenu {
@@ -1272,7 +1282,8 @@ footer p{
         white-space: normal; /* Позволяет перенос строк */
         text-align: center; /* Центрируем текст */
         padding: 5px;
-
+        z-index: 10000;
+        position: absolute;
     }
 
 	#arriba {
@@ -1450,7 +1461,39 @@ footer p{
         width: auto;
         height: auto;
       }
+
+  .promo-item-conteiner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 5px;
+  }
+
+  .promo-item {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: var(--fondoClaro);
+    border: 1px solid #084303;
+    border-radius: 5px;
+  }
+
+  .promo-item h3 {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+  }
+
+  .promo-item p {
+    margin: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    line-height: 1.4;
+    width: 100%;
+  }
+
 }
+
 
     @media (min-width: 768px) {
         .product-cart-container {

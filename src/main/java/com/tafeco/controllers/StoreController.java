@@ -31,7 +31,7 @@ public class StoreController {
 
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN', 'SUPERADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         return storeService.delete(id)
                 ? ResponseEntity.ok().build()

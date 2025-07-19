@@ -8,7 +8,6 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -25,26 +24,27 @@ public class JwtService {
 
     private final Environment environment;
 
+    @Value("${JWT_SECRET:}")
+    private String secret;
+
     private SecretKey secretKey;
 
     private static final long EXPIRATION_MS = 24 * 60 * 60 * 1000;
 
     @PostConstruct
     public void init() {
-        String secret = System.getenv("JWT_SECRET");
-
         boolean isTestProfile = Arrays.asList(environment.getActiveProfiles()).contains("test");
 
         if (secret == null || secret.length() < 32) {
             if (!isTestProfile) {
                 throw new IllegalStateException("JWT_SECRET env variable is missing or too short (min 32 chars)");
             } else {
-                secret = "00000000000000000000000000000000"; // дефолтный ключ для тестов
+                secret = "00000000000000000000000000000000"; // fallback для тестов
             }
         }
 
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        System.out.println("SECRET_KEY initialized: " + Base64.getEncoder().encodeToString(secret.getBytes()));
+        System.out.println("JWT_SECRET initialized.");
     }
 
     public String generateToken(User user) {

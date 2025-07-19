@@ -33,9 +33,9 @@ public class Product  {
     @Column(nullable = false)
     private Boolean active = true;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JsonIgnore
-    @JoinColumn(name="categorise")
+    @JoinColumn(name="categorise", nullable = true)
     private Categorise categorise;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -46,8 +46,8 @@ public class Product  {
     @JsonIgnore
     private Set<Archive> archives = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "dimension_id")
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "dimension_id", nullable = true)
     @JsonIgnore
     private Dimension dimension;
 

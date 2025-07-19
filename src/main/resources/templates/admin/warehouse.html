@@ -8,8 +8,12 @@
     <title>Админ-панель</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="image" href="/img/field-moderator.webp" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-
+    <script>
+        const preimg = new Image();
+        preimg.src = "/img/field-moderator.webp";
+    </script>
     <link rel="stylesheet" th:href="@{/css/admin.css}" />
     <link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" />
     <link rel="stylesheet"

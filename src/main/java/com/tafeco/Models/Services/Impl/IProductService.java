@@ -32,4 +32,6 @@ public interface IProductService {
 
     List<ProductDTO> searchByKeyword(String keyword);
     List<StoreDTO> getActiveProductsStore();
+
+    void forceDeleteProduct(Long id);
 }

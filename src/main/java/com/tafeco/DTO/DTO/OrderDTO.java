@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -15,7 +16,7 @@ public class OrderDTO {
     private LocalDate orderDate;
     private Long user;
     private String userEmail;
-    private Set<OrderItemDTO> items;
+    private Set<OrderItemDTO> items = new HashSet<>();
     private BigDecimal totalPrice;
     private OrderStatus status;
 }

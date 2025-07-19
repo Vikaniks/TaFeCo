@@ -81,19 +81,23 @@ export function redirectIfNotLoggedIn(redirectTo = '/register') {
 // Выход из аккаунта
 export function logoutUser() {
   localStorage.removeItem('userData');
-  localStorage.setItem('loggedIn', 'false');
-  localStorage.removeItem('jwtToken');
+  localStorage.removeItem('jwt');
+  localStorage.removeItem('loggedIn');
   localStorage.removeItem('cart-items');
 
   sessionStorage.clear();
 
   if ('caches' in window) {
-      caches.keys().then(names => {
-        for (let name of names) caches.delete(name);
-      });
+    caches.keys().then(names => {
+      for (let name of names) {
+        caches.delete(name);
+      }
+    });
+  }
+
   window.location.href = '/register';
 }
-}
+
 
 export function authFetch(url, options = {}) {
   const token = localStorage.getItem('jwt');

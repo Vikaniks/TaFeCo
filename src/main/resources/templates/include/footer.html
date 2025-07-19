@@ -1,8 +1,20 @@
 <footer th:fragment="footer">
     <div id="pie_izq">
         <ul id="redes-sociales">
-            <li><a th:href="@{https://t.me/{user}(user=${telegramUsername})}" target="_blank" class="telegram-icon"><i class="fab fa-telegram"></i></a></li>
-            <li><a th:href="@{https://wa.me/{number}(number=${whatsappTo})}" target="_blank" class="whatsapp-icon"><i class="fab fa-whatsapp"></i></a></li>
+            <!-- Telegram -->
+            <li>
+                <a href="#" data-telegram="${telegramUsername}" class="telegram-icon telegram-link">
+                    <i class="fab fa-telegram"></i>
+                </a>
+            </li>
+
+            <!-- WhatsApp -->
+            <li>
+                <a href="#" data-whatsapp="${whatsappTo}" class="whatsapp-icon whatsapp-link">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </li>
+
             <li><a th:href="'mailto:' + ${mailUsername}" target="_blank" class="email-icon"><i class="fas fa-envelope"></i></a></li>
         </ul>
     </div>
@@ -12,4 +24,5 @@
     <div id="arriba">
         <a href="#"><i class="fa fa-arrow-up fa-2x" aria-hidden="true"></i></a>
     </div>
+
 </footer>

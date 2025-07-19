@@ -164,6 +164,25 @@ public class ProductServiceImpl implements IProductService {
         productRepository.flush();
     }
 
+    @Override
+    @Transactional
+    public void forceDeleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Продукт не найден"));
+
+        // Убираем связи с внешними сущностями
+        product.setCategorise(null);
+        product.setDimension(null);
+
+        productRepository.save(product);
+
+        // Удаляем связанные OrderItem
+        List<OrderItem> relatedItems = orderItemRepository.findByProductId(id);
+        orderItemRepository.deleteAll(relatedItems);
+
+        productRepository.delete(product);
+    }
+
 
 
     @Override

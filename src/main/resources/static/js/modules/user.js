@@ -185,6 +185,31 @@ function parseJwt(token) {
   }
 }
 
+////////////////////////
+
+export async function checkRoleAccess(allowedRoles) {
+  const jwt = localStorage.getItem('jwt');
+  if (!jwt) return false;
+
+  try {
+    const res = await fetch('/api/auth/roles', {
+      headers: {
+        'Authorization': `Bearer ${jwt}`
+      }
+    });
+
+    if (!res.ok) return false;
+
+    const roles = await res.json();
+    return roles.some(role => allowedRoles.includes(role));
+  } catch (e) {
+    console.error('Ошибка при проверке ролей:', e);
+    return false;
+  }
+}
+
+
+/*
 export async function userHasRole(role) {
   const userData = localStorage.getItem('userData');
   const jwt = localStorage.getItem('jwt');
@@ -200,32 +225,9 @@ export async function userHasRole(role) {
     console.log(atob(jwt.split('.')[1]));
     console.log('userHasRole вызван с ролью:', role);
 
-    // Выполняем соответствующий fetch + редирект
-    if (role === 'ROLE_ADMIN') {
-      const res = await fetch('/api/admin', {
-        headers: {
-          'Authorization': `Bearer ${jwt}`,
-        }
-      });
-
-      if (res.ok) {
-        window.location.href = '/admin';
-      } else {
-        alert('Нет доступа к админ-панели');
-      }
-
-    } else if (role === 'ROLE_MODERATOR') {
-      const res = await fetch('/api/moderator', {
-        headers: {
-          'Authorization': `Bearer ${jwt}`,
-        }
-      });
-
-      if (res.ok) {
-        window.location.href = '/moderator';
-      } else {
-        alert('Нет доступа к модераторской панели');
-      }
+    // 👉 Просто делаем переход, если роль подходящая
+    if (role === 'ROLE_ADMIN' || role === 'ROLE_SUPERADMIN' || role === 'ROLE_MODERATOR') {
+      window.location.href = '/admin';
     }
 
     return true;
@@ -234,13 +236,56 @@ export async function userHasRole(role) {
     return false;
   }
 }
+*/
+export async function redirectByRole(roles) {
+  console.log('📢 redirectByRole вызван с:', roles);
+
+  const jwt = localStorage.getItem('jwt');
+  if (!jwt) {
+    console.warn('❌ JWT не найден. Перенаправляем на главную');
+    window.location.href = '/index';
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/auth/roles', {
+      headers: {
+        'Authorization': `Bearer ${jwt}`
+      }
+    });
+
+    if (!response.ok) {
+      console.warn('⚠️ Не удалось получить роли с сервера. Перенаправляем на /login');
+      window.location.href = '/register';
+      return;
+    }
+
+    const serverRoles = await response.json();
+    console.log('✅ Роли с сервера:', serverRoles);
+
+    if (
+      serverRoles.includes('ROLE_ADMIN') ||
+      serverRoles.includes('ROLE_MODERATOR') ||
+      serverRoles.includes('ROLE_SUPERADMIN')
+    ) {
+      console.log('✅ Редиректим в /admin');
+      window.location.href = '/admin';
+    } else {
+      console.log('❌ Вы пользователь. Переход в магазин');
+      window.location.href = '/shop';
+    }
+  } catch (error) {
+    console.error('Ошибка при проверке ролей:', error);
+    window.location.href = '/register';
+  }
+}
+
 
 
 export async function handleLogin(event) {
   event.preventDefault();
 
   const form = event.target.closest('form');
-
   const emailInput = form.querySelector('#login-email');
   const passwordInput = form.querySelector('#login-password');
 
@@ -273,12 +318,12 @@ export async function handleLogin(event) {
         alert('Ошибка сервера: данные пользователя не получены');
         return;
       }
+
       if (user.email && user.email !== email) {
         console.error('Несовпадение email с сервером');
         return;
       }
 
-      // Парсим JWT и сохраняем флаг временного пароля
       const payload = parseJwt(result.token);
       localStorage.setItem('temporaryPassword', payload?.temporaryPassword ? 'true' : 'false');
 
@@ -301,28 +346,20 @@ export async function handleLogin(event) {
         roles: user.roles || ['USER'],
       };
 
-      // Сохраняем JWT
       localStorage.setItem('jwt', result.token);
-
-      // Сохраняем профиль
       localStorage.setItem('userData', JSON.stringify({ user: profile }));
-
       localStorage.setItem('loggedIn', 'true');
 
-      // Обновляем отображение имени пользователя
+      const roles = user.roles || [];
+      console.log('🟡 Роли, полученные от сервера:', roles);
+
+      // или напрямую из localStorage:
+      const storedUser = JSON.parse(localStorage.getItem('userData'));
+      console.log('🔵 Роли из localStorage:', storedUser.user.roles);
+
       updateUserNameDisplay();
-
-      // Обрабатываем роли
-            const roles = user.roles || [];
-            console.log('roles:', roles);
-            if (roles.includes('ROLE_ADMIN')) {
-              await userHasRole('ROLE_ADMIN');
-            } else if (roles.includes('ROLE_MODERATOR')) {
-              await userHasRole('ROLE_MODERATOR');
-            } else {
-              window.location.href = '/login';
-            }
-
+      // 👉 Редирект по ролям
+      await redirectByRole(profile.roles);
 
     } else if (response.status === 401) {
       alert('Неверный логин или пароль.');
@@ -336,7 +373,6 @@ export async function handleLogin(event) {
     alert('Ошибка сети. Попробуйте позже.');
   }
 }
-
 
 function updateUserProfileDisplay(user) {
   document.getElementById('name').textContent = user.name || '';

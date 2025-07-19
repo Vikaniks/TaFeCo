@@ -18,7 +18,7 @@ import {
 } from './modules/reportOrder.js';
 
 import {
-  initProductModule
+  initProductModule, initDeleteProductModal
 } from './modules/adminProducts.js';
 
 import {
@@ -33,7 +33,20 @@ import {
   initWarehouseModule
 } from './modules/warehouses.js';
 
+import { checkRoleAccess } from './modules/authGuard.js';
 
+document.addEventListener('DOMContentLoaded', async () => {
+
+  console.log('📦 DOMContentLoaded сработал');
+  const access = await checkRoleAccess(['ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_SUPERADMIN']);
+
+  if (!access) {
+    alert('У вас нет доступа');
+    window.location.href = '/register';
+    return;
+  }
+
+  console.log('✅ Доступ подтверждён. Продолжаем...');
 
 let allUsers = [];
 let currentPage = 0;
@@ -47,6 +60,36 @@ if (jwt) {
   //loadAllUsers(jwt);
   //setJwt(jwt);
 }
+
+// Выход
+/*    const logout = document.getElementById("logout");
+    if (logout) {
+      logout.addEventListener("click", () => {
+        console.log('Выход выполнен');
+        e.preventDefault();
+              logoutAdmin();
+      });
+    }
+*/
+// Запускаем нужный модуль по ID страницы
+  if (document.getElementById('orders-page')) {
+    initOrdersModule();
+  } else if (document.getElementById('report-page')) {
+    initReportModule();
+  } else if (document.getElementById('admin-products')) {
+    initProductModule();
+    const deleteProductButton = document.getElementById('delete-product');
+      if (deleteProductButton) {
+        initDeleteProductModal();
+      }
+  } else if (document.getElementById('reports-section')) {
+    initReportProductModule();
+  } else if (document.getElementById('store-section')) {
+    initStoreModule();
+  } else if (document.getElementById('warehouses-section')) {
+    initWarehouseModule();
+  }
+
 
 // === Поиск пользователя по email или телефону ===
 const usernameButton = document.getElementById('btn-username');
@@ -196,22 +239,5 @@ if (btnUsers) {
 }
 
 
-/////////////////////////////////////////////
-
-document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('orders-page')) {
-    initOrdersModule();
-  } else if (document.getElementById('report-page')) {
-    initReportModule();
-  } else if (document.getElementById('admin-products')) {
-    initProductModule();
-  } else if (document.getElementById('reports-section')) {
-    initReportProductModule();
-  } else if (document.getElementById('store-section')) {
-    initStoreModule();
-  } else if (document.getElementById('warehouses-section')) {
-        initWarehouseModule();
-  }
 
 });
-

@@ -8,8 +8,12 @@
     <title>Админ-панель</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="image" href="/img/field-moderator.webp" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-
+    <script>
+        const preimg = new Image();
+        preimg.src = "/img/field-moderator.webp";
+    </script>
     <link rel="stylesheet" th:href="@{/css/admin.css}" />
     <link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" />
     <link rel="stylesheet"
@@ -41,7 +45,7 @@
 
             <button id="open-create-product-modal" style="font-weight: bold; font-size: 16px;">Создать продукт</button>
 
-            <label for="filterCategory">Фильтровать по:</label>
+            <label for="filterCategory" style="display: block; margin-bottom: 3px; font-size: 10px;">Фильтровать по:</label>
             <select id="filterCategory">
                 <option value="">Все категории</option>
                 <!-- JS динамически подставит список категорий -->
@@ -52,6 +56,8 @@
                 <option value="true">Активные</option>
                 <option value="false">Неактивные</option>
             </select>
+
+            <button id="delete-product" style="color: red;">Удалить продукт</button>
         </div>
 
 
@@ -181,6 +187,26 @@
 
 
                     <button type="submit">Сохранить</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Модальное окно удалить продукт -->
+        <div id="delete-product-modal" class="modal" style="display:none; color: red;">
+            <div class="modal-content">
+                <span id="close-delete-product-modal" class="modal-close">&times;</span>
+                <h2>Удалить безвозвратно продукт?</h2>
+                <form id="delete-product-form">
+                    <label>
+                        ID:<br />
+                        <input type="text" name="id" required />
+                    </label><br />
+                    <label>
+                        Название:<br />
+                        <input type="text" name="name" required/>
+                    </label><br />
+
+                    <button type="submit">Удалить</button>
                 </form>
             </div>
         </div>

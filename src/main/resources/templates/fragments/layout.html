@@ -6,13 +6,49 @@
     <title>TaFe & Co</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="image" href="/img/flow_fon.webp" />
     <link rel="icon" th:href="@{/img/Pollo.svg}" />
+    <script>
+        const prelogImg = new Image();
+        prelogImg.src = "/img/flow_fon.webp";
+    </script>
     <link rel="stylesheet" th:href="@{/css/styles_2.css}" />
     <link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" />
 </head>
 
 <body>
-<div th:replace="include/header :: header"></div>
+<header>
+    <div id="header_izq">
+        <h1>TaФe & Co</h1>
+        <h2>Фермерское хозяйство</h2>
+    </div>
+
+    <div id="header_der">
+        <div class="cart-container">
+            <a th:href="@{/cart}">
+                <img th:src="@{/img/cart.svg}" alt="Корзина" width="50px" height="50px" />
+            </a>
+            <div class="cart-count" id="cart-count">0</div>
+        </div>
+
+        <div class="user-container">
+            <div class="flower-container">
+                <img src="/img/flower.svg" alt="Flower" class="flower-img" />
+                <div class="username" id="username-flower"></div>
+            </div>
+            <a href="#" id="user-icon-link">
+                <img th:src="@{/img/user.svg}" alt="Пользователь" width="50px" height="50px" />
+            </a>
+            <div class="dropdown-menu">
+                <ul class="user-menu">
+                    <li><a href="#" id="account-link">Личный кабинет</a></li>
+                    <li><a th:href="@{/index}" id="logout">Выйти</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
 
 <div th:replace="include/nav :: nav"></div>
 

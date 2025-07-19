@@ -1,0 +1,41 @@
+services:
+  tafeco:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tafeco-app
+    container_name: tafeco_app
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    env_file:
+        - .env
+    restart: unless-stopped
+    volumes:
+      - ./uploads:/app/uploads
+
+
+  db:
+    image: mysql:8.0
+    container_name: tafeco_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: tafeco_db
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p1234" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:
+    driver: local
+

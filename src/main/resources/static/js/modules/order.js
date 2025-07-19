@@ -308,14 +308,14 @@ export function populateFinalOrder() {
     }
 
     // Отображаем комментарий к заказу из sessionStorage
-    const comment = sessionStorage.getItem("orderComment");
+    const comment = localStorage.getItem("orderComment");
     const commentDisplay = document.getElementById("comment");
     if (comment && commentDisplay) {
         commentDisplay.textContent = comment;
     }
 
     // Удаляем комментарий из sessionStorage после отображения
-    sessionStorage.removeItem("orderComment");
+    localStorage.removeItem("orderComment");
 }
 
 

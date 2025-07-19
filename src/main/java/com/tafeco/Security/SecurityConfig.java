@@ -39,49 +39,30 @@ public class SecurityConfig {
                                 "/",
                                 "/index",
                                 "/login",
+                                "/register",
                                 "/css/**",
+                                "/js/**",
+                                "/img/**",
+                                "/fonts/**",
+                                "/favicon.ico",
                                 "/api/products",
                                 "/api/products/category/**",
                                 "/category",
                                 "/api/categories/**",
                                 "/uploads/**",
-                                "/js/**",
-                                "/img/**",
-                                "/fonts/**",
                                 "/shop",
-                                "/api/auth/register",
-                                "/api/auth/login",
-                                "/api/auth/**",
-                                "/register",
                                 "/sale",
                                 "/condition",
                                 "/cart",
                                 "/confirmar_order",
                                 "/finalOrder",
                                 "/order",
-                                "/api/orders",
-                                "/error",
-                                "/favicon.ico",
                                 "/admin",
-                                "/admin/**"
+                                "/admin/**",
+                                "/api/auth/**"
                         ).permitAll()
-                        .requestMatchers(
-                                "/api/user/**"
-                        ).hasAnyRole("USER", "SUPERADMIN")
-                        .requestMatchers(
-                                "/api/moderator",
-                                "/api/dimensions/**",
-                                "/api/categories/**",
-                                "/api/orders",
-                                "/api/moderator/products/**",
-                                "/api/moderator/warehouses/**",
-                                "/api/moderator/stores/**",
-                                "/api/warehouses/**",
-                                "/api/stores/**"
-                        ).hasAnyRole("MODERATOR", "ADMIN", "SUPERADMIN")
-                        .requestMatchers(
-                                "/api/admin/**"
-                        ).hasAnyRole("ADMIN", "SUPERADMIN")
+                        .requestMatchers("/api/user/**").hasAnyRole("USER", "MODERATOR", "ADMIN", "SUPERADMIN")
+                        .requestMatchers("/api/**").hasAnyRole("MODERATOR", "ADMIN", "SUPERADMIN")
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)

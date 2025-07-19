@@ -40,7 +40,7 @@
 
 header {
     height: var(--alturaCabecera);
-	background-image: url('../img/field-moderator.jpg'); /* путь к изображению */
+	background-image: url('../img/field-moderator.webp'); /* путь к изображению */
 	background-size: cover; /* Изображение растягивается по всему контейнеру */
 	background-position: center; /* Центрирование изображения */
 	background-repeat: no-repeat; /* Отключаем повторение изображения */
@@ -460,7 +460,7 @@ width: 80px;
 #btn-report-status, #btn-report-sum, #btn-back-to-orders,
 #btn-report-period, #btnReportSummary, #open-create-product-modal,
 #open-create-category-modal, #open-create-dimension-modal,
-#sortProducts, #filterCategory, #filterActive, .btn-report,
+#sortProducts, #filterCategory, #filterActive, #delete-product, .btn-report,
 #warehouseSelect, #storeSelect, #load-full-store-report, #activeFilter,
 #find-all-btn, #show-inactive, #new-store-btn, #submit-create-warehouse,
 #find-all-wh, #create-warehouse-btn, #openAddProductModal {
@@ -573,13 +573,13 @@ width: 90px;
   margin: 5px;
 }
 
-#editProductForm, #create-product-form {
+#editProductForm, #create-product-form, #delete-product-form {
     display: flex;
     flex-direction: column;
     gap: 5px;
   }
 
-  #editProductForm label {
+  #editProductForm label, #create-product-form label {
     font-weight: bold;
   }
 
@@ -593,6 +593,16 @@ width: 90px;
   #editStoreName input,
   #editLocation input,
   #editWarehouse input {
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+  }
+#create-product-form input,
+#create-product-form textarea,
+#create-product-form select,
+#delete-product-form input {
     padding: 5px;
     border-radius: 6px;
     border: 1px solid #ccc;
@@ -614,6 +624,7 @@ width: 90px;
     border: 1px solid var(--colorPrincipalOscuro);
     cursor: pointer;
     margin-top: 10px;
+    flex: 1;
   }
 
   button[type="submit"]:hover {
@@ -649,6 +660,13 @@ width: 90px;
   padding: 0.25rem;
 }
 
+#moder-section div {
+padding: 30px 60px;
+}
+.moder-section li {
+padding: 5px;
+font-size: 20px;
+}
 
 /* Общие стили для таблицы */
 #tablas {

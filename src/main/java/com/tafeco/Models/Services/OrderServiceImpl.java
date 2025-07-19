@@ -103,7 +103,12 @@ public class OrderServiceImpl implements IOrderService {
 
 
         // 7. Отправка уведомления менеджеру
-        notificationService.notifyManager(savedOrder);
+        try {
+            notificationService.notifyManager(savedOrder);
+        } catch (Exception e) {
+            log.warn("Failed to notify manager: {}", e.getMessage());
+        }
+
 
         // 8. Возвращаем OrderDTO
         return result;

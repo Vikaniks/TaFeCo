@@ -31,7 +31,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/moderator")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('MODERATOR', 'ADMIN')")
+@PreAuthorize("hasAnyRole('MODERATOR', 'ADMIN', 'SUPERADMIN')")
 public class ModeratorController {
 
     private final IProductService productService;
@@ -46,6 +46,10 @@ public class ModeratorController {
     private final IProductInventoryService inventoryService;
     private final OrderMapper orderMapper;
 
+    @GetMapping
+    public ResponseEntity<String> checkModeratorAccess() {
+        return ResponseEntity.ok("Moderator access granted");
+    }
 
     // Добавить новый продукт
     @PostMapping(value = "/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -85,10 +89,16 @@ public class ModeratorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // Удалить продукт по id
+    // Мягкое удалить продукт по id - сделать не активным
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/products/force/{id}")
+    public ResponseEntity<Void> forceDeleteProduct(@PathVariable Long id) {
+        productService.forceDeleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 

@@ -34,7 +34,7 @@ import {handleRegistration,
         updateUserNameDisplay,
         handleLogin,
         handleProfileFormSubmit,
-        userHasRole } from './modules/user.js';
+        checkRoleAccess } from './modules/user.js';
 
 import { renderProductList,
          renderProductListByCategory } from './modules/shop.js';
@@ -58,8 +58,6 @@ window.renderCartPage = renderCartPage;
 window.saveOrderData = saveOrderData;
 window.saveOrderData = saveUserData;
 window.updateUserNameDisplay = updateUserNameDisplay;
-
-
 
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -125,6 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         loginForm.addEventListener('submit', handleLogin);
       }
 
+
       // 2. Обработка смены данных (с текущим паролем)
       const changeDataForm = document.getElementById('change-password-form');
       if (changeDataForm) {
@@ -148,6 +147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
+    // Изменить пароль
     const form = document.getElementById('change-password-form');
       if (form) {
         form.addEventListener('submit', handleProfileFormSubmit);
@@ -175,11 +175,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     }
 
-    // Страница finalOrder.html
-   /*if (document.getElementById("recipient")) {
-        populateFinalOrder();
-        setupConfirmButton();
-    }*/
 
     // Регистрация нового пользователя
     const registerForm = document.getElementById('register-form');
@@ -282,23 +277,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 });
 
-/*document.addEventListener('DOMContentLoaded', () => {
-  // Пример: показать админские кнопки только админам
-  const adminElements = document.querySelectorAll('.admin-only');
-  const isAdmin = userHasRole('ROLE_ADMIN');
-
-  adminElements.forEach(el => {
-    el.style.display = isAdmin ? '' : 'none';
-  });
-
-  // Показать кнопки для авторизованных пользователей
-  const authElements = document.querySelectorAll('.auth-only');
-  const loggedIn = !!localStorage.getItem('loggedIn');
-
-  authElements.forEach(el => {
-    el.style.display = loggedIn ? '' : 'none';
-  });
-});*/
 
 // ЛК
 document.addEventListener('DOMContentLoaded', () => {
@@ -339,39 +317,18 @@ document.addEventListener('DOMContentLoaded', () => {
     accountLink.addEventListener('click', async (event) => {
       event.preventDefault();
 
-      const jwt = localStorage.getItem('jwt');
       const userDataRaw = localStorage.getItem('userData');
-      let profile = null;
+      const profile = userDataRaw ? JSON.parse(userDataRaw) : null;
 
-      try {
-        const parsed = userDataRaw ? JSON.parse(userDataRaw) : null;
-        profile = parsed?.user || parsed;
-      } catch {
-        profile = null;
-      }
-
-      const isLoggedIn = jwt && profile && profile.id;
-
-      if (!isLoggedIn) {
+      if (!profile || !profile.id) {
         window.location.href = '/register';
         return;
       }
 
-      const roles = profile.roles || [];
-
-      if (roles.includes('ROLE_ADMIN')) {
-        await userHasRole('ROLE_ADMIN');
-      } else if (roles.includes('ROLE_MODERATOR')) {
-        await userHasRole('ROLE_MODERATOR');
-      } else {
-        // Роль обычного пользователя — перенаправление в личный кабинет
-        window.location.href = '/login';
-      }
+      await redirectByRole(profile.roles);
     });
   }
 });
-
-
 
 // Заказы юзера в ЛК
 document.addEventListener('DOMContentLoaded', () => {
@@ -440,4 +397,29 @@ document.addEventListener("DOMContentLoaded", () => {
         setupConfirmButton();
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Обработчик Telegram
+  document.querySelectorAll('.telegram-link').forEach(link => {
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      const user = link.dataset.telegram;
+      if (user) {
+        window.open(`https://t.me/${user}`, '_blank');
+      }
+    });
+  });
+
+  // Обработчик WhatsApp
+  document.querySelectorAll('.whatsapp-link').forEach(link => {
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      const phone = link.dataset.whatsapp;
+      if (phone) {
+        window.open(`https://wa.me/${phone}`, '_blank');
+      }
+    });
+  });
+});
+
 

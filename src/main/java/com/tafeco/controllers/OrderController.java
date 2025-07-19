@@ -5,7 +5,9 @@ import com.tafeco.DTO.DTO.OrderDetailDTO;
 import com.tafeco.Models.Entity.OrderStatus;
 import com.tafeco.Models.Services.Impl.IOrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
@@ -19,6 +21,10 @@ public class OrderController {
 
     @PostMapping
     public OrderDTO create(@RequestBody OrderDTO dto, Principal principal) {
+        if (dto.getItems() == null || dto.getItems().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Список товаров не может быть пустым");
+        }
+
         String username = principal != null ? principal.getName() : null;
         return orderService.create(dto, username);
     }

@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface IProductStockDAO extends JpaRepository<ProductStock, Long> {
-    Optional<ProductStock> findByProductId(Long productId);
+    Optional<ProductStock> findByProduct_Id(Long productId);
 }
 

@@ -136,7 +136,7 @@
          const removeButton = document.createElement('button');
          removeButton.className = 'button-remove';
          removeButton.textContent = 'Удалить';
-         removeButton.addEventListener('click', () => removeFromCart(productName));
+         removeButton.addEventListener('click', () => removeFromCart(productId));
          removeCell.appendChild(removeButton);
 
          // Собираем строку таблицы
